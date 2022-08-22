@@ -43,17 +43,17 @@
                  [thheller/shadow-cljs "2.18.0" :scope "provided"]]
 
   :min-lein-version "2.0.0"
-  
+
   :source-paths ["src/clj" "src/cljs" "src/cljc"]
   :test-paths ["test/clj"]
   :resource-paths ["resources" "target/cljsbuild"]
   :target-path "target/%s/"
   :main ^:skip-aot withings-client.core
 
-  :plugins [] 
+  :plugins []
   :clean-targets ^{:protect false}
   [:target-path "target/cljsbuild"]
-  
+
 
   :profiles
   {:uberjar {:omit-source true

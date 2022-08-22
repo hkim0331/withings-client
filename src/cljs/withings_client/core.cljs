@@ -53,6 +53,12 @@
 ;;&redirect_uri=https://wc.melt.kyutech.ac.jp/callback
 ;;&state=dev
 
+(defn link-component []
+ [:div
+  [:h2 "a href 文字列を作ってクリックさせたら？"]
+  [:a {:href "https://account.withings.com/oauth2_user/authorize2?response_type=code&client_id=f7164783bfc573217510d38c07176b798daa2a9e78edf1e320e6c1f0e5a5fa35&scope=user.metrics,user.activity&redirect_uri=https://wc.melt.kyutech.ac.jp/callback&state=hkimura"}
+    "click me"]])
+
 (defn call-withings []
   (let [{:keys [name cid belong email]} @session]
     (.log js/console name cid belong email)
@@ -66,7 +72,7 @@
 
 (defn new-component []
   [:div
-   [:h2 "new"]
+   [:h2 "new , こっちでは CORS に引っかかってダメ。"]
    [:div
     [:p "name   " [:input {:on-change #(swap! session
                                                assoc
@@ -94,6 +100,7 @@
 
 (defn home-page []
   [:section.section>div.container>div.content
+   (link-component)
    (new-component)
    (users-component)])
 

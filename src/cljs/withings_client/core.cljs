@@ -53,16 +53,6 @@
                "redirect_uri=" redirect-uri "&"
                "scope=" scope "&"))
 
-;;?response_type=code
-;;&client_id=f7164783bfc573217510d38c07176b798daa2a9e78edf1e320e6c1f0e5a5fa35
-;;&scope=user.metrics,user.activity
-;;&redirect_uri=https://wc.melt.kyutech.ac.jp/callback
-;;&state=dev
-
-(defn link-component []
-  [:div
-   [:h2 "a href 文字列を作ってクリックさせたら？"]
-   [:a {:href (:uri @session)} (:uri @session)]])
 
 ;; (defn call-withings []
 ;;   (let [{:keys [name cid belong email]} @session]
@@ -77,16 +67,16 @@
 
 (defn new-component []
   [:div
-   [:h2 "new , こっちでは CORS に引っかかってダメ。"]
+   [:h2 "new"]
    [:div
     [:p "name   " [:input {:on-change #(swap! session
                                               assoc
                                               :name
                                               (-> % .-target .-value))}]]
     [:p "cid    " [:input {:on-change #(swap! session
-                                              assoc
-                                              :cid
-                                              (-> % .-target .-value))}]]
+                                                  assoc
+                                                  :cid
+                                                  (-> % .-target .-value))}]]
     [:p "belong " [:input {:on-change #(swap! session
                                               assoc
                                               :belong
@@ -103,6 +93,10 @@
                                    (str base "client_id=" (:cid @session) "&"
                                         "state=" (:name @session)))}]]]])
 
+(defn link-component []
+  [:div
+   [:p "create ボタンの後、下に現れるリンクをクリック。"]
+   [:p [:a {:href (:uri @session)} (:name @session)]]])
 
 (defn users-component []
   [:div
@@ -110,8 +104,10 @@
 
 (defn home-page []
   [:section.section>div.container>div.content
-   (link-component)
    (new-component)
+   [:br]
+   (link-component)
+   [:br]
    (users-component)])
 
 (def pages

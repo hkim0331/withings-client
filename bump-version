@@ -30,5 +30,5 @@ ${SED} -i "s/(defproject \S+) \S+/\1 \"$1\"/" project.clj
 #${SED} -i "s/(def \^:private version) .+/\1 \"$1\")/" src/core.clj
 
 # cljs
-${SED} -i "s/(def \^:private version) .+/\1 \"$1\")/" src/main.cljs
+#${SED} -i "s/(def \^:private version) .+/\1 \"$1\")/" src/main.cljs
 

@@ -6,6 +6,8 @@ localhost/:1 Access to XMLHttpRequest at 'https://account.withings.com/oauth2_us
 
 GET https://account.withings.com/oauth2_user/authorize2?response_type=code&client_id=aaa&scope=user.metrics%2Cuser.activity&redirect_uri=https%3A%2F%2Fwc.melt.kyutech.ac.jp%2Fcallback&state=aaa
 
+## 0.2.0 - 2022-08-22
+- URL を作ってクリックさせる方法でauth-token を取れる。
 
 ## 0.1.0 - 2022-08-22
 

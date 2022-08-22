@@ -1,4 +1,4 @@
-(defproject withings-client "0.1.0-SNAPSHOT"
+(defproject withings-client "0.1.0"
 
   :description "FIXME: write description"
   :url "http://example.com/FIXME"
@@ -57,17 +57,17 @@
 
   :profiles
   {:uberjar {:omit-source true
-             
+
              :prep-tasks ["compile" ["run" "-m" "shadow.cljs.devtools.cli" "release" "app"]]
              :aot :all
              :uberjar-name "withings-client.jar"
-             :source-paths ["env/prod/clj"  "env/prod/cljs" ]
+             :source-paths ["env/prod/clj"  "env/prod/cljs"]
              :resource-paths ["env/prod/resources"]}
 
    :dev           [:project/dev :profiles/dev]
    :test          [:project/dev :project/test :profiles/test]
 
-   :project/dev  {:jvm-opts ["-Dconf=dev-config.edn" ]
+   :project/dev  {:jvm-opts ["-Dconf=dev-config.edn"]
                   :dependencies [[binaryage/devtools "1.0.4"]
                                  [cider/piggieback "0.5.3"]
                                  [org.clojure/tools.namespace "1.2.0"]
@@ -77,19 +77,14 @@
                                  [ring/ring-mock "0.4.0"]]
                   :plugins      [[com.jakemccrary/lein-test-refresh "0.24.1"]
                                  [jonase/eastwood "1.2.4"]
-                                 [cider/cider-nrepl "0.26.0"]] 
-                  
-                  
-                  :source-paths ["env/dev/clj"  "env/dev/cljs" "test/cljs" ]
+                                 [cider/cider-nrepl "0.26.0"]]
+                  :source-paths ["env/dev/clj"  "env/dev/cljs" "test/cljs"]
                   :resource-paths ["env/dev/resources"]
                   :repl-options {:init-ns user
                                  :timeout 120000}
                   :injections [(require 'pjstadig.humane-test-output)
                                (pjstadig.humane-test-output/activate!)]}
-   :project/test {:jvm-opts ["-Dconf=test-config.edn" ]
-                  :resource-paths ["env/test/resources"] 
-                  
-                  
-                  }
+   :project/test {:jvm-opts ["-Dconf=test-config.edn"]
+                  :resource-paths ["env/test/resources"]}
    :profiles/dev {}
    :profiles/test {}})

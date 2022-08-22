@@ -16,7 +16,7 @@
   GET https://account.withings.com/oauth2_user/authorize2?response_type=code&client_id=aaa&scope=user.metrics%2Cuser.activity&redirect_uri=https%3A%2F%2Fwc.melt.kyutech.ac.jp%2Fcallback&state=aaa
 - URL を作ってクリックさせる方法で auth-token が取れた。
 - gitignored /data フォルダを作った。
-
+- kohhoh に配置する。早めに。
 
 ## 0.1.0 - 2022-08-22
 - https://wc.melt 準備。callback は HTTPS じゃないとダメになった。

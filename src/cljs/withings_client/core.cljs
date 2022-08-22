@@ -44,8 +44,14 @@
    ;; test csrf-token
    [:p js/csrfToken]])
 ;;
-(def withings-uri "https://account.withings.com/oauth2_user/authorize2")
+(def withings-uri "https://account.withings.com/oauth2_user/authorize2?")
 (def redirect-uri "https://wc.melt.kyutech.ac.jp/callback")
+(def scope "user.metrics,user.activity")
+
+(def base (str withings-uri
+               "response_type=code&"
+               "redirect_uri=" redirect-uri "&"
+               "scope=" scope "&"))
 
 ;;?response_type=code
 ;;&client_id=f7164783bfc573217510d38c07176b798daa2a9e78edf1e320e6c1f0e5a5fa35
@@ -54,45 +60,49 @@
 ;;&state=dev
 
 (defn link-component []
- [:div
-  [:h2 "a href 文字列を作ってクリックさせたら？"]
-  [:a {:href "https://account.withings.com/oauth2_user/authorize2?response_type=code&client_id=f7164783bfc573217510d38c07176b798daa2a9e78edf1e320e6c1f0e5a5fa35&scope=user.metrics,user.activity&redirect_uri=https://wc.melt.kyutech.ac.jp/callback&state=hkimura"}
-    "click me"]])
+  [:div
+   [:h2 "a href 文字列を作ってクリックさせたら？"]
+   [:a {:href (:uri @session)} (:uri @session)]])
 
-(defn call-withings []
-  (let [{:keys [name cid belong email]} @session]
-    (.log js/console name cid belong email)
-    (GET withings-uri {:params {:response_type "code"
-                                :client_id cid
-                                :scope "user.metrics,user.activity"
-                                :redirect_uri redirect-uri
-                                :state name}
-                       :handler #(.log js/console %)
-                       :error-handler #(.log js/console (str "error" %))})))
+;; (defn call-withings []
+;;   (let [{:keys [name cid belong email]} @session]
+;;     (.log js/console name cid belong email)
+;;     (GET withings-uri {:params {:response_type "code"
+;;                                 :client_id cid
+;;                                 :scope "user.metrics,user.activity"
+;;                                 :redirect_uri redirect-uri
+;;                                 :state name}
+;;                        :handler #(.log js/console %)
+;;                        :error-handler #(.log js/console (str "error" %))})))
 
 (defn new-component []
   [:div
    [:h2 "new , こっちでは CORS に引っかかってダメ。"]
    [:div
     [:p "name   " [:input {:on-change #(swap! session
-                                               assoc
-                                               :name
-                                               (-> % .-target .-value))}]]
+                                              assoc
+                                              :name
+                                              (-> % .-target .-value))}]]
     [:p "cid    " [:input {:on-change #(swap! session
-                                               assoc
-                                               :cid
-                                               (-> % .-target .-value))}]]
+                                              assoc
+                                              :cid
+                                              (-> % .-target .-value))}]]
     [:p "belong " [:input {:on-change #(swap! session
-                                               assoc
-                                               :belong
-                                               (-> % .-target .-value))}]]
+                                              assoc
+                                              :belong
+                                              (-> % .-target .-value))}]]
     [:p "email  " [:input {:on-change #(swap! session
-                                               assoc
-                                               :email
-                                               (-> % .-target .-value))}]]
+                                              assoc
+                                              :email
+                                              (-> % .-target .-value))}]]
     [:p [:input {:type "button"
                  :value "create"
-                 :on-click call-withings}]]]])
+                 :on-click #(swap! session
+                                   assoc
+                                   :uri
+                                   (str base "client_id=" (:cid @session) "&"
+                                        "state=" (:name @session)))}]]]])
+
 
 (defn users-component []
   [:div

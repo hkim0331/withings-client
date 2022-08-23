@@ -10,7 +10,7 @@
 - mariadb のタイムスタンプを JST に。app.melt は JST だった。docker のが UTC.
 
 
-## 0.4.2-SNAPSHOT
+## 0.4.2 - 2022-08-23
 - GET /api/users/:n
 - POST /api/users/del/:n
 - POST /api/user/:n for update(PUT)

@@ -7,6 +7,7 @@
 - /callback で auth を受け取ったらすぐに access token, refresh token をゲットする。
 - MySQL テーブルの定義。withings.users
 
+## 0.3.0-SNAPSHOT
 
 ## 0.2.0 - 2022-08-22
 - ajax-cljs の GET は CORS に抵触する

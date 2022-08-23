@@ -3,18 +3,24 @@
 ## Unreleased
 - navbar のどこかに withings へのリンク
 - secret はいつ使う？
-- create のタイミングで name, belong, email を insert する。
+
 - /callback で auth を受け取ったらすぐ access token, refresh token をゲット。
 - kohhoh への早期配置。apt install mariadb-server
 - create の隣に undo ボタン。
 - mariadb のタイムスタンプを JST に。app.melt は JST だった。docker のが UTC.
 
 ## 0.4.3 - 2022-08-23
+- create のタイミングで name, cid のほか、
+  埋めてあったら secret, belong, email を insert する。
+### Fixed
+- core.cljs: session アトムは上記すべてのフィールドをあらかじめ持ってる必要あり。
+### Added
 名前を揃えたほうがいいか？
 - db/update-cid-by-name!
 - users/update-user!
 - db/updat-user!
 - users/update-cid!
+
 
 ## 0.4.2 - 2022-08-23
 - GET /api/users/:n

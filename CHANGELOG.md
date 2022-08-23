@@ -9,6 +9,8 @@
 - create の隣に undo ボタン。
 - mariadb のタイムスタンプを JST に。app.melt は JST だった。docker のが UTC.
 
+## 0.5.0-SNAPSHOT
+
 
 ## 0.4.1 - 2022-08-23
 - created /src/routes/services.clj

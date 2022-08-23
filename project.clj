@@ -1,4 +1,4 @@
-(defproject withings-client "0.4.2"
+(defproject withings-client "0.4.3"
 
   :description "FIXME: write description"
   :url "http://example.com/FIXME"
@@ -14,6 +14,7 @@
                  [cprop "0.1.19"]
                  [expound "0.9.0"]
                  [funcool/struct "1.4.0"]
+                 [hato/hato "0.8.2"]
                  [json-html "0.4.7"]
                  [luminus-migrations "0.7.2"]
                  [luminus-transit "0.1.5"]

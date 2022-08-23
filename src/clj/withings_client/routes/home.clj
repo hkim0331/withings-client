@@ -11,10 +11,12 @@
 (defn home-page [request]
   (layout/render request "home.html"))
 
+(defn access-token
+ []
+ )
 ;; auth code inside request header {:code ... :state dev}
-(defn callback [{{:keys [cid state]} :params :as params}]
-  (log/info "/callback" cid state)
-  (users/update-cid! params)
+(defn callback [{{:keys [code state]} :params :as params}]
+  (log/info "/callback" code state)
   (response/ok "OK"))
 
 (defn home-routes []

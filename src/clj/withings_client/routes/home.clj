@@ -12,9 +12,9 @@
   (layout/render request "home.html"))
 
 ;; auth code inside request header {:code ... :state dev}
-(defn callback [{params :params}]
-  (log/info "/callback" params)
-  (response/ok params))
+(defn callback [{{:keys [cid state]} :params}]
+  (log/info "/callback" cid state)
+  (response/ok "OK"))
 
 (defn home-routes []
   [""

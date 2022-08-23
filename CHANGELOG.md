@@ -10,9 +10,14 @@
 - mariadb のタイムスタンプを JST に。app.melt は JST だった。docker のが UTC.
 
 
+## 0.4.2 - 2022-08-23
+- GET /api/users/:n
+- POST /api/users/del/:n
+- POST /api/user/:n for update(PUT)
+
 ## 0.4.1 - 2022-08-23
 - created /src/routes/services.clj
-- creates /src/users.clj
+- created /src/users.clj
 - GET /api/users
 - POST /api/user {:name "name" :cid "cid"}
 - create のタイミングで name, belong, email を insert する。

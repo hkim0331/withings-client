@@ -60,14 +60,13 @@
 
 (defn create-user!
   [params]
-  (js/alert (str params))
   (POST "/api/user"
     {:format :json
      :headers
      {"Accept" "application/transit+json"
       "x-csrf-token" js/csrfToken}
      :params params
-     :hander (fn [_] (js/alert "inserted"))
+     :handler (fn [_] (js/alert (str "OK " params)))
      :error-handler (fn [e] (.log js/console (str e)))}))
 
 
@@ -76,10 +75,11 @@
    [:h2 "new"]
    [:div [:label {:class "label"} "name"]]
    [:div {:class "field"}
-    [:input {:on-change #(swap! session
-                                assoc
-                                :name
-                                (-> % .-target .-value))}]]
+    [:input {:value (:name @session)
+             :on-change #(swap! session
+                               assoc
+                               :name
+                               (-> % .-target .-value))}]]
    [:div [:label {:class "label"} "cid"]]
    [:div {:class "field"}
     [:input {:on-change #(swap! session
@@ -110,7 +110,6 @@
                            (create-user!
                             (select-keys @session
                                          [:name :cid :secret :belong :email]))
-                           ;; (js/alert "db inserted")
                            (swap! session
                                   assoc
                                   :uri (create-url)))}

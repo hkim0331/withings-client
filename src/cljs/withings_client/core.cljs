@@ -1,7 +1,7 @@
 (ns withings-client.core
   (:require
    [ajax.core :refer [GET POST]]
-   [cljs.core.async :refer [<!]]
+   ;; [cljs.core.async :refer [<!]]
    [clojure.string :as string]
    [goog.events :as events]
    [goog.history.EventType :as HistoryEventType]
@@ -10,8 +10,8 @@
    [reagent.dom :as rdom]
    [reitit.core :as reitit]
    [withings-client.ajax :as ajax])
-  (:require-macros
-   [cljs.core.async.macros :refer [go]])
+  #_(:require-macros
+     [cljs.core.async.macros :refer [go]])
   (:import
    goog.History))
 
@@ -45,8 +45,9 @@
    ;; test csrf-token
    [:p js/csrfToken]])
 
-;;
+;; 環境変数から取れないか？ js/redirect_uri とかで。
 (def redirect-uri "https://wc.melt.kyutech.ac.jp/callback")
+;;
 (def withings-uri "https://account.withings.com/oauth2_user/authorize2")
 (def scope "user.metrics,user.activity,user.info")
 (def base
@@ -69,7 +70,6 @@
      :handler (fn [_] (js/alert (str "OK " params)))
      :error-handler (fn [e] (.log js/console (str e)))}))
 
-
 (defn new-component []
   [:div
    [:h2 "new"]
@@ -77,9 +77,9 @@
    [:div {:class "field"}
     [:input {:value (:name @session)
              :on-change #(swap! session
-                               assoc
-                               :name
-                               (-> % .-target .-value))}]]
+                                assoc
+                                :name
+                                (-> % .-target .-value))}]]
    [:div [:label {:class "label"} "cid"]]
    [:div {:class "field"}
     [:input {:on-change #(swap! session

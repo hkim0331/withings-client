@@ -15,6 +15,10 @@
   [params]
   (db/update-user! params))
 
+(defn update-cid!
+  [params]
+  (db/update-cid-by-name! params))
+
 (defn delete-user!
   [id]
   (db/delete-user! {:id id}))

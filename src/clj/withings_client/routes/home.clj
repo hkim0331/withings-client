@@ -4,16 +4,19 @@
    [clojure.tools.logging :as log]
    [ring.util.http-response :as response]
    [ring.util.response]
-   [withings-client.db.core :as db]
+   [withings-client.users :as users]
    [withings-client.layout :as layout]
    [withings-client.middleware :as middleware]))
 
 (defn home-page [request]
   (layout/render request "home.html"))
 
+(defn access-token
+ [])
+ 
 ;; auth code inside request header {:code ... :state dev}
-(defn callback [{{:keys [cid state]} :params}]
-  (log/info "/callback" cid state)
+(defn callback [{{:keys [code state]} :params :as params}]
+  (log/info "/callback" code state)
   (response/ok "OK"))
 
 (defn home-routes []

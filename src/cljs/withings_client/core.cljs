@@ -106,13 +106,14 @@
                                 (-> % .-target .-value))}]]
    [:div {:class "field"}
     [:button {:class "button is-primary is-small"
-              :on-click #(do
-                           (create-user!
-                            (select-keys @session
-                                         [:name :cid :secret :belong :email]))
+              :on-click #(let [params (select-keys @session
+                                                   [:name :cid :secret :belong :email])]
+                           (create-user! params)
+                           (js/alert (str "created " params))
                            (swap! session
                                   assoc
-                                  :uri (create-url)))}
+                                  :uri
+                                  (create-url)))}
      "create"]]])
 
 (defn link-component []

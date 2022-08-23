@@ -9,6 +9,9 @@
 - create の隣に undo ボタン。
 - mariadb のタイムスタンプを JST に。app.melt は JST だった。docker のが UTC.
 
+
+## 0.4.4-SNAPSHOT
+
 ## 0.4.3 - 2022-08-23
 - create のタイミングで name, cid のほか、
   埋めてあったら secret, belong, email を insert する。
@@ -20,7 +23,6 @@
 - users/update-user!
 - db/updat-user!
 - users/update-cid!
-
 
 ## 0.4.2 - 2022-08-23
 - GET /api/users/:n

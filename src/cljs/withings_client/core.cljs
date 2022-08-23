@@ -1,6 +1,4 @@
 (ns withings-client.core
-  (:require-macros
-   [cljs.core.async.macros :refer [go]])
   (:require
    [ajax.core :refer [GET POST]]
    [cljs.core.async :refer [<!]]
@@ -12,7 +10,10 @@
    [reagent.dom :as rdom]
    [reitit.core :as reitit]
    [withings-client.ajax :as ajax])
-  (:import goog.History))
+  (:require-macros
+   [cljs.core.async.macros :refer [go]])
+  (:import
+   goog.History))
 
 (defonce session (r/atom {:page :home}))
 
@@ -27,43 +28,35 @@
     [:nav.navbar.is-info>div.container
      [:div.navbar-brand
       [:a.navbar-item {:href "/" :style {:font-weight :bold}} "Withings-Client"]
-      [:span.navbar-burger.burger
-       {:data-target :nav-menu
+      [:span.navbar-burger.burger]]]
+    {:data-target :nav-menu
         :on-click #(swap! expanded? not)
-        :class (when @expanded? :is-active)}
-       [:span] [:span] [:span]]]
-     [:div#nav-menu.navbar-menu
-      {:class (when @expanded? :is-active)}
+        :class (when @expanded? :is-active)
+       [:span] [:span] [:span]
+     [:div#nav-menu.navbar-menu]}
+    {:class (when @expanded? :is-active)
       [:div.navbar-start
        [nav-link "#/" "Home" :home]
-       [nav-link "#/about" "About" :about]]]]))
+       [nav-link "#/about" "About" :about]]}))
 
 (defn about-page []
   [:section.section>div.container>div.content
    [:img {:src "/img/warning_clojure.png"}]
    ;; test csrf-token
    [:p js/csrfToken]])
+
+;; 
+(def redirect-uri "https://wc.melt.kyutech.ac.jp/callback")
 ;;
 (def withings-uri "https://account.withings.com/oauth2_user/authorize2?")
-(def redirect-uri "https://wc.melt.kyutech.ac.jp/callback")
 (def scope "user.metrics,user.activity")
+(def base
+  (str withings-uri
+       "response_type=code&"
+       "redirect_uri=" redirect-uri "&"
+       "scope=" scope "&"))
 
-(def base (str withings-uri
-               "response_type=code&"
-               "redirect_uri=" redirect-uri "&"
-               "scope=" scope "&"))
-
-;;?response_type=code
-;;&client_id=f7164783bfc573217510d38c07176b798daa2a9e78edf1e320e6c1f0e5a5fa35
-;;&scope=user.metrics,user.activity
-;;&redirect_uri=https://wc.melt.kyutech.ac.jp/callback
-;;&state=dev
-
-(defn link-component []
-  [:div
-   [:h2 "a href 文字列を作ってクリックさせたら？"]
-   [:a {:href (:uri @session)} (:uri @session)]])
-
+;; こっちだと CORS に抵触
 ;; (defn call-withings []
 ;;   (let [{:keys [name cid belong email]} @session]
 ;;     (.log js/console name cid belong email)
@@ -77,7 +70,7 @@
 
 (defn new-component []
   [:div
-   [:h2 "new , こっちでは CORS に引っかかってダメ。"]
+   [:h2 "new"]
    [:div
     [:p "name   " [:input {:on-change #(swap! session
                                               assoc
@@ -103,6 +96,10 @@
                                    (str base "client_id=" (:cid @session) "&"
                                         "state=" (:name @session)))}]]]])
 
+(defn link-component []
+  [:div
+   [:p "create ボタンの後、下に現れるリンクをクリック。"]
+   [:p [:a {:href (:uri @session)} (:name @session)]]])
 
 (defn users-component []
   [:div
@@ -110,8 +107,10 @@
 
 (defn home-page []
   [:section.section>div.container>div.content
-   (link-component)
    (new-component)
+   [:br]
+   (link-component)
+   [:br]
    (users-component)])
 
 (def pages
@@ -134,6 +133,7 @@
        (reitit/match-by-path router)
        :data
        :name))
+
 ;; -------------------------
 ;; History
 ;; must be called after routes have been defined
@@ -147,7 +147,7 @@
 
 ;; -------------------------
 ;; Initialize app
-;;(defn fetch-docs! []
+;; (defn fetch-docs! []
 ;;  (GET "/docs" {:handler #(swap! session assoc :docs %)}))
 
 (defn ^:dev/after-load mount-components []
@@ -156,6 +156,6 @@
 
 (defn init! []
   (ajax/load-interceptors!)
-  ;;(fetch-docs!)
+  ;; (fetch-docs!)
   (hook-browser-navigation!)
   (mount-components))

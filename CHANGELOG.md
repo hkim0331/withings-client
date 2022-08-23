@@ -6,8 +6,11 @@
 - create のタイミングで name, belong, email を insert する。
 - /callback で auth を受け取ったらすぐに access token, refresh token をゲットする。
 - MySQL テーブルの定義。withings.users
+- kohhoh への早期配置。
+- create の隣に undo ボタン。
 
 ## 0.3.0-SNAPSHOT
+
 
 ## 0.2.0 - 2022-08-22
 - ajax-cljs の GET は CORS に抵触する
@@ -17,7 +20,7 @@
   GET https://account.withings.com/oauth2_user/authorize2?response_type=code&client_id=aaa&scope=user.metrics%2Cuser.activity&redirect_uri=https%3A%2F%2Fwc.melt.kyutech.ac.jp%2Fcallback&state=aaa
 - URL を作ってクリックさせる方法で auth-token が取れた。
 - gitignored /data フォルダを作った。
-- kohhoh に配置する。早めに。
+
 
 ## 0.1.0 - 2022-08-22
 - https://wc.melt 準備。callback は HTTPS じゃないとダメになった。

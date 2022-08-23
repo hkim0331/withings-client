@@ -28,16 +28,16 @@
     [:nav.navbar.is-info>div.container
      [:div.navbar-brand
       [:a.navbar-item {:href "/" :style {:font-weight :bold}} "Withings-Client"]
-      [:span.navbar-burger.burger]]]
-    {:data-target :nav-menu
+      [:span.navbar-burger.burger
+       {:data-target :nav-menu
         :on-click #(swap! expanded? not)
-        :class (when @expanded? :is-active)
-       [:span] [:span] [:span]
-     [:div#nav-menu.navbar-menu]}
-    {:class (when @expanded? :is-active)
+        :class (when @expanded? :is-active)}
+       [:span] [:span] [:span]]]
+     [:div#nav-menu.navbar-menu
+      {:class (when @expanded? :is-active)}
       [:div.navbar-start
        [nav-link "#/" "Home" :home]
-       [nav-link "#/about" "About" :about]]}))
+       [nav-link "#/about" "About" :about]]]]))
 
 (defn about-page []
   [:section.section>div.container>div.content
@@ -45,15 +45,13 @@
    ;; test csrf-token
    [:p js/csrfToken]])
 
-;; 
-(def redirect-uri "https://wc.melt.kyutech.ac.jp/callback")
 ;;
-(def withings-uri "https://account.withings.com/oauth2_user/authorize2?")
-(def scope "user.metrics,user.activity")
+(def redirect-uri "https://wc.melt.kyutech.ac.jp/callback")
+(def withings-uri "https://account.withings.com/oauth2_user/authorize2")
+(def scope "user.metrics,user.activity,user.info")
 (def base
   (str withings-uri
-       "response_type=code&"
-       "redirect_uri=" redirect-uri "&"
+       "?response_type=code&redirect_uri=" redirect-uri "&"
        "scope=" scope "&"))
 
 ;; こっちだと CORS に抵触
@@ -68,38 +66,50 @@
 ;;                        :handler #(.log js/console %)
 ;;                        :error-handler #(.log js/console (str "error" %))})))
 
+(defn create-url
+  []
+  (str base "client_id=" (:cid @session) "&state=" (:name @session)))
+
 (defn new-component []
   [:div
    [:h2 "new"]
-   [:div
-    [:p "name   " [:input {:on-change #(swap! session
-                                              assoc
-                                              :name
-                                              (-> % .-target .-value))}]]
-    [:p "cid    " [:input {:on-change #(swap! session
-                                              assoc
-                                              :cid
-                                              (-> % .-target .-value))}]]
-    [:p "belong " [:input {:on-change #(swap! session
-                                              assoc
-                                              :belong
-                                              (-> % .-target .-value))}]]
-    [:p "email  " [:input {:on-change #(swap! session
-                                              assoc
-                                              :email
-                                              (-> % .-target .-value))}]]
-    [:p [:input {:type "button"
-                 :value "create"
-                 :on-click #(swap! session
-                                   assoc
-                                   :uri
-                                   (str base "client_id=" (:cid @session) "&"
-                                        "state=" (:name @session)))}]]]])
+   [:div [:label {:class "label"} "name"]]
+   [:div {:class "field"}
+    [:input {:on-change #(swap! session
+                                assoc
+                                :name
+                                (-> % .-target .-value))}]]
+   [:div [:label {:class "label"} "cid"]]
+   [:div {:class "field"}
+    [:input {:on-change #(swap! session
+                                assoc
+                                :cid
+                                (-> % .-target .-value))}]]
+   [:div [:label {:class "label"} "belong"]]
+   [:div {:class "field"}
+    [:input {:on-change #(swap! session
+                                assoc
+                                :belong
+                                (-> % .-target .-value))}]]
+   [:div [:label {:class "label"} "email"]]
+   [:div {:class "field"}
+    [:input {:on-change #(swap! session
+                                assoc
+                                :email
+                                (-> % .-target .-value))}]]
+   [:div {:class "field"}
+    [:button {:class "button is-primary is-small"
+              :on-click #(swap! session
+                                assoc
+                                :uri (create-url))}
+             "create"]]])
 
 (defn link-component []
   [:div
-   [:p "create ボタンの後、下に現れるリンクをクリック。"]
-   [:p [:a {:href (:uri @session)} (:name @session)]]])
+   [:p "create ボタンの後、下に現れるリンクをクリック。" [:br]
+    "create のタイミングで name, belong, email を DB インサートするため、"
+    "create を省略できない。"]
+   [:p "クリックで登録 → " [:a {:href (:uri @session)} (:name @session)]]])
 
 (defn users-component []
   [:div

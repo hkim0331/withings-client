@@ -15,7 +15,12 @@
   (:import
    goog.History))
 
-(defonce session (r/atom {:page :home}))
+(defonce session (r/atom {:page :home
+                          :name nil
+                          :cid nil
+                          :secret nil
+                          :belong nil
+                          :email nil}))
 
 (defn nav-link [uri title page]
   [:a.navbar-item
@@ -68,7 +73,7 @@
       "x-csrf-token" js/csrfToken}
      :params params
      :handler (fn [_] (js/alert (str "OK " params)))
-     :error-handler (fn [e] (.log js/console (str e)))}))
+     :error-handler (fn [e] (js/alert (str  "error " e)))}))
 
 (defn new-component []
   [:div
@@ -106,10 +111,10 @@
                                 (-> % .-target .-value))}]]
    [:div {:class "field"}
     [:button {:class "button is-primary is-small"
-              :on-click #(let [params (select-keys @session
-                                                   [:name :cid :secret :belong :email])]
+              :on-click #(let [params (select-keys
+                                       @session
+                                       [:name :cid :secret :belong :email])]
                            (create-user! params)
-                           (js/alert (str "created " params))
                            (swap! session
                                   assoc
                                   :uri

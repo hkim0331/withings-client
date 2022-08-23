@@ -12,8 +12,8 @@
   (layout/render request "home.html"))
 
 (defn access-token
- []
- )
+ [])
+ 
 ;; auth code inside request header {:code ... :state dev}
 (defn callback [{{:keys [code state]} :params :as params}]
   (log/info "/callback" code state)

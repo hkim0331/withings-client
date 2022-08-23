@@ -5,7 +5,7 @@
    [clojure.string :as string]
    [goog.events :as events]
    [goog.history.EventType :as HistoryEventType]
-   [markdown.core :refer [md->html]]
+   ;; [markdown.core :refer [md->html]]
    [reagent.core :as r]
    [reagent.dom :as rdom]
    [reitit.core :as reitit]
@@ -54,21 +54,22 @@
        "?response_type=code&redirect_uri=" redirect-uri "&"
        "scope=" scope "&"))
 
-;; こっちだと CORS に抵触
-;; (defn call-withings []
-;;   (let [{:keys [name cid belong email]} @session]
-;;     (.log js/console name cid belong email)
-;;     (GET withings-uri {:params {:response_type "code"
-;;                                 :client_id cid
-;;                                 :scope "user.metrics,user.activity"
-;;                                 :redirect_uri redirect-uri
-;;                                 :state name}
-;;                        :handler #(.log js/console %)
-;;                        :error-handler #(.log js/console (str "error" %))})))
-
 (defn create-url
   []
   (str base "client_id=" (:cid @session) "&state=" (:name @session)))
+
+(defn create-user!
+  [params]
+  (js/alert (str params))
+  (POST "/api/user"
+    {:format :json
+     :headers
+     {"Accept" "application/transit+json"
+      "x-csrf-token" js/csrfToken}
+     :params params
+     :hander (fn [_] (js/alert "inserted"))
+     :error-handler (fn [e] (.log js/console (str e)))}))
+
 
 (defn new-component []
   [:div
@@ -106,7 +107,10 @@
    [:div {:class "field"}
     [:button {:class "button is-primary is-small"
               :on-click #(do
-                           (js/alert "db insert")
+                           (create-user!
+                            (select-keys @session
+                                         [:name :cid :secret :belong :email]))
+                           ;; (js/alert "db inserted")
                            (swap! session
                                   assoc
                                   :uri (create-url)))}

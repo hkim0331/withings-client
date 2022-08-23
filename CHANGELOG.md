@@ -5,8 +5,18 @@
 - secret はいつ使う？
 - create のタイミングで name, belong, email を insert する。
 - /callback で auth を受け取ったらすぐ access token, refresh token をゲット。
-- kohhoh への早期配置。
+- kohhoh への早期配置。apt install mariadb-server
 - create の隣に undo ボタン。
+- mariadb のタイムスタンプを JST に。app.melt は JST だった。docker のが UTC.
+
+
+## 0.4.1 - 2022-08-23
+- created /src/routes/services.clj
+- creates /src/users.clj
+- GET /api/users
+- POST /api/user {:name "name" :cid "cid"}
+- create のタイミングで name, belong, email を insert する。
+  対応する値が "" の時、null が "" に書き換わる。
 
 ## 0.3.0 - 2022-08-23
 - Makefile -- npm install xmlhttprequest

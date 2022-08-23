@@ -1,12 +1,14 @@
 -- :name create-user! :! :n
 -- :doc creates a new user record
 INSERT INTO users
-(id, first_name, last_name, email, pass)
-VALUES (:id, :first_name, :last_name, :email, :pass)
+(name, cid, secret, belong, email)
+VALUES
+(:name, :cid, :secret, :belong, :email)
 
 -- :name update-user! :! :n
 -- :doc updates an existing user record
 UPDATE users
+-- FIXME:
 SET first_name = :first_name, last_name = :last_name, email = :email
 WHERE id = :id
 
@@ -19,3 +21,7 @@ WHERE id = :id
 -- :doc deletes a user record given the id
 DELETE FROM users
 WHERE id = :id
+
+-- :name get-users :? :*
+-- :doc get all users
+SELECT * FROM users

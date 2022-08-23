@@ -9,8 +9,9 @@
 (defn service-routes []
  ["/api"
   {:middleware [middleware/wrap-formats]}
-  ["/users"
-   {:get (fn [_] (response/ok (users/users-list)))}]
+
+  ["/users"  {:get (fn [_] (response/ok (users/users-list)))}]
+
   ["/user/:n"
    {:get
     (fn [{{:keys [n]} :path-params}]
@@ -20,6 +21,7 @@
     (fn [{{:keys [n]} :path-params :as request}]
       (let [params (:params request)]
         (response/ok {:user n :params params})))}]
+
   ["/user/del/:n"
    {:post
     (fn [{{:keys [n]} :path-params}]
@@ -29,6 +31,7 @@
         (catch Exception e
           (response/internal-server-error
            {:errors {:server-error (.getMessage e)}}))))}]
+
   ["/user"
    {:post
     (fn [{:keys [params]}]
@@ -39,4 +42,3 @@
           ;; (println "error" (str params))
           (response/internal-server-error
            {:errors {:server-error (.getMessage e)}}))))}]])
- 

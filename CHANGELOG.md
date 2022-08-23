@@ -9,6 +9,8 @@
 - create の隣に undo ボタン。
 - mariadb のタイムスタンプを JST に。app.melt は JST だった。docker のが UTC.
 
+## 0.4.3 - 2022-08-23
+- db/update-cid-by-name!
 
 ## 0.4.2 - 2022-08-23
 - GET /api/users/:n

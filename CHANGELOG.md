@@ -8,9 +8,11 @@
 - MySQL テーブルの定義。withings.users
 - kohhoh への早期配置。
 - create の隣に undo ボタン。
+- jar で動かせるか？
 
 ## 0.3.0-SNAPSHOT
-
+- Makefile -- npm install xmlhttprequest
+- secret フィールド追加
 
 ## 0.2.0 - 2022-08-22
 - ajax-cljs の GET は CORS に抵触する

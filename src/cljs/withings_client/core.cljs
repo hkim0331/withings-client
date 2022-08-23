@@ -85,6 +85,12 @@
                                 assoc
                                 :cid
                                 (-> % .-target .-value))}]]
+   [:div [:label {:class "label"} "secret"]]
+   [:div {:class "field"}
+    [:input {:on-change #(swap! session
+                                assoc
+                                :secret
+                                (-> % .-target .-value))}]]
    [:div [:label {:class "label"} "belong"]]
    [:div {:class "field"}
     [:input {:on-change #(swap! session
@@ -99,10 +105,12 @@
                                 (-> % .-target .-value))}]]
    [:div {:class "field"}
     [:button {:class "button is-primary is-small"
-              :on-click #(swap! session
-                                assoc
-                                :uri (create-url))}
-             "create"]]])
+              :on-click #(do
+                           (js/alert "db insert")
+                           (swap! session
+                                  assoc
+                                  :uri (create-url)))}
+     "create"]]])
 
 (defn link-component []
   [:div

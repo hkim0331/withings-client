@@ -15,7 +15,7 @@
   (:import
    goog.History))
 
-(def ^:private version "0.4.6")
+(def ^:private version "0.4.7")
 
 (defonce session (r/atom {:page :home
                           :name nil
@@ -55,7 +55,8 @@
   [:section.section>div.container>div.content
    [:img {:src "/img/warning_clojure.png"}]
    ;; test csrf-token
-   [:p js/csrfToken]])
+   ;; [:p js/csrfToken]
+   [:p version]])
 
 ;; -------------------------
 ;; edit page
@@ -170,11 +171,11 @@
 
 (defn home-page []
   [:section.section>div.container>div.content
-   (users-component)
-   [:hr]
    (new-component)
    [:br]
    (link-component)
+   [:hr]
+   (users-component)
    [:hr]
    version])
 

@@ -2,9 +2,12 @@
  (:require
   [ring.util.http-response :as response]
   [withings-client.middleware :as middleware]
-  ;; the reason why withings-client.users?
-  ;; why not directly db.core?
   [withings-client.users :as users]))
+
+(defn error
+ [e]
+ (response/internal-server-error
+           {:errors {:server-error (.getMessage e)}}))
 
 (defn service-routes []
  ["/api"
@@ -16,29 +19,35 @@
    {:get
     (fn [{{:keys [n]} :path-params}]
       (response/ok (users/get-user n)))
-    ;; UPDATE
+
+    ;; FIXME: UPDATE 
     :post
     (fn [{{:keys [n]} :path-params :as request}]
       (let [params (:params request)]
-        (response/ok {:user n :params params})))}]
+        (try
+          (response/ok {:user n :params params})
+          (catch Exception e (error e)))))}]
 
-  ["/user/del/:n"
+  ["/user/:n/delete"
    {:post
     (fn [{{:keys [n]} :path-params}]
       (try
         (users/delete-user! n)
         (response/ok "deleted")
-        (catch Exception e
-          (response/internal-server-error
-           {:errors {:server-error (.getMessage e)}}))))}]
+        (catch Exception e (error e))))}]
 
-  ["/user"
+  ["/user/:n/valid"
    {:post
-    (fn [{:keys [params]}]
+    (fn [{{:keys [n]} :path-params}]
       (try
-        (users/create-user! params)
-        (response/ok params)
-        (catch Exception e
-          ;; (println "error" (str params))
-          (response/internal-server-error
-           {:errors {:server-error (.getMessage e)}}))))}]])
+        (users/toggle-valid! n)
+        (response/ok "valid")
+        (catch Exception e (error e))))}]
+ 
+  ["/user"
+    {:post
+     (fn [{:keys [params]}]
+       (try
+         (users/create-user! params)
+         (response/ok params)
+         (catch Exception e (error e))))}]])

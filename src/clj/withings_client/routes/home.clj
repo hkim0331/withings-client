@@ -15,10 +15,10 @@
   (layout/render request "home.html"))
 
 (defn callback
-  "auth code inside request header {:code ... :state dev}"
-  [{{:keys [code state]} :params}]
-  (log/info "/callback" "code" code "state" state)
-  (tokens/auth {:name state :code code})
+  "auth code inside request header :params {:code ... :state dev}"
+  [{params :params}]
+  (log/info "/callback" params)
+  (tokens/auth params)
   (response/found "/"))
 
 (defn home-routes []

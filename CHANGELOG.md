@@ -8,7 +8,11 @@
 - スリープすると mysql とのコネクションが切れる。
 - edit-user-page
 - on the fly で home-page 上の users をアップデートする。
+- disable-user: valid をトグルする
 
+
+## 0.4.7-SNAPSHOT
+このへんで kohhoh へ
 
 ## 0.4.6 - 2022-08-24
 - users 表示。

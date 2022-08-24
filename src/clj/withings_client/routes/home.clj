@@ -14,7 +14,6 @@
 (defn home-page [request]
   (layout/render request "home.html"))
 
-
 (defn callback
   "auth code inside request header {:code ... :state dev}"
   [{{:keys [code state]} :params}]

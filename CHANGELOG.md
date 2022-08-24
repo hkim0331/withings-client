@@ -5,14 +5,18 @@
 - kohhoh への早期配置。apt install mariadb-server
 - create の隣に undo ボタン。
 - mariadb のタイムスタンプを JST に。app.melt は JST だった。docker のが UTC.
-- スリープすると mysql とのコネクションが切れる？
+- スリープすると mysql とのコネクションが切れる。
 
 
 ## 0.4.5 - 2022-08-24
+### Added
 - secret は cid と共に、access/refresh を取得する際に必要。
 - /callback で auth を受け取ったらすぐ access/refresh/userid をゲット。
+### Changed
+- users テーブルに userid varchar(255) 追加した。
 
 ## 0.4.4 - 2022-08-24
+### Added
 - 必須フィールドを(*)で表示
 - users/user-by-name
 - withings-client/tokens.clj

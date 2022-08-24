@@ -50,13 +50,15 @@
    ;; test csrf-token
    [:p js/csrfToken]])
 
-;; 環境変数から取れないか？ js/redirect_uri とかで。
-(def redirect-uri "https://wc.melt.kyutech.ac.jp/callback")
-;;
-(def withings-uri "https://account.withings.com/oauth2_user/authorize2")
+
+(def redirect-uri js/redirectUrl)
+
 (def scope "user.metrics,user.activity,user.info")
+
+(def authorize2-uri "https://account.withings.com/oauth2_user/authorize2")
+
 (def base
-  (str withings-uri
+  (str authorize2-uri
        "?response_type=code&redirect_uri=" redirect-uri "&"
        "scope=" scope "&"))
 
@@ -65,6 +67,7 @@
   (str base "client_id=" (:cid @session) "&state=" (:name @session)))
 
 (defn create-user!
+  ":name, :cid, :secret は必須フィールド。元バージョンはチェックが抜けている。"
   [params]
   (POST "/api/user"
     {:format :json
@@ -78,20 +81,20 @@
 (defn new-component []
   [:div
    [:h2 "new"]
-   [:div [:label {:class "label"} "name"]]
+   [:div [:label {:class "label"} "name(*)"]]
    [:div {:class "field"}
     [:input {:value (:name @session)
              :on-change #(swap! session
                                 assoc
                                 :name
                                 (-> % .-target .-value))}]]
-   [:div [:label {:class "label"} "cid"]]
+   [:div [:label {:class "label"} "cid(*)"]]
    [:div {:class "field"}
     [:input {:on-change #(swap! session
                                 assoc
                                 :cid
                                 (-> % .-target .-value))}]]
-   [:div [:label {:class "label"} "secret"]]
+   [:div [:label {:class "label"} "secret(*)"]]
    [:div {:class "field"}
     [:input {:on-change #(swap! session
                                 assoc
@@ -123,9 +126,9 @@
 
 (defn link-component []
   [:div
-   [:p "create ボタンの後、下に現れるリンクをクリック。" [:br]
-    "create のタイミングで name, belong, email を DB インサートするため、"
-    "create を省略できない。"]
+   [:p "(*)は必須フィールド。belong, email はカラでもよい。" [:br]
+    "create ボタンの後、下に現れるリンクをクリックし、"
+    "acccess トークン、refresh トークンを取得する。"]
    [:p "クリックで登録 → " [:a {:href (:uri @session)} (:name @session)]]])
 
 (defn users-component []

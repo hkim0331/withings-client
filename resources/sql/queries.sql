@@ -33,3 +33,8 @@ WHERE id = :id
 -- :name get-users :? :*
 -- :doc get all users
 SELECT * FROM users
+
+-- :name user-by-name :? :1
+-- :doc retrieves a user record given the name
+SELECT * FROM users
+where name = :name

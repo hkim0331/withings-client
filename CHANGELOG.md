@@ -8,9 +8,26 @@
 - kohhoh への早期配置。apt install mariadb-server
 - create の隣に undo ボタン。
 - mariadb のタイムスタンプを JST に。app.melt は JST だった。docker のが UTC.
+- スリープすると mysql とのコネクションが切れる？
 
 
 ## 0.4.4-SNAPSHOT
+- 必須フィールドを(*)で表示
+- users/user-by-name
+- withings-client/tokens.clj
+- core.cljs: (def redirect-uri js/redirectUrl)
+
+  dev_config.edn で次の定義をし、
+```
+  :redirect-url "https://wc.melt.kyutech.ac.jp/callback"
+```
+  利用したい ns で参照後、
+```
+  [withings-client.config :refer [env]]
+  (env :redirect-url)
+```
+  これを layout.clj/render の :params で渡すと JS にも渡る。
+
 
 ## 0.4.3 - 2022-08-23
 - create のタイミングで name, cid のほか、

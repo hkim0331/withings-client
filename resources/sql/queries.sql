@@ -45,3 +45,11 @@ UPDATE users
 SET access = :access_token, refresh = :refresh_token, userid = :userid,
     updated_at = now()
 where name = :name
+
+-------------------------------------
+
+-- :name toggle-valid! :! :n
+-- :doc toggle id's `valid`
+UPDATE users
+set valid = ! valid
+where id = :id

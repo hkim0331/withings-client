@@ -9,10 +9,16 @@
 - edit-user-page
 - on the fly で home-page 上の users をアップデートする。
 - disable-user: valid をトグルする
+- application を作ったときに cid, secret, が発行され、redirect-uri を指定する。開発 redirect-uri では hkimura ユーザしか試せない。
+- edit-user
 
 
-## 0.4.7-SNAPSHOT
-このへんで kohhoh へ
+## 0.4.7 - 2022-08-24
+- defined /user/:n/valid
+- /user/delete/:n のルートがあるときに、/usr/:n/valid は定義できない。どっちにマッチするかわからない。/user/:n/delete に変更。
+- new と users の上下を戻す
+- wc.melt.kyutech.ac.jp で name='木村　広' のアクセストークン、リフレッシュトークンを取得できた。
+
 
 ## 0.4.6 - 2022-08-24
 - users 表示。

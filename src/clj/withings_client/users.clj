@@ -35,3 +35,9 @@
 (defn update-tokens-by-name!
   [params]
   (db/update-tokens-by-name! params))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(defn toggle-valid!
+  "toggle colum valid"
+  [id]
+  (db/toggle-valid! {:id id}))

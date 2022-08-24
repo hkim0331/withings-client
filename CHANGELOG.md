@@ -7,10 +7,12 @@
 - mariadb のタイムスタンプを JST に。app.melt は JST だった。docker のが UTC.
 - スリープすると mysql とのコネクションが切れる。
 - FIXME: edit-user-page
+- #object[Transit$TaggedValue [TaggedValue: LocalDateTime, 2022-08-24T20:00:33.000]] の表示をどうするか？
+
 
 ## 0.4.6-SNAPSHOT
 - users 表示。
-
+- ページに version ナンバー
 
 ## 0.4.5 - 2022-08-24
 ### Added

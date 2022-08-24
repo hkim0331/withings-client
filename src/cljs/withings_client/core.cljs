@@ -15,6 +15,8 @@
   (:import
    goog.History))
 
+(def ^:private version "0.4.6-SNAPSHOT")
+
 (defonce session (r/atom {:page :home
                           :name nil
                           :cid nil
@@ -93,20 +95,20 @@
 (defn new-component []
   [:div
    [:h2 "new"]
-   [:div [:label {:class "label"} "name(*)"]]
+   [:div [:label {:class "label"} "name (*)"]]
    [:div {:class "field"}
     [:input {:value (:name @session)
              :on-change #(swap! session
                                 assoc
                                 :name
                                 (-> % .-target .-value))}]]
-   [:div [:label {:class "label"} "cid(*)"]]
+   [:div [:label {:class "label"} "cid (*)"]]
    [:div {:class "field"}
     [:input {:on-change #(swap! session
                                 assoc
                                 :cid
                                 (-> % .-target .-value))}]]
-   [:div [:label {:class "label"} "secret(*)"]]
+   [:div [:label {:class "label"} "secret (*)"]]
    [:div {:class "field"}
     [:input {:on-change #(swap! session
                                 assoc
@@ -144,6 +146,12 @@
     "ページが切り替わるのに 5 秒くらいかかる。"]
    [:p "クリックで登録 → " [:a {:href (:uri @session)} (:name @session)]]])
 
+(defn tm
+  "returns strung yyyy-mm-dd hh:mm from tagged value rv"
+  [tv]
+  (let [s (.-rep tv)]
+   (str (subs s 0 10) " " (subs s 11 16))))
+
 (defn users-component []
   [:div
    [:h2 "users"]
@@ -153,19 +161,21 @@
       [:div {:class "column"} (:name user)]
       [:div {:class "column"} (:belong user)]
       [:div {:class "column"} (:email user)]
+      [:div {:class "column"} (tm (:updated_at user))]
       [:div {:class "column"}
        [:button {:on-click
-                 #(edit-user-page (:id user))} "edit"]]])])
+                 #(swap! session assoc :page :edit)}
+        "edit"]]])])
 
 (defn home-page []
   [:section.section>div.container>div.content
+   (users-component)
+   [:hr]
    (new-component)
    [:br]
    (link-component)
-   [:br]
-   (users-component)])
-
-
+   [:hr]
+   version])
 
 ;; -------------------------
 (def pages

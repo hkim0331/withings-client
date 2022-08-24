@@ -6,11 +6,19 @@ VALUES
 (:name, :cid, :secret, :belong, :email)
 
 -- :name update-user! :! :n
--- :doc updates an existing user record
+-- :doc updates an existing user's records
 UPDATE users
--- FIXME:
-SET first_name = :first_name, last_name = :last_name, email = :email
+SET name = :name, belong = :belong, email = :email,
+    cid = :cid, secret = :secret,
+    access = :access, refresh = :refresh,
+    updated_at = now()
 WHERE id = :id
+
+-- :name update-cid-by-name! :! :n
+-- :doc updates an existing user's cid record
+UPDATE users
+SET cid = :cid, updated_at = now()
+WHERE name = :name
 
 -- :name get-user :? :1
 -- :doc retrieves a user record given the id
@@ -25,3 +33,8 @@ WHERE id = :id
 -- :name get-users :? :*
 -- :doc get all users
 SELECT * FROM users
+
+-- :name user-by-name :? :1
+-- :doc retrieves a user record given the name
+SELECT * FROM users
+where name = :name

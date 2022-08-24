@@ -38,13 +38,14 @@
   (let [user (users/user-by-name state)
         ret (hc/post
              base
-            {:query-params {:action        "requesttoken"
+            {:as :json
+             :query-params {:action        "requesttoken"
                             :grant_type    "authorization_code"
                             :client_id     (user :cid)
                             :client_secret (user :secret)
                             :code          code
                             :redirect_uri  (env :redirect-url)}})
-        body (get-in ret [:body "body"])
+        body (get-in ret [:body :body])
         params (merge {:name state} body)]
     (log/info "auth body" body)
     (log/info "auth params" params)

@@ -1,19 +1,25 @@
 # Withings-Client
 
 ## Unreleased
-- navbar のどこかに withings へのリンク
-- kohhoh への早期配置。apt install mariadb-server
-- create の隣に undo ボタン。
-- mariadb のタイムスタンプを JST に。app.melt は JST だった。docker のが UTC.
-- スリープすると mysql とのコネクションが切れる。
-- edit-user-page
-- on the fly で home-page 上の users をアップデートする。
-- disable-user: valid をトグルする
-- application を作ったときに cid, secret, が発行され、redirect-uri を指定する。開発 redirect-uri では hkimura ユーザしか試せない。
+- use English, particular in public repositries.
+- early deploy onto kohhoh. apt install mariadb-server
+- undo facility.
+- docker server timestamp JST
+- connection to mysql breaks when macos sleeps
+- create edit-user-page
+- update users list on the fly. SPA way.
+- redirect-uri is required when creating an application.
+without creating it, cid and secret are never got.
 - edit-user
+- update-token. access-token expires 10800 sec.
+- get-meas
+
+
+## 0.4.8-SNAPSHOT
 
 
 ## 0.4.7 - 2022-08-24
+- link to Withings in navbar
 - defined /user/:n/valid
 - /user/delete/:n のルートがあるときに、/usr/:n/valid は定義できない。どっちにマッチするかわからない。/user/:n/delete に変更。
 - new と users の上下を戻す

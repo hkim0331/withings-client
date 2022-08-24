@@ -6,13 +6,21 @@
 - create の隣に undo ボタン。
 - mariadb のタイムスタンプを JST に。app.melt は JST だった。docker のが UTC.
 - スリープすると mysql とのコネクションが切れる。
-- FIXME: edit-user-page
-- #object[Transit$TaggedValue [TaggedValue: LocalDateTime, 2022-08-24T20:00:33.000]] の表示をどうするか？
+- edit-user-page
+- on the fly で home-page 上の users をアップデートする。
 
 
-## 0.4.6-SNAPSHOT
+## 0.4.6 - 2022-08-24
 - users 表示。
 - ページに version ナンバー
+- #object[Transit$TaggedValue [TaggedValue: LocalDateTime, 2022-08-24T20:00:33.000]] を表示するため、tm を定義した。
+```
+(defn tm
+  "returns strung yyyy-mm-dd hh:mm from tagged value rv"
+  [^js/LocalDateTime tv]
+  (let [s (.-rep tv)]
+    (str (subs s 0 10) " " (subs s 11 16))))
+```
 
 ## 0.4.5 - 2022-08-24
 ### Added

@@ -45,7 +45,8 @@
       {:class (when @expanded? :is-active)}
       [:div.navbar-start
        [nav-link "#/" "Home" :home]
-       [nav-link "#/about" "About" :about]]]]))
+       [nav-link "#/about" "About" :about]
+       [nav-link "https://developer.withings.com/api-reference" "API"]]]]))
 
 ;; -------------------------
 ;; about page
@@ -148,9 +149,9 @@
 
 (defn tm
   "returns strung yyyy-mm-dd hh:mm from tagged value rv"
-  [tv]
+  [^js/LocalDateTime tv]
   (let [s (.-rep tv)]
-   (str (subs s 0 10) " " (subs s 11 16))))
+    (str (subs s 0 10) " " (subs s 11 16))))
 
 (defn users-component []
   [:div

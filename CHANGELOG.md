@@ -2,12 +2,52 @@
 
 ## Unreleased
 - navbar のどこかに withings へのリンク
-- secret はいつ使う？
-
-- /callback で auth を受け取ったらすぐ access token, refresh token をゲット。
 - kohhoh への早期配置。apt install mariadb-server
 - create の隣に undo ボタン。
 - mariadb のタイムスタンプを JST に。app.melt は JST だった。docker のが UTC.
+- スリープすると mysql とのコネクションが切れる。
+- edit-user-page
+- on the fly で home-page 上の users をアップデートする。
+
+
+## 0.4.6 - 2022-08-24
+- users 表示。
+- ページに version ナンバー
+- #object[Transit$TaggedValue [TaggedValue: LocalDateTime, 2022-08-24T20:00:33.000]] を表示するため、tm を定義した。
+```
+(defn tm
+  "returns strung yyyy-mm-dd hh:mm from tagged value rv"
+  [^js/LocalDateTime tv]
+  (let [s (.-rep tv)]
+    (str (subs s 0 10) " " (subs s 11 16))))
+```
+
+## 0.4.5 - 2022-08-24
+### Added
+- secret は cid と共に、access/refresh を取得する際に必要。
+- /callback で auth を受け取ったらすぐ access/refresh/userid をゲット。
+### Changed
+- users テーブルに userid varchar(255) 追加した。
+
+## 0.4.4 - 2022-08-24
+### Added
+- 必須フィールドを(*)で表示
+- users/user-by-name
+- withings-client/tokens.clj
+- core.cljs: (def redirect-uri js/redirectUrl)
+
+dev_config.edn で次の定義をし、
+```
+:redirect-url "https://wc.melt.kyutech.ac.jp/callback"
+```
+利用したい ns で参照後、
+```
+[withings-client.config :refer [env]]
+(env :redirect-url)
+```
+これを layout.clj/render の :params で渡すと JS にも渡る。
+js/redirectUrl は、ブラウザを開く前、コンパイル時には未定義エラーになる。しょうがないね。
+
 
 ## 0.4.3 - 2022-08-23
 - create のタイミングで name, cid のほか、
@@ -20,7 +60,6 @@
 - users/update-user!
 - db/updat-user!
 - users/update-cid!
-
 
 ## 0.4.2 - 2022-08-23
 - GET /api/users/:n

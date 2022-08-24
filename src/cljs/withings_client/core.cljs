@@ -15,12 +15,15 @@
   (:import
    goog.History))
 
+(def ^:private version "0.4.6")
+
 (defonce session (r/atom {:page :home
                           :name nil
                           :cid nil
                           :secret nil
                           :belong nil
                           :email nil}))
+(defonce users (r/atom {}))
 
 (defn nav-link [uri title page]
   [:a.navbar-item
@@ -42,7 +45,11 @@
       {:class (when @expanded? :is-active)}
       [:div.navbar-start
        [nav-link "#/" "Home" :home]
-       [nav-link "#/about" "About" :about]]]]))
+       [nav-link "#/about" "About" :about]
+       [nav-link "https://developer.withings.com/api-reference" "API"]]]]))
+
+;; -------------------------
+;; about page
 
 (defn about-page []
   [:section.section>div.container>div.content
@@ -50,13 +57,23 @@
    ;; test csrf-token
    [:p js/csrfToken]])
 
-;; 環境変数から取れないか？ js/redirect_uri とかで。
-(def redirect-uri "https://wc.melt.kyutech.ac.jp/callback")
-;;
-(def withings-uri "https://account.withings.com/oauth2_user/authorize2")
+;; -------------------------
+;; edit page
+
+(defn edit-user-page
+  [id]
+  [:section.section>div.container>div.content
+   [:div
+    [:h2 "Edit"]
+    [:p "id =" id]]])
+
+;; -------------------------
+;; home page
+(def redirect-uri js/redirectUrl)
 (def scope "user.metrics,user.activity,user.info")
+(def authorize2-uri "https://account.withings.com/oauth2_user/authorize2")
 (def base
-  (str withings-uri
+  (str authorize2-uri
        "?response_type=code&redirect_uri=" redirect-uri "&"
        "scope=" scope "&"))
 
@@ -65,6 +82,7 @@
   (str base "client_id=" (:cid @session) "&state=" (:name @session)))
 
 (defn create-user!
+  ":name, :cid, :secret は必須フィールド。元バージョンはチェックが抜けている。"
   [params]
   (POST "/api/user"
     {:format :json
@@ -72,26 +90,26 @@
      {"Accept" "application/transit+json"
       "x-csrf-token" js/csrfToken}
      :params params
-     :handler (fn [_] (js/alert (str "OK " params)))
+     :handler (fn [_] (js/alert (str "saved " params)))
      :error-handler (fn [e] (js/alert (str  "error " e)))}))
 
 (defn new-component []
   [:div
    [:h2 "new"]
-   [:div [:label {:class "label"} "name"]]
+   [:div [:label {:class "label"} "name (*)"]]
    [:div {:class "field"}
     [:input {:value (:name @session)
              :on-change #(swap! session
                                 assoc
                                 :name
                                 (-> % .-target .-value))}]]
-   [:div [:label {:class "label"} "cid"]]
+   [:div [:label {:class "label"} "cid (*)"]]
    [:div {:class "field"}
     [:input {:on-change #(swap! session
                                 assoc
                                 :cid
                                 (-> % .-target .-value))}]]
-   [:div [:label {:class "label"} "secret"]]
+   [:div [:label {:class "label"} "secret (*)"]]
    [:div {:class "field"}
     [:input {:on-change #(swap! session
                                 assoc
@@ -123,26 +141,48 @@
 
 (defn link-component []
   [:div
-   [:p "create ボタンの後、下に現れるリンクをクリック。" [:br]
-    "create のタイミングで name, belong, email を DB インサートするため、"
-    "create を省略できない。"]
+   [:p "(*)は必須フィールド。belong, email はカラでもよい。" [:br]
+    "create ボタンの後、下に現れるリンクをクリックし、"
+    "acccess トークン、refresh トークンを取得する。"
+    "ページが切り替わるのに 5 秒くらいかかる。"]
    [:p "クリックで登録 → " [:a {:href (:uri @session)} (:name @session)]]])
+
+(defn tm
+  "returns strung yyyy-mm-dd hh:mm from tagged value rv"
+  [^js/LocalDateTime tv]
+  (let [s (.-rep tv)]
+    (str (subs s 0 10) " " (subs s 11 16))))
 
 (defn users-component []
   [:div
-   [:h2 "users"]])
+   [:h2 "users"]
+   (for [user @users]
+     [:div {:class "columns"}
+      [:div (:valid user)]
+      [:div {:class "column"} (:name user)]
+      [:div {:class "column"} (:belong user)]
+      [:div {:class "column"} (:email user)]
+      [:div {:class "column"} (tm (:updated_at user))]
+      [:div {:class "column"}
+       [:button {:on-click
+                 #(swap! session assoc :page :edit)}
+        "edit"]]])])
 
 (defn home-page []
   [:section.section>div.container>div.content
+   (users-component)
+   [:hr]
    (new-component)
    [:br]
    (link-component)
-   [:br]
-   (users-component)])
+   [:hr]
+   version])
 
+;; -------------------------
 (def pages
   {:home #'home-page
-   :about #'about-page})
+   :about #'about-page
+   :edit #'edit-user-page})
 
 (defn page []
   [(pages (:page @session))])
@@ -174,8 +214,8 @@
 
 ;; -------------------------
 ;; Initialize app
-;; (defn fetch-docs! []
-;;  (GET "/docs" {:handler #(swap! session assoc :docs %)}))
+(defn fetch-users! []
+  (GET "/api/users" {:handler #(reset! users %)}))
 
 (defn ^:dev/after-load mount-components []
   (rdom/render [#'navbar] (.getElementById js/document "navbar"))
@@ -183,6 +223,6 @@
 
 (defn init! []
   (ajax/load-interceptors!)
-  ;; (fetch-docs!)
+  (fetch-users!)
   (hook-browser-navigation!)
   (mount-components))

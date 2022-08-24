@@ -1,30 +1,30 @@
 (ns withings-client.routes.home
   (:require
-   [clojure.java.io :as io]
+   ;; [clojure.java.io :as io]
+   ;; [clojure.string :as str]
    [clojure.tools.logging :as log]
+   ;; [hato.client :as hc]
    [ring.util.http-response :as response]
    [ring.util.response]
-   [withings-client.users :as users]
+   ;; [withings-client.users :as users]
    [withings-client.layout :as layout]
-   [withings-client.middleware :as middleware]))
+   [withings-client.middleware :as middleware]
+   [withings-client.tokens :as tokens]))
 
 (defn home-page [request]
   (layout/render request "home.html"))
 
-(defn access-token
- [])
- 
-;; auth code inside request header {:code ... :state dev}
-(defn callback [{{:keys [code state]} :params :as params}]
-  (log/info "/callback" code state)
-  (response/ok "OK"))
+(defn callback
+  "auth code inside request header :params {:code ... :state dev}"
+  [{params :params}]
+  (log/info "/callback" params)
+  (tokens/auth params)
+  (response/found "/"))
 
 (defn home-routes []
   [""
    {:middleware [middleware/wrap-csrf
                  middleware/wrap-formats]}
    ["/" {:get home-page}]
-  ;;  ["/docs" {:get (fn [_]
-  ;;                   (-> (response/ok (-> "docs/docs.md" io/resource slurp))
-  ;;                       (response/header "Content-Type" "text/plain; charset=utf-8")))}]
    ["/callback" {:get callback}]])
+

@@ -11,7 +11,7 @@
 - スリープすると mysql とのコネクションが切れる？
 
 
-## 0.4.4-SNAPSHOT
+## 0.4.4 - 2022-08-24
 - 必須フィールドを(*)で表示
 - users/user-by-name
 - withings-client/tokens.clj

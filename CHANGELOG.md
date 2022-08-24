@@ -2,17 +2,15 @@
 
 ## Unreleased
 - navbar のどこかに withings へのリンク
-- secret はいつ使う？
-
-- /callback で auth を受け取ったらすぐ access token, refresh token をゲット。
 - kohhoh への早期配置。apt install mariadb-server
 - create の隣に undo ボタン。
 - mariadb のタイムスタンプを JST に。app.melt は JST だった。docker のが UTC.
 - スリープすると mysql とのコネクションが切れる？
 
 
-## 0.4.5-SNAPSHOT
-
+## 0.4.5 - 2022-08-24
+- secret は cid と共に、access/refresh を取得する際に必要。
+- /callback で auth を受け取ったらすぐ access/refresh/userid をゲット。
 
 ## 0.4.4 - 2022-08-24
 - 必須フィールドを(*)で表示

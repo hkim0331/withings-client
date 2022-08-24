@@ -6,10 +6,10 @@
 - create の隣に undo ボタン。
 - mariadb のタイムスタンプを JST に。app.melt は JST だった。docker のが UTC.
 - スリープすると mysql とのコネクションが切れる。
-- users 表示。
+- FIXME: edit-user-page
 
 ## 0.4.6-SNAPSHOT
-
+- users 表示。
 
 
 ## 0.4.5 - 2022-08-24

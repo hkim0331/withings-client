@@ -21,6 +21,7 @@
                           :secret nil
                           :belong nil
                           :email nil}))
+(defonce users (r/atom {}))
 
 (defn nav-link [uri title page]
   [:a.navbar-item
@@ -44,18 +45,30 @@
        [nav-link "#/" "Home" :home]
        [nav-link "#/about" "About" :about]]]]))
 
+;; -------------------------
+;; about page
+
 (defn about-page []
   [:section.section>div.container>div.content
    [:img {:src "/img/warning_clojure.png"}]
    ;; test csrf-token
    [:p js/csrfToken]])
 
+;; -------------------------
+;; edit page
+
+(defn edit-user-page
+  [id]
+  [:section.section>div.container>div.content
+   [:div
+    [:h2 "Edit"]
+    [:p "id =" id]]])
+
+;; -------------------------
+;; home page
 (def redirect-uri js/redirectUrl)
-
 (def scope "user.metrics,user.activity,user.info")
-
 (def authorize2-uri "https://account.withings.com/oauth2_user/authorize2")
-
 (def base
   (str authorize2-uri
        "?response_type=code&redirect_uri=" redirect-uri "&"
@@ -127,12 +140,22 @@
   [:div
    [:p "(*)は必須フィールド。belong, email はカラでもよい。" [:br]
     "create ボタンの後、下に現れるリンクをクリックし、"
-    "acccess トークン、refresh トークンを取得する。"]
+    "acccess トークン、refresh トークンを取得する。"
+    "ページが切り替わるのに 5 秒くらいかかる。"]
    [:p "クリックで登録 → " [:a {:href (:uri @session)} (:name @session)]]])
 
 (defn users-component []
   [:div
-   [:h2 "users"]])
+   [:h2 "users"]
+   (for [user @users]
+     [:div {:class "columns"}
+      [:div (:valid user)]
+      [:div {:class "column"} (:name user)]
+      [:div {:class "column"} (:belong user)]
+      [:div {:class "column"} (:email user)]
+      [:div {:class "column"}
+       [:button {:on-click
+                 #(edit-user-page (:id user))} "edit"]]])])
 
 (defn home-page []
   [:section.section>div.container>div.content
@@ -142,9 +165,13 @@
    [:br]
    (users-component)])
 
+
+
+;; -------------------------
 (def pages
   {:home #'home-page
-   :about #'about-page})
+   :about #'about-page
+   :edit #'edit-user-page})
 
 (defn page []
   [(pages (:page @session))])
@@ -176,8 +203,8 @@
 
 ;; -------------------------
 ;; Initialize app
-;; (defn fetch-docs! []
-;;  (GET "/docs" {:handler #(swap! session assoc :docs %)}))
+(defn fetch-users! []
+  (GET "/api/users" {:handler #(reset! users %)}))
 
 (defn ^:dev/after-load mount-components []
   (rdom/render [#'navbar] (.getElementById js/document "navbar"))
@@ -185,6 +212,6 @@
 
 (defn init! []
   (ajax/load-interceptors!)
-  ;; (fetch-docs!)
+  (fetch-users!)
   (hook-browser-navigation!)
   (mount-components))

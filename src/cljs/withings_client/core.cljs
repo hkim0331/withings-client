@@ -50,7 +50,6 @@
    ;; test csrf-token
    [:p js/csrfToken]])
 
-
 (def redirect-uri js/redirectUrl)
 
 (def scope "user.metrics,user.activity,user.info")
@@ -75,7 +74,7 @@
      {"Accept" "application/transit+json"
       "x-csrf-token" js/csrfToken}
      :params params
-     :handler (fn [_] (js/alert (str "OK " params)))
+     :handler (fn [_] (js/alert (str "saved " params)))
      :error-handler (fn [e] (js/alert (str  "error " e)))}))
 
 (defn new-component []

@@ -22,13 +22,16 @@
 (defn users-list
   []
   (db/get-users))
+;; no. update-user-by-name ではないと使い道がない。
+(defn update-cid!
+  [params]
+  (db/update-cid-by-name! params))
 
 ;; 2022-08-24 はここから
 (defn user-by-name
   [name]
   (db/user-by-name {:name name}))
 
-;; no. update-user-by-name ではないと使い道がない。
-(defn update-cid!
+(defn update-tokens-by-name!
   [params]
-  (db/update-cid-by-name! params))
+  (db/update-tokens-by-name! params))

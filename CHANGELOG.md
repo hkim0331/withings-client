@@ -2,31 +2,37 @@
 
 ## Unreleased
 - navbar のどこかに withings へのリンク
-- secret はいつ使う？
-
-- /callback で auth を受け取ったらすぐ access token, refresh token をゲット。
 - kohhoh への早期配置。apt install mariadb-server
 - create の隣に undo ボタン。
 - mariadb のタイムスタンプを JST に。app.melt は JST だった。docker のが UTC.
-- スリープすると mysql とのコネクションが切れる？
+- スリープすると mysql とのコネクションが切れる。
 
+
+## 0.4.5 - 2022-08-24
+### Added
+- secret は cid と共に、access/refresh を取得する際に必要。
+- /callback で auth を受け取ったらすぐ access/refresh/userid をゲット。
+### Changed
+- users テーブルに userid varchar(255) 追加した。
 
 ## 0.4.4 - 2022-08-24
+### Added
 - 必須フィールドを(*)で表示
 - users/user-by-name
 - withings-client/tokens.clj
 - core.cljs: (def redirect-uri js/redirectUrl)
 
-  dev_config.edn で次の定義をし、
+dev_config.edn で次の定義をし、
 ```
-  :redirect-url "https://wc.melt.kyutech.ac.jp/callback"
+:redirect-url "https://wc.melt.kyutech.ac.jp/callback"
 ```
-  利用したい ns で参照後、
+利用したい ns で参照後、
 ```
-  [withings-client.config :refer [env]]
-  (env :redirect-url)
+[withings-client.config :refer [env]]
+(env :redirect-url)
 ```
-  これを layout.clj/render の :params で渡すと JS にも渡る。
+これを layout.clj/render の :params で渡すと JS にも渡る。
+js/redirectUrl は、ブラウザを開く前、コンパイル時には未定義エラーになる。しょうがないね。
 
 
 ## 0.4.3 - 2022-08-23

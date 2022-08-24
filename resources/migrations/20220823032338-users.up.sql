@@ -11,6 +11,7 @@ CREATE TABLE users (
   secret  VARCHAR(255),
   access  VARCHAR(255),
   refresh VARCHAR(255),
+  userid  VARCHAR(255),
 
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP);

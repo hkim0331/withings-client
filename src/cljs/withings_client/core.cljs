@@ -70,8 +70,8 @@
 
 ;; -------------------------
 ;; home page
-;;(def redirect-uri js/redirectUrl)
-(def redirect-uri "https://wc.melt.kyutech.ac.jp/callback")
+(def redirect-uri js/redirectUrl)
+;; (def redirect-uri "https://wc.melt.kyutech.ac.jp/callback")
 
 (def scope "user.metrics,user.activity,user.info")
 (def authorize2-uri "https://account.withings.com/oauth2_user/authorize2")
@@ -93,8 +93,8 @@
      {"Accept" "application/transit+json"
       "x-csrf-token" js/csrfToken}
      :params params
-     :handler (fn [_] (js/alert (str "saved " params)))
-     :error-handler (fn [e] (js/alert (str  "error " e)))}))
+     :handler (fn [_] (js/alert (str "saved" params)))
+     :error-handler (fn [e] (js/alert (str  "error /api/user" e)))}))
 
 (defn new-component []
   [:div
@@ -170,14 +170,15 @@
       [:div {:class "column"} (tm (:updated_at user))]
       [:div {:class "column"}
        [:button {:on-click
-                 #(POST "/api/token/refesh"
-                    {:format :json
-                     :headers
-                     {"Accept" "application/transit+json"
-                      "x-csrf-token" js/csrfToken}
-                     :params user
-                     :handler (fn [_] (js/alert (str "refreshed")))
-                     :error-handler (fn [e] (js/alert (str  "error " e)))})}
+                 (fn [_] (POST "/api/token/refresh"
+                           {:format :json
+                            :headers
+                            {"Accept" "application/transit+json"
+                             "x-csrf-token" js/csrfToken}
+                            :params user
+                            :handler #(js/alert (str %))
+                            :error-handler
+                            (fn [e] (js/alert (str "/api/token error" e)))}))}
         "refresh"]]
       [:div {:class "column"}
        [:button {:on-click #(swap! session assoc :page :edit)} "edit"]]])])

@@ -18,7 +18,8 @@
   "auth code inside request header :params {:code ... :state dev}"
   [{params :params}]
   (log/info "/callback" params)
-  (tokens/auth params)
+  ;(tokens/auth params)
+  (tokens/fetch-and-store! params)
   (response/found "/"))
 
 (defn home-routes []

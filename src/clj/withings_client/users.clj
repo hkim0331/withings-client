@@ -20,8 +20,10 @@
   (db/delete-user! {:id id}))
 
 (defn users-list
+  "returns users list reverse order of updated_at"
   []
   (db/get-users))
+
 ;; no. update-user-by-name ではないと使い道がない。
 (defn update-cid!
   [params]

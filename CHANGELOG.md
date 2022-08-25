@@ -9,11 +9,16 @@
 - create edit-user-page
 - update users list on the fly. SPA way.
 - redirect-uri is required when creating an application.
-without creating it, cid and secret are never got.
+  without creating it, cid and secret are never got.
 - edit-user
 - get-meas
 - remote debug
 - (response/found "/") if refresh success.
+- /api/token/refresh/:id
+
+
+## 0.4.10 - 2022-08-25
+- post /api/token/refresh:n
 
 ## 0.4.9 - 2022-08-25
 - update-token. access-token expires 10800 sec.
@@ -22,7 +27,6 @@ without creating it, cid and secret are never got.
 - tokens/refresh
 - tokens/restore!
 - tokens/refresh-and-restore!
-
 
 ## 0.4.8 - 2022-08-25
 - resolve `tokens/auth` into `request-token` and `store!`,

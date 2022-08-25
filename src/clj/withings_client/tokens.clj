@@ -79,3 +79,7 @@
   [{params :params}]
   (log/info "refresh-and-restore! params" params)
   (-> params refresh restore!))
+
+(defn refresh-and-restore-one!
+  [n]
+  (-> (users/get-user n) refresh restore!))

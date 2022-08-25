@@ -25,6 +25,15 @@
    {:post #(do
              (tokens/refresh-and-restore! %)
              (response/ok "refreshed"))}]
+
+  ["/token/refresh/:n"
+   {:post (fn [{{:keys [n]} :path-params}]
+            (log/info "/token/refresh/:n" n)
+            (try
+              (tokens/refresh-and-restore-one! n)
+              (response/ok "refreshed")
+              (catch Exception e (error e))))}]
+
   ;; users
   ["/users"
    {:get (fn [_] (response/ok (users/users-list)))}]

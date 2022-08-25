@@ -17,7 +17,7 @@
 - /api/token/refresh/:id
 
 
-## 0.4.10-SNAPSHOT
+## 0.4.10 - 2022-08-25
 - post /api/token/refresh:n
 
 ## 0.4.9 - 2022-08-25

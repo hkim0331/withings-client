@@ -15,8 +15,11 @@
 - (response/found "/") if refresh success.
 - hato :async? true
 
-## 0.4.11-SNAPSHOT
+
+## 0.4.11 - 2022-08-26
 - meas
+### FIXME
+- hato request header
 
 ## 0.4.10 - 2022-08-25
 - /api/token/refresh/:id

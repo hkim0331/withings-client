@@ -7,16 +7,17 @@
    ;; [withings-client.config :refer [env]]
    [withings-client.users :as users]))
 
-(def meas-uri "https://wbsapi.withings.net/measure")
-
 (defn str->timestamp
   "input: yyyy-MM-DD hh:mm:ss
    returns timestamp(int)"
   [s]
   (let [[date time] (str/split s #" ")]
-    (-> (str date "T" time)
-        jt/to-sql-timestamp
-        jt/to-millis-from-epoch)))
+    (quot (-> (str date "T" time)
+              jt/to-sql-timestamp
+              jt/to-millis-from-epoch)
+          1000)))
+
+(def meas-uri "https://wbsapi.withings.net/measure")
 
 ;; curl
 ;; --header "Authorization: Bearer YOUR_ACCESS_TOKEN"
@@ -35,14 +36,16 @@
   "get meastype between statdate and enddate
    fetch access token from user id (not userid)"
   [{{:keys [id meastype startdate enddate]} :params}]
-  (let [user (users/get-user id)]
+  (let [{:keys [access]} (users/get-user id)]
     (log/info "meas" id meastype startdate enddate)
+    (log/info "access" access)
     (-> (hc/post
          meas-uri
-         {:as :json
-          :header {"Authorization:" (str "Bearer " (:access user))}
+         {;; :authorization (str "Bearer " access)
+          :as :json
           :query-params
           {:action    "getmeas"
+           :access_token access
            :meastype  meastype
            :category  1
            :startdate (str->timestamp startdate)

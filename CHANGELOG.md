@@ -11,13 +11,15 @@
 - redirect-uri is required when creating an application.
   without creating it, cid and secret are never got.
 - edit-user
-- get-meas
 - remote debug
 - (response/found "/") if refresh success.
-- /api/token/refresh/:id
+- hato :async? true
 
+## 0.4.11-SNAPSHOT
+- meas
 
 ## 0.4.10 - 2022-08-25
+- /api/token/refresh/:id
 - post /api/token/refresh:n
 
 ## 0.4.9 - 2022-08-25

@@ -166,6 +166,7 @@
    (for [user @users]
      [:div {:class "columns"}
       [:div {:class "column"} (if (:valid user) "y" "n")]
+      [:div {:class "column"} (:id user)]
       [:div {:class "column"} (:name user)]
       [:div {:class "column"} (:belong user)]
       [:div {:class "column"} (:email user)]

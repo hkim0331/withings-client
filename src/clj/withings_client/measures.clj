@@ -34,8 +34,8 @@
 (defn meas
   "get meastype between statdate and enddate
    fetch access token from user id (not userid)"
-  [{:keys [id meastype startdate enddate]}]
-  (let [user (user/get-user id)]
+  [{{:keys [id meastype startdate enddate]} :params}]
+  (let [user (users/get-user id)]
     (log/info "meas" id meastype startdate enddate)
     (-> (hc/post
          meas-uri

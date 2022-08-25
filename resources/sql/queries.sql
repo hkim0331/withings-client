@@ -33,6 +33,7 @@ WHERE id = :id
 -- :name get-users :? :*
 -- :doc get all users
 SELECT * FROM users
+ORDER BY updated_at DESC
 
 -- :name user-by-name :? :1
 -- :doc retrieves a user record given the name

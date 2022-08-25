@@ -168,14 +168,14 @@
       [:div {:class "column"} (tm (:updated_at user))]
       [:div {:class "column"}
        [:button {:on-click
-                 #((POST "/api/token/refesh"
-                     {:format :json
-                      :headers
-                      {"Accept" "application/transit+json"
-                       "x-csrf-token" js/csrfToken}
-                      :params user
-                      :handler (fn [_] (js/alert (str "refreshed")))
-                      :error-handler (fn [e] (js/alert (str  "error " e)))}))}
+                 #(POST "/api/token/refesh"
+                    {:format :json
+                     :headers
+                     {"Accept" "application/transit+json"
+                      "x-csrf-token" js/csrfToken}
+                     :params user
+                     :handler (fn [_] (js/alert (str "refreshed")))
+                     :error-handler (fn [e] (js/alert (str  "error " e)))})}
                 "refresh"]]
       [:div {:class "column"}
        [:button {:on-click #(swap! session assoc :page :edit)} "edit"]]])])

@@ -40,12 +40,21 @@ ORDER BY updated_at DESC
 SELECT * FROM users
 where name = :name
 
+-------------------------------------
+
 -- :name update-tokens-by-name! :! :n
 -- :doc updates an existing user's tokens, key is name.
 UPDATE users
 SET access = :access_token, refresh = :refresh_token, userid = :userid,
     updated_at = now()
 where name = :name
+
+-- :name update-tokens-by-userid! :! :n
+-- :doc updates an existing user's tokens, key is name.
+UPDATE users
+SET access = :access_token, refresh = :refresh_token,
+    updated_at = now()
+where userid = :userid
 
 -------------------------------------
 

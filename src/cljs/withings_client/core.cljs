@@ -15,7 +15,7 @@
   (:import
    goog.History))
 
-(def ^:private version "0.4.8")
+(def ^:private version "0.4.9")
 
 (defonce session (r/atom {:page :home
                           :name nil
@@ -71,6 +71,8 @@
 ;; -------------------------
 ;; home page
 (def redirect-uri js/redirectUrl)
+;; (def redirect-uri "https://wc.melt.kyutech.ac.jp/callback")
+
 (def scope "user.metrics,user.activity,user.info")
 (def authorize2-uri "https://account.withings.com/oauth2_user/authorize2")
 (def base
@@ -91,8 +93,8 @@
      {"Accept" "application/transit+json"
       "x-csrf-token" js/csrfToken}
      :params params
-     :handler (fn [_] (js/alert (str "saved " params)))
-     :error-handler (fn [e] (js/alert (str  "error " e)))}))
+     :handler (fn [_] (js/alert (str "saved" params)))
+     :error-handler (fn [e] (js/alert (str  "error /api/user" e)))}))
 
 (defn new-component []
   [:div
@@ -154,20 +156,34 @@
   (let [s (.-rep tv)]
     (str (subs s 0 10) " " (subs s 11 16))))
 
+;; can not (sort-by :update_at @user)
+;; since tagged value (:update_at @user)?
 (defn users-component []
   [:div
    [:h2 "users"]
+   [:p "access-token expires in 10800 seconds"]
    (for [user @users]
      [:div {:class "columns"}
-      [:div (:valid user)]
+      [:div {:class "column"} (if (:valid user) "y" "n")]
       [:div {:class "column"} (:name user)]
       [:div {:class "column"} (:belong user)]
       [:div {:class "column"} (:email user)]
       [:div {:class "column"} (tm (:updated_at user))]
       [:div {:class "column"}
        [:button {:on-click
-                 #(swap! session assoc :page :edit)}
-        "edit"]]])])
+                 (fn [_] (POST "/api/token/refresh"
+                           {:format :json
+                            :headers
+                            {"Accept" "application/transit+json"
+                             "x-csrf-token" js/csrfToken}
+                            :params user
+                            :handler
+                            #(js/alert (str "/api/token/refresh " %))
+                            :error-handler
+                            #(js/alert (str "error /api/token/refresh " %))}))}
+        "refresh"]]
+      [:div {:class "column"}
+       [:button {:on-click #(swap! session assoc :page :edit)} "edit"]]])])
 
 (defn home-page []
   [:section.section>div.container>div.content

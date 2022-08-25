@@ -1,5 +1,6 @@
 (ns withings-client.users
   (:require
+   [clojure.tools.logging :as log]
    [withings-client.db.core :as db]))
 
 (defn create-user!
@@ -29,14 +30,20 @@
   [params]
   (db/update-cid-by-name! params))
 
-;; 2022-08-24 はここから
+
 (defn user-by-name
   [name]
   (db/user-by-name {:name name}))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defn update-tokens-by-name!
   [params]
   (db/update-tokens-by-name! params))
+
+(defn update-tokens-by-userid!
+  [params]
+  (log/info "update-tokens-by-userid!" params)
+  (db/update-tokens-by-userid! params))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defn toggle-valid!

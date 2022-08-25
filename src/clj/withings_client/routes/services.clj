@@ -13,7 +13,7 @@
 (defn refresh-token
   [{params :params}]
   (log/info "refresh-token" params)
-  (response/ok "OK"))
+  (response/ok "reresh-token called"))
 
 (defn service-routes []
  ["/api"

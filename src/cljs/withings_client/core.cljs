@@ -70,7 +70,9 @@
 
 ;; -------------------------
 ;; home page
-(def redirect-uri js/redirectUrl)
+;;(def redirect-uri js/redirectUrl)
+(def redirect-uri "https://wc.melt.kyutech.ac.jp/callback")
+
 (def scope "user.metrics,user.activity,user.info")
 (def authorize2-uri "https://account.withings.com/oauth2_user/authorize2")
 (def base
@@ -168,15 +170,15 @@
       [:div {:class "column"} (tm (:updated_at user))]
       [:div {:class "column"}
        [:button {:on-click
-                 #((POST "/api/token/refesh"
-                     {:format :json
-                      :headers
-                      {"Accept" "application/transit+json"
-                       "x-csrf-token" js/csrfToken}
-                      :params user
-                      :handler (fn [_] (js/alert (str "refreshed")))
-                      :error-handler (fn [e] (js/alert (str  "error " e)))}))}
-                "refresh"]]
+                 #(POST "/api/token/refesh"
+                    {:format :json
+                     :headers
+                     {"Accept" "application/transit+json"
+                      "x-csrf-token" js/csrfToken}
+                     :params user
+                     :handler (fn [_] (js/alert (str "refreshed")))
+                     :error-handler (fn [e] (js/alert (str  "error " e)))})}
+        "refresh"]]
       [:div {:class "column"}
        [:button {:on-click #(swap! session assoc :page :edit)} "edit"]]])])
 

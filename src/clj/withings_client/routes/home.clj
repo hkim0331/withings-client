@@ -18,16 +18,12 @@
   "auth code inside request header :params {:code ... :state dev}"
   [{params :params}]
   (log/info "/callback" params)
-  ;(tokens/auth params)
   (tokens/fetch-and-store! params)
-  (response/found "/")
+  (response/found "/"))
 
-
- 
- (defn home-routes []
+(defn home-routes []
   [""
    {:middleware [middleware/wrap-csrf
                  middleware/wrap-formats]}
    ["/" {:get home-page}]
-   ["/callback" {:get callback}]]))   
-
+   ["/callback" {:get callback}]]) 

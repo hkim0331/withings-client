@@ -158,10 +158,11 @@
 
 ;; can not (sort-by :update_at @user)
 ;; since tagged value (:update_at @user)?
+;; use async?
 (defn users-component []
   [:div
    [:h2 "users"]
-   [:p "access-token expires in 10800 seconds"]
+   [:p "アクセストークンは 10800 秒（3時間）で切れます。"]
    (for [user @users]
      [:div {:class "columns"}
       [:div {:class "column"} (if (:valid user) "y" "n")]

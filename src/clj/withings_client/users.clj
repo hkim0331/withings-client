@@ -30,7 +30,6 @@
   [params]
   (db/update-cid-by-name! params))
 
-
 (defn user-by-name
   [name]
   (db/user-by-name {:name name}))

@@ -14,7 +14,10 @@ without creating it, cid and secret are never got.
 - update-token. access-token expires 10800 sec.
 - get-meas
 - refresh
+- remote debug
 
+
+## 0.4.9-SNAPSHOT
 
 ## 0.4.8 - 2022-08-25
 - resolve `tokens/auth` into `request-token` and `store!`,

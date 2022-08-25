@@ -6,6 +6,8 @@
    [withings-client.config :refer [env]]
    [withings-client.users :as users]))
 
+(def oauth2-uri "https://wbsapi.withings.net/v2/oauth2")
+
 ;; 0.4.8 resolved to `fetch` and `store!`
 ;; (defn auth
 ;;   "param is {:state name :code code}
@@ -36,7 +38,7 @@
   [{:keys [state code]}]
   (let [user (users/user-by-name state)]
     (-> (hc/post
-         "https://wbsapi.withings.net/v2/oauth2"
+         oauth2-uri
          {:as :json
           :query-params {:action        "requesttoken"
                          :grant_type    "authorization_code"
@@ -48,9 +50,43 @@
         (merge {:name state}))))
 
 (defn store!
- [params]
- (users/update-tokens-by-name! params))
+  [params]
+  (users/update-tokens-by-name! params))
 
 (defn fetch-and-store!
   [params]
   (-> params request-token store!))
+
+;; curl --data "action=requesttoken&
+;; grant_type=refresh_token&
+;; client_id=7573fd4a4c421ddd102dac406dc6e0e0e22f683c4a5e81ff0a5caf8b65abed67&
+;; client_secret=d9286311451fc6ed71b372a075c58c5058be158f56a77865e43ab3783255424f&
+;; refresh_token=9697c3d06ccfd1ca302f5a527d345a9f99ea88a2"
+;; 'https://wbsapi.withings.net/v2/oauth2'
+;;
+
+(defn refresh-token
+  [{:keys [cid secret refresh]}]
+  (-> (hc/post
+       oauth2-uri
+       {:as :json
+        :query-params {:action        "requesttoken"
+                       :grant_type    "refresh_token"
+                       :client_id     cid
+                       :client_secret secret
+                       :refresh_token refresh}})))
+
+;; {
+;;   "status": 0,
+;;   "body": {
+;;            "userid": "363",
+;;            "access_token": "a075f8c14fb8df40b08ebc8508533dc332a6910a",
+;;            "refresh_token": "f631236f02b991810feb774765b6ae8e6c6839ca",
+;;            "expires_in": 10800,
+;;            "scope": "user.info,user.metrics",
+;;            "csrf_token": "PACnnxwHTaBQOzF7bQqwFUUotIuvtzSM",
+;;            "token_type": "Bearer"}}
+
+(defn update-tokens-by-userid
+ [params]
+ (users/update-tokens-by-userid! params))

@@ -15,7 +15,7 @@
   (:import
    goog.History))
 
-(def ^:private version "0.4.11-SNAPSHOT")
+(def ^:private version "0.4.11")
 
 (defonce session (r/atom {:page :home
                           :name nil

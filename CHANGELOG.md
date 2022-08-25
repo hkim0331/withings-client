@@ -13,17 +13,23 @@ without creating it, cid and secret are never got.
 - edit-user
 - update-token. access-token expires 10800 sec.
 - get-meas
+- refresh
 
 
-## 0.4.8-SNAPSHOT
-
+## 0.4.8 - 2022-08-25
+- resolve `tokens/auth` into `request-token` and `store!`,
+  defined `tokens/fetch-and-store!`.
+- list users reverse order.
+  could not use (sort-by :update_at @users), maybe for tagged value.
 
 ## 0.4.7 - 2022-08-24
 - link to Withings in navbar
-- defined /user/:n/valid
-- /user/delete/:n のルートがあるときに、/usr/:n/valid は定義できない。どっちにマッチするかわからない。/user/:n/delete に変更。
-- new と users の上下を戻す
-- wc.melt.kyutech.ac.jp で name='木村　広' のアクセストークン、リフレッシュトークンを取得できた。
+- defined `/user/:n/valid`
+- got tokens via `wc.melt.kyutech.ac.jp/callback`
+### Changed
+- routes conflict `/user/delete/:n` and `/usr/:n/valid`.
+  changed to `/user/:n/delete` and `/user/:n/valid`. valid should be toggle-valid
+- resume up and down `new` and `users` in `core.cljs`
 
 
 ## 0.4.6 - 2022-08-24

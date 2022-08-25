@@ -1,5 +1,6 @@
 (ns withings-client.users
   (:require
+   [clojure.tools.logging :as log]
    [withings-client.db.core :as db]))
 
 (defn create-user!
@@ -41,6 +42,7 @@
 
 (defn update-tokens-by-userid!
   [params]
+  (log/info "update-tokens-by-userid!" params)
   (db/update-tokens-by-userid! params))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

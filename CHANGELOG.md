@@ -11,13 +11,13 @@
 - redirect-uri is required when creating an application.
 without creating it, cid and secret are never got.
 - edit-user
-- update-token. access-token expires 10800 sec.
 - get-meas
-- refresh
 - remote debug
+- (response/found "/") if refresh success.
 
-
-## 0.4.9-SNAPSHOT
+## 0.4.9 - 2022-08-25
+- update-token. access-token expires 10800 sec.
+- refresh
 - /api/token/refresh
 - tokens/refresh
 - tokens/restore!

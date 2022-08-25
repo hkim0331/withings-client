@@ -15,7 +15,7 @@
   (:import
    goog.History))
 
-(def ^:private version "0.4.9-SNAPSHOT")
+(def ^:private version "0.4.9.7-SNAPSHOT")
 
 (defonce session (r/atom {:page :home
                           :name nil
@@ -161,6 +161,7 @@
 (defn users-component []
   [:div
    [:h2 "users"]
+   [:p "access-token expires in 10800 seconds"]
    (for [user @users]
      [:div {:class "columns"}
       [:div {:class "column"} (if (:valid user) "y" "n")]
@@ -176,9 +177,10 @@
                             {"Accept" "application/transit+json"
                              "x-csrf-token" js/csrfToken}
                             :params user
-                            :handler #(js/alert (str %))
+                            :handler
+                            #(js/alert (str "/api/token/refresh " %))
                             :error-handler
-                            (fn [e] (js/alert (str "/api/token error" e)))}))}
+                            #(js/alert (str "error /api/token/refresh " %))}))}
         "refresh"]]
       [:div {:class "column"}
        [:button {:on-click #(swap! session assoc :page :edit)} "edit"]]])])

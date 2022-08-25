@@ -8,29 +8,6 @@
 
 (def oauth2-uri "https://wbsapi.withings.net/v2/oauth2")
 
-;; 0.4.8 resolved to `fetch` and `store!`
-;; (defn auth
-;;   "param is {:state name :code code}
-;;    Returns {:access token :refresh token}"
-;;   [{:keys [state code]}]
-;;   (let [user (users/user-by-name state)
-;;         ret (hc/post
-;;              "https://wbsapi.withings.net/v2/oauth2"
-;;              {:as :json
-;;               :query-params {:action        "requesttoken"
-;;                              :grant_type    "authorization_code"
-;;                              :client_id     (user :cid)
-;;                              :client_secret (user :secret)
-;;                              :code          code
-;;                              :redirect_uri  (env :redirect-url)}})
-;;         body (get-in ret [:body :body])
-;;         params (merge {:name state} body)]
-;;     ;; (log/info "auth body" body)
-;;     (log/info "auth params" params)
-;;     (users/update-tokens-by-name! params)))
-
-;; according to withings naming,
-;; name this function as `request-token`.
 (defn request-token
   "param is {:state state :code code},
    withings returns {:access token :refresh token :userid id}.
@@ -66,7 +43,8 @@
 
 (defn refresh
   "when errors, returns {}"
-  [{:keys [cid secret refresh]}]
+  [{:keys [cid secret refresh] :as params}]
+  (log/info "tokens/refresh params" params)
   (-> (hc/post
        oauth2-uri
        {:as :json
@@ -77,6 +55,7 @@
                        :refresh_token refresh}})
       (get-in [:body :body])))
 
+;; example
 ;; (refresh {:cid "f7164783bfc573217510d38c07176b798daa2a9e78edf1e320e6c1f0e5a5fa35"
 ;;           :secret "027a7105dfc049d9fe4722ab8f6dbdc66a3931702b57976f437af2368813e3de"
 ;;           :refresh "160395aa1d38b6635587ab4e30c410f5a6c86044"})
@@ -91,10 +70,12 @@
 (defn restore!
   "params には userid, access, refresh, access, "
   [params]
+  (log/info "tokens/restore! params" params)
   (if (empty? params)
-   {:error "empty"}
-   (users/update-tokens-by-userid! params)))
+    (throw (Exception. "empty param."))
+    (users/update-tokens-by-userid! params)))
 
 (defn refresh-and-restore!
-  [params]
+  [{params :params}]
+  (log/info "refresh-and-restore! params" params)
   (-> params refresh restore!))

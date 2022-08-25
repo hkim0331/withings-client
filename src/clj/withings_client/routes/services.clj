@@ -22,10 +22,12 @@
 
   ;; tokens
   ["/token/refresh"
-   {:post tokens/refresh-and-restore!}]
-
+   {:post #(do
+             (tokens/refresh-and-restore! %)
+             (response/ok "refreshed"))}]
   ;; users
-  ["/users"  {:get (fn [_] (response/ok (users/users-list)))}]
+  ["/users"
+   {:get (fn [_] (response/ok (users/users-list)))}]
 
   ["/user/:n"
    {:get

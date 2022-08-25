@@ -3,6 +3,7 @@
   [clojure.tools.logging :as log]
   [ring.util.http-response :as response]
   [withings-client.middleware :as middleware]
+  [withings-client.tokens :as tokens]
   [withings-client.users :as users]))
 
 (defn error
@@ -10,10 +11,10 @@
  (response/internal-server-error
            {:errors {:server-error (.getMessage e)}}))
 
-(defn refresh-token
-  [{params :params}]
-  (log/info "refresh-token" params)
-  (response/ok {:refresh-token params}))
+;; (defn refresh-token
+;;   [{params :params}]
+;;   (log/info "refresh-token" params)
+;;   (response/ok {:refresh-token params}))
 
 (defn service-routes []
  ["/api"
@@ -21,7 +22,7 @@
 
   ;; tokens
   ["/token/refresh"
-   {:post refresh-token}]
+   {:post tokens/refresh-and-restore!}]
 
   ;; users
   ["/users"  {:get (fn [_] (response/ok (users/users-list)))}]

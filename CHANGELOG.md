@@ -18,6 +18,11 @@ without creating it, cid and secret are never got.
 
 
 ## 0.4.9-SNAPSHOT
+- /api/token/refresh
+- tokens/refresh
+- tokens/restore!
+- tokens/refresh-and-restore!
+
 
 ## 0.4.8 - 2022-08-25
 - resolve `tokens/auth` into `request-token` and `store!`,

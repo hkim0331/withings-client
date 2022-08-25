@@ -15,6 +15,10 @@
 - (response/found "/") if refresh success.
 - hato :async? true
 
+## 0.4.11-SNAPSHOT
+measure
+timestamp int
+
 
 ## 0.4.11 - 2022-08-26
 - meas

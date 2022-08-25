@@ -1,7 +1,7 @@
 (ns withings-client.tokens
   (:require
    [hato.client :as hc]
-   [clojure.string :as str]
+   ;; [clojure.string :as str]
    [clojure.tools.logging :as log]
    [withings-client.config :refer [env]]
    [withings-client.users :as users]))
@@ -17,12 +17,13 @@
     (-> (hc/post
          oauth2-uri
          {:as :json
-          :query-params {:action        "requesttoken"
-                         :grant_type    "authorization_code"
-                         :client_id     (user :cid)
-                         :client_secret (user :secret)
-                         :code          code
-                         :redirect_uri  (env :redirect-url)}})
+          :query-params
+          {:action        "requesttoken"
+           :grant_type    "authorization_code"
+           :client_id     (user :cid)
+           :client_secret (user :secret)
+           :code          code
+           :redirect_uri  (env :redirect-url)}})
         (get-in [:body :body])
         (merge {:name state}))))
 
@@ -48,11 +49,12 @@
   (-> (hc/post
        oauth2-uri
        {:as :json
-        :query-params {:action        "requesttoken"
-                       :grant_type    "refresh_token"
-                       :client_id     cid
-                       :client_secret secret
-                       :refresh_token refresh}})
+        :query-params
+        {:action        "requesttoken"
+         :grant_type    "refresh_token"
+         :client_id     cid
+         :client_secret secret
+         :refresh_token refresh}})
       (get-in [:body :body])))
 
 ;; example

@@ -2,6 +2,7 @@
  (:require
   [clojure.tools.logging :as log]
   [ring.util.http-response :as response]
+  [withings-client.measures :as measures]
   [withings-client.middleware :as middleware]
   [withings-client.tokens :as tokens]
   [withings-client.users :as users]))
@@ -19,6 +20,14 @@
 (defn service-routes []
  ["/api"
   {:middleware [middleware/wrap-formats]}
+
+  ;; measures
+  ["/meas"
+   {:post #(try
+             (let [ret (measures/meas %)]
+                ;; (store ret)
+               ret)
+             (catch Exception e (error e)))}]
 
   ;; tokens
   ["/token/refresh"

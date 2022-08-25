@@ -15,7 +15,7 @@
   (:import
    goog.History))
 
-(def ^:private version "0.4.10")
+(def ^:private version "0.4.11")
 
 (defonce session (r/atom {:page :home
                           :name nil
@@ -166,6 +166,7 @@
    (for [user @users]
      [:div {:class "columns"}
       [:div {:class "column"} (if (:valid user) "y" "n")]
+      [:div {:class "column"} (:id user)]
       [:div {:class "column"} (:name user)]
       [:div {:class "column"} (:belong user)]
       [:div {:class "column"} (:email user)]

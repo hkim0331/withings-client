@@ -41,11 +41,11 @@
     (log/info "access" access)
     (-> (hc/post
          meas-uri
-         {;; :authorization (str "Bearer " access)
-          :as :json
+         {:as :json
+          :headers {"authorization" (str "Bearer " access)}
           :query-params
           {:action    "getmeas"
-           :access_token access
+           ;; :access_token access
            :meastype  meastype
            :category  1
            :startdate (str->timestamp startdate)

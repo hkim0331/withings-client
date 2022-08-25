@@ -15,10 +15,18 @@
 - (response/found "/") if refresh success.
 - hato :async? true
 
-## 0.4.11-SNAPSHOT
-measure
-timestamp int
-
+## 0.4.12 - 2022-08-26
+### Added
+- measure namespace
+- timestamp int using java-time
+### Info
+- to append additional request header in hato, use :headers.
+```
+   (-> (hc/post
+         meas-uri
+         {:headers {"authorization" (str "Bearer " access)}
+         ...
+```
 
 ## 0.4.11 - 2022-08-26
 - meas

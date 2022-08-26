@@ -9,12 +9,17 @@
 - update users list on the fly. SPA way.
 - redirect-uri is required when creating an application.
   without creating it, cid and secret are never got.
-- edit-user
 - remote debug
 - (response/found "/") if refresh success.
 - hato :async? true
 * timestamp->str function
-* meas sample button on wc.melt
+(java.time.Instant/ofEpochMilli 1661330819000)
+- edit-user-page
+
+
+## 0.5.2-SNAPSHOT
+- core.cljs: added `:key` to seq elements
+- core.cljs: delete user. need reload. improve.
 
 ## 0.5.1 - 2022-08-26
 - demo

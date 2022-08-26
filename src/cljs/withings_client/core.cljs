@@ -77,8 +77,8 @@
                   :meastype 1
                   :startdate "2022-08-01 00:00:00"
                   :enddate   "2022-08-25 00:00:00"}
-         :handler (fn [_] (js/alert (str %)))
-         :error-handler (fn [e] (js/alert (str  "error /api/meas" e)))})}
+         :handler (fn [_] (.log js/console (str %)))
+         :error-handler (fn [e] (js/alert (str  "error demo" e)))})}
     "demo"]])
 
 (defn edit-user-page

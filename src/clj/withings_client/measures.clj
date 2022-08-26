@@ -51,5 +51,6 @@
            :category  1
            :startdate (str->timestamp startdate)
            :enddate   (str->timestamp enddate)}})
+        :body
         :body)))
 

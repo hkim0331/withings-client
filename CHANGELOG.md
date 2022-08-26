@@ -16,8 +16,8 @@
 * timestamp->str function
 * meas sample button on wc.melt
 
-## 0.5.1-SNAPSHOT
-
+## 0.5.1 - 2022-08-26
+- demo
 
 ## 0.5.0 - 2022-08-26
 - deploy as https://wc.kohhoh.jp

@@ -15,7 +15,7 @@
   (:import
    goog.History))
 
-(def ^:private version "0.5.1-SNAPSHOT")
+(def ^:private version "0.5.1")
 
 (def redirect-uri js/redirectUrl)
 ;; (def redirect-uri "https://wc.melt.kyutech.ac.jp/callback")
@@ -26,7 +26,9 @@
                           :cid nil
                           :secret nil
                           :belong nil
-                          :email nil}))
+                          :email nil
+                          :demo "data"}))
+;; should be a member of session?
 (defonce users (r/atom {}))
 
 (defn nav-link [uri title page]
@@ -73,11 +75,11 @@
          :headers
          {"Accept" "application/transit+json"
           "x-csrf-token" js/csrfToken}
-         :params {:id 1
-                  :meastype 1
+         :params {:id        1
+                  :meastype  1
                   :startdate "2022-08-01 00:00:00"
                   :enddate   "2022-08-25 00:00:00"}
-         :handler (fn [_] (.log js/console (str %)))
+         :handler (fn [res] (swap! session assoc :demo res))
          :error-handler (fn [e] (js/alert (str  "error demo" e)))})}
     "demo"]])
 
@@ -88,7 +90,7 @@
      [:div
       [:h2 (:name user)]
       [demo user]
-      [:div {:id "demo"} "no data"]
+      [:div {:id "demo"} (:demo @session)]
       (for [[key value] user]
         [:p (str key) " → " (str value)])]]))
 

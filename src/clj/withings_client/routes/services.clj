@@ -26,7 +26,7 @@
    {:post #(try
              (let [ret (measures/meas %)]
                 ;; (store ret)
-               (response/ok {:return ret}))
+               (response/ok ret))
              (catch Exception e (error e)))}]
 
   ;; tokens

@@ -15,7 +15,11 @@
   (:import
    goog.History))
 
-(def ^:private version "0.4.11")
+(def ^:private version "0.5.2-SNAPSHOT")
+
+(def redirect-uri js/redirectUrl)
+;; (def redirect-uri "https://wc.melt.kyutech.ac.jp/callback")
+
 
 (defonce session (r/atom {:page :home
                           :name nil
@@ -60,19 +64,36 @@
 
 ;; -------------------------
 ;; edit page
+(defn demo []
+  [:div
+   [:button
+    {:on-click
+     #(POST "/api/meas"
+        {:format :json
+         :headers
+         {"Accept" "application/transit+json"
+          "x-csrf-token" js/csrfToken}
+         :params {:id 1
+                  :meastype 1
+                  :startdate "2022-08-01 00:00:00"
+                  :enddate   "2022-08-25 00:00:00"}
+         :handler (fn [_] (.log js/console (str %)))
+         :error-handler (fn [e] (js/alert (str  "error demo" e)))})}
+    "demo"]])
 
 (defn edit-user-page
-  [id]
-  [:section.section>div.container>div.content
-   [:div
-    [:h2 "Edit"]
-    [:p "id =" id]]])
+  []
+  (let [user (:edit @session)]
+    [:section.section>div.container>div.content
+     [:div
+      [:h2 (:name user)]
+      [demo user]
+      [:div {:id "demo"} "no data"]
+      (for [[key value] user]
+        [:p (str key) " → " (str value)])]]))
 
 ;; -------------------------
 ;; home page
-(def redirect-uri js/redirectUrl)
-;; (def redirect-uri "https://wc.melt.kyutech.ac.jp/callback")
-
 (def scope "user.metrics,user.activity,user.info")
 (def authorize2-uri "https://account.withings.com/oauth2_user/authorize2")
 (def base
@@ -172,20 +193,25 @@
       [:div {:class "column"} (:email user)]
       [:div {:class "column"} (tm (:updated_at user))]
       [:div {:class "column"}
-       [:button {:on-click
-                 (fn [_] (POST "/api/token/refresh"
-                           {:format :json
-                            :headers
-                            {"Accept" "application/transit+json"
-                             "x-csrf-token" js/csrfToken}
-                            :params user
-                            :handler
-                            #(js/alert (str "/api/token/refresh " %))
-                            :error-handler
-                            #(js/alert (str "error /api/token/refresh " %))}))}
+       [:button
+        {:class "button is-primary is-small"
+         :on-click
+         (fn [_] (POST "/api/token/refresh"
+                   {:format :json
+                    :headers
+                    {"Accept" "application/transit+json"
+                     "x-csrf-token" js/csrfToken}
+                    :params user
+                    :handler
+                    #(js/alert (str "/api/token/refresh " %))
+                    :error-handler
+                    #(js/alert (str "error /api/token/refresh " %))}))}
         "refresh"]]
       [:div {:class "column"}
-       [:button {:on-click #(swap! session assoc :page :edit)} "edit"]]])])
+       [:button
+        {:class "button is-primary is-small"
+         :on-click #(swap! session assoc :page :edit :edit user)}
+        "edit"]]])])
 
 (defn home-page []
   [:section.section>div.container>div.content

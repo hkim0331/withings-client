@@ -4,7 +4,6 @@
 - use English, particular in public repositries.
 - early deploy onto kohhoh. apt install mariadb-server
 - undo facility.
-- docker server timestamp JST
 - connection to mysql breaks when macos sleeps
 - create edit-user-page
 - update users list on the fly. SPA way.
@@ -14,7 +13,27 @@
 - remote debug
 - (response/found "/") if refresh success.
 - hato :async? true
+* timestamp->str function
+* meas sample button on wc.melt
 
+## 0.5.1-SNAPSHOT
+
+
+## 0.5.0 - 2022-08-26
+- deploy as https://wc.kohhoh.jp
+
+## 0.4.12 - 2022-08-26
+### Added
+- measure namespace
+- timestamp int using java-time
+### Info
+- to append additional request header in hato, use :headers.
+```
+   (-> (hc/post
+         meas-uri
+         {:headers {"authorization" (str "Bearer " access)}
+         ...
+```
 
 ## 0.4.11 - 2022-08-26
 - meas

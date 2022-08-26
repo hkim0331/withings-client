@@ -16,6 +16,7 @@
   (java.time.Instant/ofEpochMilli 1661330819000)
 - edit-user-page
 - message when errored in refresing tokens
+- auth
 
 
 ## 0.5.2-SNAPSHOT

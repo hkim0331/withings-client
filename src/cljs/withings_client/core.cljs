@@ -15,7 +15,11 @@
   (:import
    goog.History))
 
-(def ^:private version "0.4.12")
+(def ^:private version "0.5.0-SNAPSHOT")
+
+(def redirect-uri js/redirectUrl)
+;; (def redirect-uri "https://wc.melt.kyutech.ac.jp/callback")
+
 
 (defonce session (r/atom {:page :home
                           :name nil
@@ -70,9 +74,6 @@
 
 ;; -------------------------
 ;; home page
-(def redirect-uri js/redirectUrl)
-;; (def redirect-uri "https://wc.melt.kyutech.ac.jp/callback")
-
 (def scope "user.metrics,user.activity,user.info")
 (def authorize2-uri "https://account.withings.com/oauth2_user/authorize2")
 (def base

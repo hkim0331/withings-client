@@ -17,5 +17,6 @@ profiles.clj
 /log
 /data
 start.sh
-deploy.sh
+deploy*.sh
+
 

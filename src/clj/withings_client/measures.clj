@@ -49,7 +49,4 @@
            ;; :access_token access
            :meastype  meastype
            :category  1
-           :startdate (str->timestamp startdate)
-           :enddate   (str->timestamp enddate)}})
-        :body
-        :body)))
+           :startdate (str->timestamp startdate)}}))))

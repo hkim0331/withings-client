@@ -43,6 +43,7 @@
     (-> (hc/post
          meas-uri
          {:as :json
+          ;; "authorization" should be lower characters!
           :headers {"authorization" (str "Bearer " access)}
           :query-params
           {:action    "getmeas"
@@ -52,5 +53,7 @@
            :startdate (str->timestamp startdate)
            :enddate   (str->timestamp enddate)}})
         :body
-        :body)))
+        :body
+        ;; no :measuregrps
+        #_:measuregrps)))
 

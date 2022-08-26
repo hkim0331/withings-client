@@ -29,6 +29,7 @@
                (response/ok ret))
              (catch Exception e (error e)))}]
 
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;; tokens
   ["/token/refresh"
    {:post #(do
@@ -43,6 +44,7 @@
               (response/ok "refreshed")
               (catch Exception e (error e))))}]
 
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;; users
   ["/users"
    {:get (fn [_] (response/ok (users/users-list)))}]

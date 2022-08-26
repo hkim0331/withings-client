@@ -90,7 +90,7 @@
      [:div
       [:h2 (:name user)]
       [demo user]
-      [:div {:id "demo"} (:demo @session)]
+      [:div {:id "demo"} (str (-> @session :demo :measuregrps))]
       (for [[key value] user]
         [:p (str key) " → " (str value)])]]))
 

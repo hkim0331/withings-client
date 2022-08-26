@@ -12,9 +12,10 @@
 - remote debug
 - (response/found "/") if refresh success.
 - hato :async? true
-* timestamp->str function
-(java.time.Instant/ofEpochMilli 1661330819000)
+- timestamp->str function
+  (java.time.Instant/ofEpochMilli 1661330819000)
 - edit-user-page
+- message when errored in refresing tokens
 
 
 ## 0.5.2-SNAPSHOT

@@ -15,7 +15,7 @@
   (:import
    goog.History))
 
-(def ^:private version "0.5.1")
+(def ^:private version "0.5.2-SNAPSHOT")
 
 (def redirect-uri js/redirectUrl)
 ;; (def redirect-uri "https://wc.melt.kyutech.ac.jp/callback")
@@ -89,6 +89,7 @@
   (let [user (:edit @session)]
     [:section.section>div.container>div.content
      [:h2 (:name user)]
+     [:h3 "under construction"]
      [demo user]
      [:div {:id "demo"} (str (-> @session :demo :measuregrps))]
      (for [[key value] user]
@@ -238,9 +239,9 @@
 
 ;; -------------------------
 (def pages
-  {:home #'home-page
+  {:home  #'home-page
    :about #'about-page
-   :edit #'edit-user-page})
+   :edit  #'edit-user-page})
 
 (defn page []
   [(pages (:page @session))])

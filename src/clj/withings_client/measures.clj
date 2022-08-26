@@ -43,14 +43,11 @@
     (-> (hc/post
          meas-uri
          {:as :json
-          :headers {"authorization" (str "Bearer " access)}
+          :headers {"Authorization" (str "Bearer " access)}
           :query-params
           {:action    "getmeas"
            ;; :access_token access
            :meastype  meastype
            :category  1
            :startdate (str->timestamp startdate)
-           :enddate   (str->timestamp enddate)}})
-        :body
-        :body)))
-
+           :enddate   (str->timestamp enddate)}}))))

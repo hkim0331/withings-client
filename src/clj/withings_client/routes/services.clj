@@ -25,10 +25,12 @@
   ["/meas"
    {:post #(try
              (let [ret (measures/meas %)]
-               (log/info "/meas ret" ret)
-               (response/ok {:meas ret}))
+               (log/info "/meas (keys ret)" (keys ret))
+               (log/info "ret" ret)
+               (response/ok ret))
              (catch Exception e (error e)))}]
-
+  
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;; tokens
   ["/token/refresh"
    {:post #(do
@@ -43,6 +45,7 @@
               (response/ok "refreshed")
               (catch Exception e (error e))))}]
 
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;; users
   ["/users"
    {:get (fn [_] (response/ok (users/users-list)))}]

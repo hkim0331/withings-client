@@ -14,12 +14,14 @@
 - hato :async? true
 - timestamp->str function
   (java.time.Instant/ofEpochMilli 1661330819000)
-- edit-user-page
 - message when errored in refresing tokens
-- auth
 
 
-## 0.5.2-SNAPSHOT
+## 0.6.0 - 2022-08-28
+### Added
+- buddy
+
+## 0.5.2 - 2022-08-28
 - core.cljs: added `:key` to seq elements
 - core.cljs: delete user. need reload. improve.
 

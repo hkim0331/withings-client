@@ -82,7 +82,8 @@
                   :enddate   "2022-08-25 00:00:00"}
          :handler (fn [res] (swap! session assoc :demo res))
          :error-handler (fn [e] (js/alert (str  "error demo" e)))})}
-    "demo"] " 2022-01-01 から本日までの体重データを表示します。"])
+    "demo"]
+   " 2022-01-01 から 08-28 までの体重データを取得、表示します。"])
 
 (defn edit-user-page
   []

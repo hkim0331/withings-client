@@ -1,5 +1,6 @@
 (ns withings-client.middleware
   (:require
+   [buddy.auth.middleware :refer [wrap-authentication wrap-authorization]]
    [buddy.auth :refer [authenticated?]]
    [buddy.auth.accessrules :refer [restrict]]
    [buddy.auth.backends.session :refer [session-backend]]
@@ -32,7 +33,6 @@
      {:status 403
       :title "Invalid anti-forgery token"})}))
 
-
 (defn wrap-formats [handler]
   (let [wrapped (-> handler wrap-params (wrap-format formats/instance))]
     (fn [request]
@@ -40,8 +40,26 @@
       ;; since they're not compatible with this middleware
       ((if (:websocket? request) handler wrapped) request))))
 
+;; restriction
+(defn on-error [request response]
+  (error-page
+   {:status 403
+    :title (str "Access to " (:uri request) " is not authorized")}))
+
+(defn wrap-restricted [handler]
+  (restrict handler {:handler authenticated?
+                     :on-error on-error}))
+
+(defn wrap-auth [handler]
+  (let [backend (session-backend)]
+    (-> handler
+        (wrap-authentication backend)
+        (wrap-authorization backend))))
+;; restriction end
+
 (defn wrap-base [handler]
   (-> ((:middleware defaults) handler)
+      wrap-auth ;; restriction
       wrap-flash
       (wrap-session {:cookie-attrs {:http-only true}})
       (wrap-defaults

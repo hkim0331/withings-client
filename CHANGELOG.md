@@ -20,6 +20,18 @@
 ## 0.6.0 - 2022-08-28
 ### Added
 - buddy
+```
+  (ring/ring-handler
+    (ring/router
+      [(login-routes) (home-routes) (service-routes)])
+```
+- wrap-base に wrap-auth 行を追加しないと動作しなかった。
+```
+(defn wrap-base [handler]
+  (-> ((:middleware defaults) handler)
+      wrap-auth ;; restriction
+      wrap-flash
+```
 
 ## 0.5.2 - 2022-08-28
 - core.cljs: added `:key` to seq elements

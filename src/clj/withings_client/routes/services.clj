@@ -21,6 +21,7 @@
  ["/api"
   {:middleware [middleware/wrap-formats]}
 
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;; measures
   ["/meas"
    {:post #(try
@@ -54,7 +55,7 @@
     (fn [{{:keys [n]} :path-params}]
       (response/ok (users/get-user n)))
 
-    ;; FIXME: UPDATE
+    ;; update, /user/:n/update is right?
     :post
     (fn [{{:keys [n]} :path-params :as request}]
       (let [params (:params request)]

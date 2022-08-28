@@ -15,7 +15,7 @@
   (:import
    goog.History))
 
-(def ^:private version "0.5.1")
+(def ^:private version "0.5.3")
 
 (def redirect-uri js/redirectUrl)
 ;; (def redirect-uri "https://wc.melt.kyutech.ac.jp/callback")
@@ -66,7 +66,8 @@
 
 ;; -------------------------
 ;; edit page
-(defn demo []
+(defn demo
+  [user]
   [:div
    [:button
     {:on-click
@@ -75,24 +76,35 @@
          :headers
          {"Accept" "application/transit+json"
           "x-csrf-token" js/csrfToken}
-         :params {:id        1
+         :params {:id        (:id user)
                   :meastype  1
-                  :startdate "2022-08-01 00:00:00"
+                  :startdate "2022-01-01 00:00:00"
                   :enddate   "2022-08-25 00:00:00"}
          :handler (fn [res] (swap! session assoc :demo res))
          :error-handler (fn [e] (js/alert (str  "error demo" e)))})}
-    "demo"]])
+    "demo"] " 2022-01-01 から本日までの体重データを表示します。"])
 
 (defn edit-user-page
   []
   (let [user (:edit @session)]
     [:section.section>div.container>div.content
+     [:h2 (:name user)]
+     [:h3 "under construction"]
+     [demo user]
+     [:div {:id "demo"} (str (-> @session :demo :measuregrps))]
+     (for [[key value] user]
+       [:p {:key key} (symbol key) ": " (str value) [:br]
+        [:input
+         {:on-key-up #(.log js/console (.-key %))}]]) ;; Enter でなんとかする。
      [:div
-      [:h2 (:name user)]
-      [demo user]
-      [:div {:id "demo"} (:demo @session)]
-      (for [[key value] user]
-        [:p (str key) " → " (str value)])]]))
+      [:button
+       {:class "button is-danger is-small"
+        :on-click
+        (fn []
+          (POST (str "/api/user/" (:id user) "/delete")
+            {:handler #(swap! session assoc :page :home)
+             :error-handler (fn [e] (js/alert (.getMewssage e)))}))}
+       "delete"]]]))
 
 ;; -------------------------
 ;; home page
@@ -187,7 +199,7 @@
    [:h2 "users"]
    [:p "アクセストークンは 10800 秒（3時間）で切れます。"]
    (for [user @users]
-     [:div {:class "columns"}
+     [:div {:class "columns" :key (:id user)}
       [:div {:class "column"} (if (:valid user) "y" "n")]
       [:div {:class "column"} (:id user)]
       [:div {:class "column"} (:name user)]
@@ -227,9 +239,9 @@
 
 ;; -------------------------
 (def pages
-  {:home #'home-page
+  {:home  #'home-page
    :about #'about-page
-   :edit #'edit-user-page})
+   :edit  #'edit-user-page})
 
 (defn page []
   [(pages (:page @session))])

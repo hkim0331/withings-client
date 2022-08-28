@@ -2,19 +2,15 @@
 
 ## Unreleased
 - use English, particular in public repositries.
-- early deploy onto kohhoh. apt install mariadb-server
 - undo facility.
-- connection to mysql breaks when macos sleeps
-- create edit-user-page
+- edit-user-page
 - update users list on the fly. SPA way.
-- redirect-uri is required when creating an application.
-  without creating it, cid and secret are never got.
 - remote debug
-- (response/found "/") if refresh success.
+- redirection after refreshing tokens
 - hato :async? true
 - timestamp->str function
   (java.time.Instant/ofEpochMilli 1661330819000)
-- message when errored in refresing tokens
+- visualize the viable time of access tokens.
 
 
 ## 0.6.0 - 2022-08-28

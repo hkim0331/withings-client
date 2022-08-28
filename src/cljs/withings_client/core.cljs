@@ -15,7 +15,7 @@
   (:import
    goog.History))
 
-(def ^:private version "0.5.2-SNAPSHOT")
+(def ^:private version "0.5.3")
 
 (def redirect-uri js/redirectUrl)
 ;; (def redirect-uri "https://wc.melt.kyutech.ac.jp/callback")
@@ -82,7 +82,7 @@
                   :enddate   "2022-08-25 00:00:00"}
          :handler (fn [res] (swap! session assoc :demo res))
          :error-handler (fn [e] (js/alert (str  "error demo" e)))})}
-    "demo"]])
+    "demo"] " 2022-01-01 から本日までの体重データを表示します。"])
 
 (defn edit-user-page
   []

@@ -26,4 +26,5 @@
    {:middleware [middleware/wrap-csrf
                  middleware/wrap-formats]}
    ["/" {:get home-page}]
-   ["/callback" {:get callback}]]) 
+   ["/callback" {:get callback}]])
+

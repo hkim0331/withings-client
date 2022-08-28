@@ -14,23 +14,23 @@
   (tokens/fetch-and-store! params)
   (response/found "/"))
 
-;; FIXME: flash message
+
 (defn login
   [request]
   (layout/render request
                  "login.html"
                  {:flash (:flash request)}))
 
+;; FIXME: must be changed
 (defn login!
   [{{:keys [login password]} :params}]
   (log/info "login" login "password" password)
-  (if (= login password)
+  (if (and (seq password) (= login password))
     (-> (response/found "/home/")
         (assoc-in [:session :identity] login))
     (-> (response/found "/")
         (dissoc :session)
         (assoc :flash "login failure"))))
-
 
 (defn logout!
   [_]

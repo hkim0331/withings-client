@@ -3,7 +3,6 @@
 ## Unreleased
 - use English, particular in public repositries.
 - undo facility.
-- edit-user-page
 - update users list on the fly. SPA way.
 - remote debug
 - redirection after refreshing tokens
@@ -11,6 +10,12 @@
 - timestamp->str function
   (java.time.Instant/ofEpochMilli 1661330819000)
 - visualize the viable time of access tokens.
+
+
+## 0.7.0-SNAPSHOT
+* edit-user-page
+  delete then create is OK now.
+* pretty print JSON
 
 
 ## 0.6.0 - 2022-08-28

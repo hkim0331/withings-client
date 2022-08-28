@@ -25,7 +25,8 @@
     (ring/router
       [(login-routes) (home-routes) (service-routes)])
 ```
-- wrap-base に wrap-auth 行を追加しないと動作しなかった。
+- without adding `wrap-auth` line in wrap-base function,
+  could not access allowed pages.
 ```
 (defn wrap-base [handler]
   (-> ((:middleware defaults) handler)

@@ -15,7 +15,7 @@
   (:import
    goog.History))
 
-(def ^:private version "0.5.3")
+(def ^:private version "0.6.0")
 
 (def redirect-uri js/redirectUrl)
 ;; (def redirect-uri "https://wc.melt.kyutech.ac.jp/callback")
@@ -52,6 +52,7 @@
       [:div.navbar-start
        [nav-link "#/" "Home" :home]
        [nav-link "#/about" "About" :about]
+       [nav-link "/logout" "Logout"]
        [nav-link "https://developer.withings.com/api-reference" "API"]]]]))
 
 ;; -------------------------
@@ -82,7 +83,8 @@
                   :enddate   "2022-08-25 00:00:00"}
          :handler (fn [res] (swap! session assoc :demo res))
          :error-handler (fn [e] (js/alert (str  "error demo" e)))})}
-    "demo"] " 2022-01-01 から本日までの体重データを表示します。"])
+    "demo"]
+   " 2022-01-01 から 08-28 までの体重データを取得、表示します。"])
 
 (defn edit-user-page
   []
@@ -180,9 +182,9 @@
 (defn link-component []
   [:div
    [:p "(*)は必須フィールド。belong, email はカラでもよい。" [:br]
-    "create ボタンの後、下に現れるリンクをクリックし、"
-    "acccess トークン、refresh トークンを取得する。"
-    "ページが切り替わるのに 5 秒くらいかかる。"]
+    "create ボタンの後、下に現れるリンクをクリックすると"
+    "acccess トークン、refresh トークンの取得に取り掛かる。"
+    "ページが切り替わるのに 5 秒くらいかかる。非同期通信でスピードアップ予定。"]
    [:p "クリックで登録 → " [:a {:href (:uri @session)} (:name @session)]]])
 
 (defn tm
@@ -216,10 +218,8 @@
                     {"Accept" "application/transit+json"
                      "x-csrf-token" js/csrfToken}
                     :params user
-                    :handler
-                    #(js/alert (str "/api/token/refresh " %))
-                    :error-handler
-                    #(js/alert (str "error /api/token/refresh " %))}))}
+                    :handler       #(js/alert "リフレッシュ完了。")
+                    :error-handler #(js/alert "失敗")}))}
         "refresh"]]
       [:div {:class "column"}
        [:button

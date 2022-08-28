@@ -14,12 +14,26 @@
 - hato :async? true
 - timestamp->str function
   (java.time.Instant/ofEpochMilli 1661330819000)
-- edit-user-page
 - message when errored in refresing tokens
-- auth
 
 
-## 0.5.2-SNAPSHOT
+## 0.6.0 - 2022-08-28
+### Added
+- buddy
+```
+  (ring/ring-handler
+    (ring/router
+      [(login-routes) (home-routes) (service-routes)])
+```
+- wrap-base に wrap-auth 行を追加しないと動作しなかった。
+```
+(defn wrap-base [handler]
+  (-> ((:middleware defaults) handler)
+      wrap-auth ;; restriction
+      wrap-flash
+```
+
+## 0.5.2 - 2022-08-28
 - core.cljs: added `:key` to seq elements
 - core.cljs: delete user. need reload. improve.
 

@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block content %}
+  <div class="content">
+    <h1>Admin Only</h1>
+
+    <div class="admin">{{flash}}</div>
+    <form method="post">
+      {% csrf-field %}
+
+      {% if errors.login %}
+      <div class="notification is-danger">
+        {{errors.login|join}}
+      </div>
+      {% endif %}
+      <div class="columns">
+        <div class="column is-2" style="text-align:right;"><b>login</b></div>
+        <div class="column is-2"><input name="login"></div>
+      </div>
+
+      {% if errors.password %}
+      <div class="notification is-danger">
+        {{errors.password|join}}
+      </div>
+      {% endif %}
+      <div class="columns">
+        <div class="column is-2" style="text-align:right;"><b>password</b></div>
+        <div class="column is-2"><input name="password" type="password"></div>
+      </div>
+
+      <div>
+         <div class="column is-2" style="text-align:right;">
+           <input type="submit" value="login" class="button is-danger is-small"></div>
+      </div>
+    </form>
+  </div>
+{% endblock %}

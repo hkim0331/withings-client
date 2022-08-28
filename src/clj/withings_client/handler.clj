@@ -3,6 +3,7 @@
     [withings-client.middleware :as middleware]
     [withings-client.layout :refer [error-page]]
     [withings-client.routes.home :refer [home-routes]]
+    [withings-client.routes.login :refer [login-routes]]
     [withings-client.routes.services :refer [service-routes]]
     [reitit.ring :as ring]
     [ring.middleware.content-type :refer [wrap-content-type]]
@@ -18,7 +19,7 @@
   :start
   (ring/ring-handler
     (ring/router
-      [(home-routes) (service-routes)])
+      [(login-routes) (home-routes) (service-routes)])
     (ring/routes
       (ring/create-resource-handler
         {:path "/"})

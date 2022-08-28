@@ -1,10 +1,9 @@
-(defproject withings-client "0.5.3"
+(defproject withings-client "0.6.0-SNAPSHOT"
 
   :description "FIXME: write description"
   :url "http://example.com/FIXME"
 
   :dependencies [[ch.qos.logback/logback-classic "1.2.10"]
-                 [cheshire/cheshire "5.11.0"]
                  [cljs-ajax "0.8.4"]
                  [clojure.java-time "0.3.3"]
                  [com.cognitect/transit-clj "1.0.329"]
@@ -15,7 +14,6 @@
                  [cprop "0.1.19"]
                  [expound "0.9.0"]
                  [funcool/struct "1.4.0"]
-                 [hato/hato "0.8.2"]
                  [json-html "0.4.7"]
                  [luminus-migrations "0.7.2"]
                  [luminus-transit "0.1.5"]
@@ -42,7 +40,15 @@
                  [ring/ring-core "1.9.5"]
                  [ring/ring-defaults "0.3.3"]
                  [selmer "1.12.50"]
-                 [thheller/shadow-cljs "2.18.0" :scope "provided"]]
+                 [thheller/shadow-cljs "2.18.0" :scope "provided"]
+                 ;;
+                 [buddy/buddy-auth "3.0.323"]
+                 [buddy/buddy-core "1.10.413"]
+                 [buddy/buddy-hashers "1.8.158"]
+                 [buddy/buddy-sign "3.4.333"]
+                 [cheshire/cheshire "5.11.0"]
+                 [hato/hato "0.8.2"]]
+
 
   :min-lein-version "2.0.0"
 

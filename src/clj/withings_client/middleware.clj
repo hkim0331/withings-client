@@ -1,16 +1,18 @@
 (ns withings-client.middleware
   (:require
-   [withings-client.env :refer [defaults]]
+   [buddy.auth :refer [authenticated?]]
+   [buddy.auth.accessrules :refer [restrict]]
+   [buddy.auth.backends.session :refer [session-backend]]
    [clojure.tools.logging :as log]
-   [withings-client.layout :refer [error-page]]
-   [ring.middleware.anti-forgery :refer [wrap-anti-forgery]]
-   [withings-client.middleware.formats :as formats]
    [muuntaja.middleware :refer [wrap-format wrap-params]]
-   [withings-client.config :refer [env]]
-   [ring.middleware.flash :refer [wrap-flash]]
    [ring.adapter.undertow.middleware.session :refer [wrap-session]]
-   [ring.middleware.defaults :refer [site-defaults wrap-defaults]]))
-
+   [ring.middleware.anti-forgery :refer [wrap-anti-forgery]]
+   [ring.middleware.defaults :refer [site-defaults wrap-defaults]]
+   [ring.middleware.flash :refer [wrap-flash]]
+   [withings-client.config :refer [env]]
+   [withings-client.env :refer [defaults]]
+   [withings-client.layout :refer [error-page]]
+   [withings-client.middleware.formats :as formats]))
 
 (defn wrap-internal-error [handler]
   (fn [req]

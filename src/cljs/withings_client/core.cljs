@@ -15,7 +15,7 @@
   (:import
    goog.History))
 
-(def ^:private version "0.5.3")
+(def ^:private version "0.6.0-SNAPSHOT")
 
 (def redirect-uri js/redirectUrl)
 ;; (def redirect-uri "https://wc.melt.kyutech.ac.jp/callback")
@@ -52,6 +52,7 @@
       [:div.navbar-start
        [nav-link "#/" "Home" :home]
        [nav-link "#/about" "About" :about]
+       [nav-link "/logout" "Logout"]
        [nav-link "https://developer.withings.com/api-reference" "API"]]]]))
 
 ;; -------------------------

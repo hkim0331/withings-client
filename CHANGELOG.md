@@ -18,8 +18,7 @@
 - parse-timestamp
 
 ## 0.6.4-SNAPSHOT
-* pretty print JSON
-* CLJS timestamp functions
+- CLJS timestamp functions (.toLocaleString (js/Date. ts))
 
 ## 0.6.3 - 2022-08-29
 - GET /api/meas

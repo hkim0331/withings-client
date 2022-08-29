@@ -1,24 +1,28 @@
 # Withings-Client
 
 ## Unreleased
-- use English, particular in public repositries.
 - undo facility.
-- update users list on the fly. SPA way.
+- update users view SPA way.
 - remote debug
-- redirection after refreshing tokens
+- redisplay after refreshing tokens
+- redisplay without reloading after updating/deleting user information
 - hato :async? true
-- timestamp->str function
-  (java.time.Instant/ofEpochMilli 1661330819000)
-- visualize the viable time of access tokens.
-* edit-user-page
-  delete then create is OK now.
-- omit reload after updating/deleting user information
+- bar chart the viable time of access tokens.
+* edit-user-page.
 - mainly getting many data at once.
-- meastype -> meastypes?
+- change meastype with meastypes?
+- confirmed deletion
 
 
 ## 0.6.5 - 2022-08-29
 - deploy to kohhoh
+- timestamp->str function
+  (java.time.Instant/ofEpochMilli 1661330819000)
+```
+(defn ts->date
+  [ts]
+  (.toLocaleString (js/Date. (* 1000 ts))))
+```
 
 ## 0.6.4 - 2022-08-29
 - CLJS timestamp functions (.toLocaleString (js/Date. ts))

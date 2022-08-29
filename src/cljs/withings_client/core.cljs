@@ -3,11 +3,9 @@
    [ajax.core :refer [GET POST]]
    ;; [cljs.core.async :refer [<!]]
    [cljs.math :refer  [pow]]
-   [cljs.reader :refer [parse-timestamp]]
    [clojure.string :as string]
    [goog.events :as events]
    [goog.history.EventType :as HistoryEventType]
-   ;; [markdown.core :refer [md->html]]
    [reagent.core :as r]
    [reagent.dom :as rdom]
    [reitit.core :as reitit]
@@ -22,7 +20,6 @@
 (def redirect-uri js/redirectUrl)
 ;; (def redirect-uri "https://wc.melt.kyutech.ac.jp/callback")
 
-
 (defonce session (r/atom {:page :home
                           :name nil
                           :cid nil
@@ -34,10 +31,6 @@
 (defonce users (r/atom {}))
 (defonce measures (r/atom {}))
 (defonce output (r/atom {}))
-
-;; --------------------------------------
-;; date functions
-
 
 ;; --------------------------------------
 ;; navbar
@@ -77,24 +70,6 @@
 
 ;; -------------------------
 ;; user page
-;; (defn demo
-;;   [user]
-;;   [:div
-;;    [:button
-;;     {:on-click
-;;      #(POST "/api/meas"
-;;         {:format :json
-;;          :headers
-;;          {"Accept" "application/transit+json"
-;;           "x-csrf-token" js/csrfToken}
-;;          :params {:id        (:id user)
-;;                   :meastype  1
-;;                   :startdate "2022-01-01 00:00:00"
-;;                   :enddate   "2022-10-01 00:00:00"}
-;;          :handler (fn [res] (swap! session assoc :demo res))
-;;          :error-handler (fn [e] (js/alert (str  "error demo" e)))})}
-;;     "demo"]
-;;    " 2022-01-01 から 2022-09-30 までの体重データを取得、表示します。"])
 
 (defn user-page
   []
@@ -132,7 +107,8 @@
   (str base "client_id=" (:cid @session) "&state=" (:name @session)))
 
 (defn create-user!
-  ":name, :cid, :secret は必須フィールド。元バージョンはチェックが抜けている。"
+  ":name, :cid, :secret are required field.
+   FIXME: lack validations."
   [params]
   (POST "/api/user"
     {:format :json
@@ -229,7 +205,7 @@
                      "x-csrf-token" js/csrfToken}
                     :params user
                     :handler       #(js/alert "リフレッシュ完了。")
-                    :error-handler #(js/alert "失敗")}))}
+                    :error-handler #(js/alert "失敗。")}))}
         "refresh"]]
       [:div {:class "column"}
        [:button
@@ -251,8 +227,9 @@
 ;; data-page
 
 (defn input-component
-  "form. must pass id meatype startdate enddate.
-   date format is yyyy-MM-dd hh:mm:ss"
+  "id, meatype, startdate, enddate are required to work.
+   date must be in  `yyyy-MM-dd hh:mm:ss` format.
+   FIXME: validation."
   []
   (let [id        (r/atom (:id (first @users)))
         meastype  (r/atom (:id (first @measures)))
@@ -295,14 +272,18 @@
        "fetch"]]]))
 
 (defn ts->date
+  "after converting to milli, doing jobs."
   [ts]
-  (.toLocaleString (js/Date. (* 1000 ts))))
+  (-> ts
+      (* 1000)
+      js/Date.
+      .toLocaleString))
 
 (defn format-measures
   [[{:keys [value unit]}]]
   (/ value (pow 10 (- unit))))
 
-;; params has created param. which should be displayed?
+;; params has `created` param. which should be displayed?
 (defn output-one
   [{:keys [date measures]}]
   [:div
@@ -334,7 +315,6 @@
 
 ;; -------------------------
 ;; Routes
-
 (def router
   (reitit/router
    [["/"      :home]

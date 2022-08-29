@@ -14,11 +14,12 @@
   delete then create is OK now.
 - omit reload after updating/deleting user information
 - mainly getting many data at once.
-- meastype -> meastypes
-- parse-timestamp
+- meastype -> meastypes?
 
-## 0.6.4-SNAPSHOT
+
+## 0.6.4 - 2022-08-29
 - CLJS timestamp functions (.toLocaleString (js/Date. ts))
+
 
 ## 0.6.3 - 2022-08-29
 - GET /api/meas

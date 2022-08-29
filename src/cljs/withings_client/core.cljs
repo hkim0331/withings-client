@@ -34,6 +34,10 @@
 (defonce output (r/atom {}))
 
 ;; --------------------------------------
+;; date functions
+
+
+;; --------------------------------------
 ;; navbar
 (defn nav-link [uri title page]
   [:a.navbar-item
@@ -243,6 +247,7 @@
 
 ;; ------------------
 ;; data-page
+;; 
 (defn input-component
   "form. must pass id meatype startdate enddate.
    date format is yyyy-MM-dd hh:mm:ss"
@@ -265,11 +270,11 @@
      [:div
       [:p [:b "start "]
        [:input {:name "start"
-                :placeholder "yyyy-MM-dd hh:mm:ss"
+                :placeholder "2022-01-01 00:00:00"
                 :on-key-up #(reset! startdate (-> % .-target .-value))}]]
       [:p [:b "end "]
        [:input {:name "end"
-                :placeholder "yyyy-MM-dd hh:mm:ss"
+                :placeholder "2023-01-01 00:00:00"
                 :on-key-up #(reset! enddate (-> % .-target .-value))}]]]
      [:div
       [:button {:class "button is-primary is-small"
@@ -287,11 +292,17 @@
                     :error-handler (fn [e] (js/alert (str  "error" e)))})}
        "fetch"]]]))
 
+(defn output
+  [{:keys [date created measures]}]
+  [:div
+   (str date created measures)])
+
 (defn output-component
   []
   [:div
    [:h3 "output"]
-   @output])
+   (for [data (:measuregrps @output)]
+    (output data))])
 
 (defn data-page []
   [:section.section>div.container>div.content

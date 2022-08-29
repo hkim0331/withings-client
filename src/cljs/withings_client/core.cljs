@@ -15,7 +15,7 @@
   (:import
    goog.History))
 
-(def ^:private version "0.6.2")
+(def ^:private version "0.6.3-SNAPSHOT")
 
 (def redirect-uri js/redirectUrl)
 ;; (def redirect-uri "https://wc.melt.kyutech.ac.jp/callback")
@@ -53,6 +53,7 @@
       {:class (when @expanded? :is-active)}
       [:div.navbar-start
        [nav-link "#/" "Home" :home]
+       [nav-link "#/data" "Data" :data]
        [nav-link "#/about" "About" :about]
        [nav-link "/logout" "Logout"]
        [nav-link "https://developer.withings.com/api-reference" "API"]]]]))
@@ -87,7 +88,7 @@
     "demo"]
    " 2022-01-01 から 2022-09-30 までの体重データを取得、表示します。"])
 
-(defn edit-user-page
+(defn user-page
   []
   (let [user (:edit @session)]
     [:section.section>div.container>div.content
@@ -106,7 +107,7 @@
         (fn []
           (POST (str "/api/user/" (:id user) "/delete")
             {:handler #(swap! session assoc :page :home)
-             :error-handler (fn [e] (js/alert (.getMewssage e)))}))}
+             :error-handler (fn [^js/Event e] (js/alert (.getMessage e)))}))}
        "delete"]]]))
 
 ;; -------------------------
@@ -225,7 +226,7 @@
       [:div {:class "column"}
        [:button
         {:class "button is-primary is-small"
-         :on-click #(swap! session assoc :page :edit :edit user)}
+         :on-click #(swap! session assoc :page :user :edit user)}
         "edit"]]])])
 
 (defn home-page []
@@ -237,12 +238,31 @@
    (users-component)
    [:hr]
    version])
+;; -------------------------
+;; data-page
+(defn input-component
+  []
+  [:div
+   [:h3 "input component"]])
+
+(defn output-component
+  []
+  [:div
+   [:h3 "output component"]])
+
+(defn data-page []
+  [:section.section>div.container>div.content
+   (input-component)
+   [:hr]
+   (output-component)
+   [:hr]])
 
 ;; -------------------------
 (def pages
   {:home  #'home-page
    :about #'about-page
-   :edit  #'edit-user-page})
+   :user  #'user-page
+   :data  #'data-page})
 
 (defn page []
   [(pages (:page @session))])
@@ -252,8 +272,9 @@
 
 (def router
   (reitit/router
-   [["/" :home]
-    ["/about" :about]]))
+   [["/"      :home]
+    ["/about" :about]
+    ["/data"  :data]]))
 
 (defn match-route [uri]
   (->> (or (not-empty (string/replace uri #"^.*#" "")) "/")

@@ -14,6 +14,7 @@
 * edit-user-page
   delete then create is OK now.
 * pretty print JSON
+- omit reload after updating/deleting user information
 
 
 ## 0.6.2 - 2022-08-29

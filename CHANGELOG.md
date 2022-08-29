@@ -15,6 +15,9 @@
   delete then create is OK now.
 * pretty print JSON
 
+## 0.6.2-SNAPSHOT
+- kohhoh did not update.
+  -> used old deploy.sh for app.melt
 
 ## 0.6.1 - 2022-08-29
 - departed /callback from login.clj

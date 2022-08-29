@@ -18,12 +18,13 @@
 
 ## 0.6.1 - 2022-08-29
 - departed /callback from login.clj
-- auth /api/ checked by;
+- session auth /api/
 ```
 % http --session=auth :3000/ login='####' password='######'
 % http --session=auth :3000/api/users ;; OK
 % http :3000/api/users ;; NG
 ```
+- demo weights between 2022-01-01 and 2022-09-30
 
 ## 0.6.0 - 2022-08-28
 ### Added

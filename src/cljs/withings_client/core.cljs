@@ -70,7 +70,7 @@
    [:p version]])
 
 ;; -------------------------
-;; edit page
+;; user page
 (defn demo
   [user]
   [:div
@@ -247,20 +247,34 @@
   "form. must pass id meatype startdate enddate.
    date format is yyyy-MM-dd hh:mm:ss"
   []
-  [:div [:h3 "who?"]
-   [:select {:name "id"}
-    (for [user @users]
-      [:option {:key (:id user) :value (:id user)} (:name user)])]
-   [:div [:h3 "what?"]
-    [:select {:name "meastype"}
-     (for [mea @measures]
-       [:option {:key (str "m" (:id mea)) :value (:value mea)}
-        (:description mea)])]]
-   [:div [:h3 "when?"]
-    [:p [:b "start "] [:input {:name "start" :placeholder "yyyy-MM-dd hh:mm:ss"}]]
-    [:p [:b "end "]   [:input {:name "end" :placeholder "yyyy-MM-dd hh:mm:ss"}]]]
-   [:div
-    [:input {:type :submit :value "data"}]]])
+  (let [id        (r/atom nil)
+        meastype  (r/atom nil)
+        startdate (r/atom nil)
+        enddate   (r/atom nil)]
+    [:div [:h3 "who?"]
+     [:select {:name "id"
+               :on-change (fn [e] (reset! id (-> e .-target .-value)))}
+      (for [user @users]
+        [:option {:key (:id user) :value (:id user)} (:name user)])]
+     [:div [:h3 "what?"]
+      [:select {:name "meastype"
+                :on-change (fn [e] (reset! meastype (-> e .-target .-value)))}
+       (for [mea @measures]
+         [:option {:key (str "m" (:id mea)) :value (:value mea)}
+          (:description mea)])]]
+     [:div [:h3 "period?"]
+      [:p [:b "start "]
+          [:input {:name "start"
+                   :placeholder "yyyy-MM-dd hh:mm:ss"
+                   :on-key-up #(reset! startdate (-> % .-target .-value))}]]
+      [:p [:b "end "]
+          [:input {:name "end"
+                   :placeholder "yyyy-MM-dd hh:mm:ss"
+                   :on-key-up #(reset! enddate (-> % .-target .-value))}]]]
+     [:div
+      [:button {:class "button is-primary is-small"
+                :on-click #(js/alert (str @id @meastype @startdate @enddate))}
+       "fetch"]]]))
 
 (defn output-component
   []

@@ -17,9 +17,11 @@
 - meastype -> meastypes?
 
 
+## 0.6.5 - 2022-08-29
+- deploy to kohhoh
+
 ## 0.6.4 - 2022-08-29
 - CLJS timestamp functions (.toLocaleString (js/Date. ts))
-
 
 ## 0.6.3 - 2022-08-29
 - GET /api/meas

@@ -63,3 +63,11 @@ where userid = :userid
 UPDATE users
 set valid = ! valid
 where id = :id
+
+-------------
+-- measures
+-------------
+
+-- :name list-measures :? :*
+-- :doc get all measures
+SELECT * FROM measures;

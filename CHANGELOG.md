@@ -10,13 +10,20 @@
 - timestamp->str function
   (java.time.Instant/ofEpochMilli 1661330819000)
 - visualize the viable time of access tokens.
-- depart callback from login.clj
 * edit-user-page
   delete then create is OK now.
 * pretty print JSON
+- omit reload after updating/deleting user information
 
+
+## 0.6.3 - 2022-08-29
+- GET /api/meas
+### FIXME
+- can not (migrate) SQL syntax error occurred.
+  however, `mycli -u $USER $DB < $migration.sql` goes well.
 
 ## 0.6.2 - 2022-08-29
+- depart callback from login.clj
 - kohhoh did not update.
   -> used old deploy.sh for app.melt
 ### Added

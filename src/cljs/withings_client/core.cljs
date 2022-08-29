@@ -15,7 +15,7 @@
   (:import
    goog.History))
 
-(def ^:private version "0.6.2")
+(def ^:private version "0.6.3")
 
 (def redirect-uri js/redirectUrl)
 ;; (def redirect-uri "https://wc.melt.kyutech.ac.jp/callback")
@@ -26,10 +26,12 @@
                           :cid nil
                           :secret nil
                           :belong nil
-                          :email nil
-                          :demo "data"}))
-;; should be a member of session?
+                          :email nil}))
+
+;; should be a member of session atom?
 (defonce users (r/atom {}))
+(defonce measures (r/atom {}))
+(defonce output (r/atom {}))
 
 ;; --------------------------------------
 ;; navbar
@@ -53,6 +55,7 @@
       {:class (when @expanded? :is-active)}
       [:div.navbar-start
        [nav-link "#/" "Home" :home]
+       [nav-link "#/data" "Data" :data]
        [nav-link "#/about" "About" :about]
        [nav-link "/logout" "Logout"]
        [nav-link "https://developer.withings.com/api-reference" "API"]]]]))
@@ -67,34 +70,34 @@
    [:p version]])
 
 ;; -------------------------
-;; edit page
-(defn demo
-  [user]
-  [:div
-   [:button
-    {:on-click
-     #(POST "/api/meas"
-        {:format :json
-         :headers
-         {"Accept" "application/transit+json"
-          "x-csrf-token" js/csrfToken}
-         :params {:id        (:id user)
-                  :meastype  1
-                  :startdate "2022-01-01 00:00:00"
-                  :enddate   "2022-10-01 00:00:00"}
-         :handler (fn [res] (swap! session assoc :demo res))
-         :error-handler (fn [e] (js/alert (str  "error demo" e)))})}
-    "demo"]
-   " 2022-01-01 から 2022-09-30 までの体重データを取得、表示します。"])
+;; user page
+;; (defn demo
+;;   [user]
+;;   [:div
+;;    [:button
+;;     {:on-click
+;;      #(POST "/api/meas"
+;;         {:format :json
+;;          :headers
+;;          {"Accept" "application/transit+json"
+;;           "x-csrf-token" js/csrfToken}
+;;          :params {:id        (:id user)
+;;                   :meastype  1
+;;                   :startdate "2022-01-01 00:00:00"
+;;                   :enddate   "2022-10-01 00:00:00"}
+;;          :handler (fn [res] (swap! session assoc :demo res))
+;;          :error-handler (fn [e] (js/alert (str  "error demo" e)))})}
+;;     "demo"]
+;;    " 2022-01-01 から 2022-09-30 までの体重データを取得、表示します。"])
 
-(defn edit-user-page
+(defn user-page
   []
   (let [user (:edit @session)]
     [:section.section>div.container>div.content
      [:h2 (:name user)]
      [:h3 "under construction"]
-     [demo user]
-     [:div {:id "demo"} (str (-> @session :demo :measuregrps))]
+     ;; [demo user]
+     ;; [:div {:id "demo"} (str (-> @session :demo :measuregrps))]
      (for [[key value] user]
        [:p {:key key} (symbol key) ": " (str value) [:br]
         [:input
@@ -106,7 +109,7 @@
         (fn []
           (POST (str "/api/user/" (:id user) "/delete")
             {:handler #(swap! session assoc :page :home)
-             :error-handler (fn [e] (js/alert (.getMewssage e)))}))}
+             :error-handler (fn [^js/Event e] (js/alert (.getMessage e)))}))}
        "delete"]]]))
 
 ;; -------------------------
@@ -225,7 +228,7 @@
       [:div {:class "column"}
        [:button
         {:class "button is-primary is-small"
-         :on-click #(swap! session assoc :page :edit :edit user)}
+         :on-click #(swap! session assoc :page :user :edit user)}
         "edit"]]])])
 
 (defn home-page []
@@ -238,11 +241,71 @@
    [:hr]
    version])
 
+;; ------------------
+;; data-page
+(defn input-component
+  "form. must pass id meatype startdate enddate.
+   date format is yyyy-MM-dd hh:mm:ss"
+  []
+  (let [id        (r/atom (:id (first @users)))
+        meastype  (r/atom (:id (first @measures)))
+        startdate (r/atom "2022-01-01 00:00:00")
+        enddate   (r/atom "2023-01-01 00:00:00")]
+    [:div [:h3 "Data"]
+     [:select {:name "id"
+               :on-change (fn [e] (reset! id (-> e .-target .-value)))}
+      (for [user @users]
+        [:option {:key (:id user) :value (:id user)} (:name user)])]
+     [:div
+      [:select {:name "meastype"
+                :on-change (fn [e] (reset! meastype (-> e .-target .-value)))}
+       (for [mea @measures]
+         [:option {:key (str "m" (:id mea)) :value (:value mea)}
+          (:description mea)])]]
+     [:div
+      [:p [:b "start "]
+       [:input {:name "start"
+                :placeholder "yyyy-MM-dd hh:mm:ss"
+                :on-key-up #(reset! startdate (-> % .-target .-value))}]]
+      [:p [:b "end "]
+       [:input {:name "end"
+                :placeholder "yyyy-MM-dd hh:mm:ss"
+                :on-key-up #(reset! enddate (-> % .-target .-value))}]]]
+     [:div
+      [:button {:class "button is-primary is-small"
+                :on-click
+                #(POST "/api/meas"
+                   {:format :json
+                    :headers
+                    {"Accept" "application/transit+json"
+                     "x-csrf-token" js/csrfToken}
+                    :params {:id        @id
+                             :meastype  @meastype
+                             :startdate @startdate
+                             :enddate   @enddate}
+                    :handler (fn [res] (reset! output res))
+                    :error-handler (fn [e] (js/alert (str  "error" e)))})}
+       "fetch"]]]))
+
+(defn output-component
+  []
+  [:div
+   [:h3 "output"]
+   @output])
+
+(defn data-page []
+  [:section.section>div.container>div.content
+   (input-component)
+   [:hr]
+   (output-component)
+   [:hr]])
+
 ;; -------------------------
 (def pages
   {:home  #'home-page
    :about #'about-page
-   :edit  #'edit-user-page})
+   :user  #'user-page
+   :data  #'data-page})
 
 (defn page []
   [(pages (:page @session))])
@@ -252,8 +315,9 @@
 
 (def router
   (reitit/router
-   [["/" :home]
-    ["/about" :about]]))
+   [["/"      :home]
+    ["/about" :about]
+    ["/data"  :data]]))
 
 (defn match-route [uri]
   (->> (or (not-empty (string/replace uri #"^.*#" "")) "/")
@@ -277,6 +341,9 @@
 (defn fetch-users! []
   (GET "/api/users" {:handler #(reset! users %)}))
 
+(defn fetch-measures! []
+  (GET "/api/meas" {:handler #(reset! measures %)}))
+
 (defn ^:dev/after-load mount-components []
   (rdom/render [#'navbar] (.getElementById js/document "navbar"))
   (rdom/render [#'page] (.getElementById js/document "app")))
@@ -284,5 +351,6 @@
 (defn init! []
   (ajax/load-interceptors!)
   (fetch-users!)
+  (fetch-measures!)
   (hook-browser-navigation!)
   (mount-components))

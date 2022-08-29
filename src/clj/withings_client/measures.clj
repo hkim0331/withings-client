@@ -5,6 +5,7 @@
    [clojure.string :as str]
    [clojure.tools.logging :as log]
    ;; [withings-client.config :refer [env]]
+   [withings-client.db.core :as db]
    [withings-client.users :as users]))
 
 (defn str->timestamp
@@ -47,7 +48,6 @@
           :headers {"authorization" (str "Bearer " access)}
           :query-params
           {:action    "getmeas"
-           ;; :access_token access
            :meastype  meastype
            :category  1
            :startdate (str->timestamp startdate)
@@ -57,3 +57,7 @@
         ;; no :measuregrps
         #_:measuregrps)))
 
+(defn list-measures
+  "returns measures vector"
+  []
+  (db/list-measures))

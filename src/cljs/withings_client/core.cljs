@@ -312,7 +312,7 @@
   []
   [:div
    [:h3 "fetched"]
-   (for [data (:measuregrps @output)]
+   (for [data (reverse (:measuregrps @output))]
      (output-one data))])
 
 (defn data-page []

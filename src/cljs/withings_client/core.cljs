@@ -26,12 +26,12 @@
                           :cid nil
                           :secret nil
                           :belong nil
-                          :email nil
-                          :demo "data"}))
+                          :email nil}))
 
 ;; should be a member of session atom?
 (defonce users (r/atom {}))
 (defonce measures (r/atom {}))
+(defonce output (r/atom {}))
 
 ;; --------------------------------------
 ;; navbar
@@ -71,24 +71,24 @@
 
 ;; -------------------------
 ;; user page
-(defn demo
-  [user]
-  [:div
-   [:button
-    {:on-click
-     #(POST "/api/meas"
-        {:format :json
-         :headers
-         {"Accept" "application/transit+json"
-          "x-csrf-token" js/csrfToken}
-         :params {:id        (:id user)
-                  :meastype  1
-                  :startdate "2022-01-01 00:00:00"
-                  :enddate   "2022-10-01 00:00:00"}
-         :handler (fn [res] (swap! session assoc :demo res))
-         :error-handler (fn [e] (js/alert (str  "error demo" e)))})}
-    "demo"]
-   " 2022-01-01 から 2022-09-30 までの体重データを取得、表示します。"])
+;; (defn demo
+;;   [user]
+;;   [:div
+;;    [:button
+;;     {:on-click
+;;      #(POST "/api/meas"
+;;         {:format :json
+;;          :headers
+;;          {"Accept" "application/transit+json"
+;;           "x-csrf-token" js/csrfToken}
+;;          :params {:id        (:id user)
+;;                   :meastype  1
+;;                   :startdate "2022-01-01 00:00:00"
+;;                   :enddate   "2022-10-01 00:00:00"}
+;;          :handler (fn [res] (swap! session assoc :demo res))
+;;          :error-handler (fn [e] (js/alert (str  "error demo" e)))})}
+;;     "demo"]
+;;    " 2022-01-01 から 2022-09-30 までの体重データを取得、表示します。"])
 
 (defn user-page
   []
@@ -96,8 +96,8 @@
     [:section.section>div.container>div.content
      [:h2 (:name user)]
      [:h3 "under construction"]
-     [demo user]
-     [:div {:id "demo"} (str (-> @session :demo :measuregrps))]
+     ;; [demo user]
+     ;; [:div {:id "demo"} (str (-> @session :demo :measuregrps))]
      (for [[key value] user]
        [:p {:key key} (symbol key) ": " (str value) [:br]
         [:input
@@ -273,13 +273,25 @@
                 :on-key-up #(reset! enddate (-> % .-target .-value))}]]]
      [:div
       [:button {:class "button is-primary is-small"
-                :on-click #(js/alert (str [@id @meastype @startdate @enddate]))}
+                :on-click
+                #(POST "/api/meas"
+                   {:format :json
+                    :headers
+                    {"Accept" "application/transit+json"
+                     "x-csrf-token" js/csrfToken}
+                    :params {:id        @id
+                             :meastype  @meastype
+                             :startdate @startdate
+                             :enddate   @enddate}
+                    :handler (fn [res] (reset! output res))
+                    :error-handler (fn [e] (js/alert (str  "error" e)))})}
        "fetch"]]]))
 
 (defn output-component
   []
   [:div
-   [:h3 "output component"]])
+   [:h3 "output"]
+   @output])
 
 (defn data-page []
   [:section.section>div.container>div.content

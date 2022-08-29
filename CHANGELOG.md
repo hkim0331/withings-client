@@ -15,7 +15,7 @@
 - omit reload after updating/deleting user information
 - mainly getting many data at once.
 - meastype -> meastypes
-
+- parse-timestamp
 
 ## 0.6.4-SNAPSHOT
 * pretty print JSON

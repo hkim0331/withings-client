@@ -2,6 +2,8 @@
   (:require
    [ajax.core :refer [GET POST]]
    ;; [cljs.core.async :refer [<!]]
+   [cljs.math :refer  [pow]]
+   [cljs.reader :refer [parse-timestamp]]
    [clojure.string :as string]
    [goog.events :as events]
    [goog.history.EventType :as HistoryEventType]
@@ -292,15 +294,24 @@
                     :error-handler (fn [e] (js/alert (str  "error" e)))})}
        "fetch"]]]))
 
+(defn ts->date
+  [ts]
+  (.toLocaleString (js/Date. (* 1000 ts))))
+
+(defn format-measures
+  [[{:keys [value unit]}]]
+  (/ value (pow 10 (- unit))))
+
+;; params has created param. which should be displayed?
 (defn output-one
-  [{:keys [date created measures]}]
+  [{:keys [date measures]}]
   [:div
-   (str date created measures)])
+   (str (ts->date date) ", " (format-measures measures))])
 
 (defn output-component
   []
   [:div
-   [:h3 "output"]
+   [:h3 "fetched"]
    (for [data (:measuregrps @output)]
      (output-one data))])
 

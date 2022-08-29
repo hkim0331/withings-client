@@ -15,7 +15,7 @@
   (:import
    goog.History))
 
-(def ^:private version "0.6.1")
+(def ^:private version "0.6.2")
 
 (def redirect-uri js/redirectUrl)
 ;; (def redirect-uri "https://wc.melt.kyutech.ac.jp/callback")
@@ -31,6 +31,8 @@
 ;; should be a member of session?
 (defonce users (r/atom {}))
 
+;; --------------------------------------
+;; navbar
 (defn nav-link [uri title page]
   [:a.navbar-item
    {:href   uri
@@ -57,7 +59,6 @@
 
 ;; -------------------------
 ;; about page
-
 (defn about-page []
   [:section.section>div.container>div.content
    [:img {:src "/img/warning_clojure.png"}]

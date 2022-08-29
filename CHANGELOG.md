@@ -16,6 +16,13 @@
 * pretty print JSON
 
 
+## 0.6.2 - 2022-08-29
+- kohhoh did not update.
+  -> used old deploy.sh for app.melt
+### Added
+- mysql/mysqldump can not dump maridb database.
+- db-dump/{dump.sh,restore.sh}
+
 ## 0.6.1 - 2022-08-29
 - departed /callback from login.clj
 - session auth /api/

@@ -19,7 +19,8 @@
 
 (defn service-routes []
  ["/api"
-  {:middleware [middleware/wrap-formats]}
+  {:middleware [middleware/wrap-restricted
+                middleware/wrap-formats]}
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;; measures

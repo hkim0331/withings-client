@@ -2,20 +2,29 @@
 
 ## Unreleased
 - use English, particular in public repositries.
-- early deploy onto kohhoh. apt install mariadb-server
 - undo facility.
-- connection to mysql breaks when macos sleeps
-- create edit-user-page
 - update users list on the fly. SPA way.
-- redirect-uri is required when creating an application.
-  without creating it, cid and secret are never got.
 - remote debug
-- (response/found "/") if refresh success.
+- redirection after refreshing tokens
 - hato :async? true
 - timestamp->str function
   (java.time.Instant/ofEpochMilli 1661330819000)
-- message when errored in refresing tokens
+- visualize the viable time of access tokens.
+- depart callback from login.clj
+* edit-user-page
+  delete then create is OK now.
+* pretty print JSON
 
+
+## 0.6.1 - 2022-08-29
+- departed /callback from login.clj
+- session auth /api/
+```
+% http --session=auth :3000/ login='####' password='######'
+% http --session=auth :3000/api/users ;; OK
+% http :3000/api/users ;; NG
+```
+- demo weights between 2022-01-01 and 2022-09-30
 
 ## 0.6.0 - 2022-08-28
 ### Added
@@ -25,7 +34,8 @@
     (ring/router
       [(login-routes) (home-routes) (service-routes)])
 ```
-- wrap-base に wrap-auth 行を追加しないと動作しなかった。
+- without adding `wrap-auth` line in wrap-base function,
+  could not access allowed pages.
 ```
 (defn wrap-base [handler]
   (-> ((:middleware defaults) handler)

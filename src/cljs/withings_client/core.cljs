@@ -80,11 +80,11 @@
          :params {:id        (:id user)
                   :meastype  1
                   :startdate "2022-01-01 00:00:00"
-                  :enddate   "2022-08-25 00:00:00"}
+                  :enddate   "2022-10-01 00:00:00"}
          :handler (fn [res] (swap! session assoc :demo res))
          :error-handler (fn [e] (js/alert (str  "error demo" e)))})}
     "demo"]
-   " 2022-01-01 から 08-28 までの体重データを取得、表示します。"])
+   " 2022-01-01 から 2022-09-30 までの体重データを取得、表示します。"])
 
 (defn edit-user-page
   []

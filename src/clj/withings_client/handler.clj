@@ -1,15 +1,16 @@
 (ns withings-client.handler
   (:require
-    [withings-client.middleware :as middleware]
-    [withings-client.layout :refer [error-page]]
-    [withings-client.routes.home :refer [home-routes]]
-    [withings-client.routes.login :refer [login-routes]]
-    [withings-client.routes.services :refer [service-routes]]
-    [reitit.ring :as ring]
-    [ring.middleware.content-type :refer [wrap-content-type]]
-    [ring.middleware.webjars :refer [wrap-webjars]]
-    [withings-client.env :refer [defaults]]
-    [mount.core :as mount]))
+   [withings-client.middleware :as middleware]
+   [withings-client.layout :refer [error-page]]
+   [withings-client.routes.home :refer [home-routes]]
+   [withings-client.routes.login :refer [login-routes]]
+   [withings-client.routes.callback :refer [callback-routes]]
+   [withings-client.routes.services :refer [service-routes]]
+   [reitit.ring :as ring]
+   [ring.middleware.content-type :refer [wrap-content-type]]
+   [ring.middleware.webjars :refer [wrap-webjars]]
+   [withings-client.env :refer [defaults]]
+   [mount.core :as mount]))
 
 (mount/defstate init-app
   :start ((or (:init defaults) (fn [])))
@@ -19,7 +20,7 @@
   :start
   (ring/ring-handler
     (ring/router
-      [(login-routes) (home-routes) (service-routes)])
+      [(callback-routes) (login-routes) (home-routes) (service-routes)])
     (ring/routes
       (ring/create-resource-handler
         {:path "/"})

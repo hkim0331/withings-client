@@ -10,13 +10,20 @@
 - timestamp->str function
   (java.time.Instant/ofEpochMilli 1661330819000)
 - visualize the viable time of access tokens.
-
-
-## 0.7.0-SNAPSHOT
+- depart callback from login.clj
 * edit-user-page
   delete then create is OK now.
 * pretty print JSON
 
+
+## 0.6.1 - 2022-08-29
+- departed /callback from login.clj
+- auth /api/ checked by;
+```
+% http --session=auth :3000/ login='####' password='######'
+% http --session=auth :3000/api/users ;; OK
+% http :3000/api/users ;; NG
+```
 
 ## 0.6.0 - 2022-08-28
 ### Added

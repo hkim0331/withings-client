@@ -7,12 +7,12 @@
    [withings-client.middleware :as middleware]
    [withings-client.tokens :as tokens]))
 
-(defn callback
-  "auth code inside request header :params {:code ... :state dev}"
-  [{params :params}]
-  (log/info "/callback" params)
-  (tokens/fetch-and-store! params)
-  (response/found "/"))
+;; (defn callback
+;;   "auth code inside request header :params {:code ... :state dev}"
+;;   [{params :params}]
+;;   (log/info "/callback" params)
+;;   (tokens/fetch-and-store! params)
+;;   (response/found "/"))
 
 (defn login
   [request]
@@ -38,9 +38,8 @@
 
 (defn login-routes []
   [""
-   {:middleware [middleware/wrap-csrf
+   {:middleware [;; middleware/wrap-csrf
                  middleware/wrap-formats]}
-   ["/callback" {:get callback}]
    ["/"  {:get  login
           :post login!}]
    ["/logout" {:get  logout!}]])

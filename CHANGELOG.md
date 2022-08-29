@@ -16,7 +16,7 @@
 * pretty print JSON
 
 
-## 0.6.2-SNAPSHOT
+## 0.6.2 - 2022-08-29
 - kohhoh did not update.
   -> used old deploy.sh for app.melt
 ### Added

@@ -17,6 +17,12 @@
 - omit reload after updating/deleting user information
 
 
+## 0.6.3-SNAPSHOT
+- GET /api/meas
+### FIXME
+- can not (migrate) SQL syntax error occurred.
+  however, `mycli -u $USER $DB < $migration.sql` goes well.
+
 ## 0.6.2 - 2022-08-29
 - kohhoh did not update.
   -> used old deploy.sh for app.melt

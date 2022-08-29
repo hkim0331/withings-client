@@ -28,8 +28,10 @@
                           :belong nil
                           :email nil
                           :demo "data"}))
-;; should be a member of session?
+
+;; should be a member of session atom?
 (defonce users (r/atom {}))
+(defonce measures (r/atom {}))
 
 ;; --------------------------------------
 ;; navbar
@@ -238,12 +240,22 @@
    (users-component)
    [:hr]
    version])
+
 ;; -------------------------
 ;; data-page
 (defn input-component
   []
   [:div
-   [:h3 "input component"]])
+   [:div [:h3 "who?"]
+    (for [user @users]
+     [:p {:key (:id user)} (:name user)])]
+   [:div [:h3 "what?"]
+    (for [mea @measures]
+     [:p {:key (str "m" (:id mea))}
+      (:value mea) " " (:description mea)])]
+   [:div [:h3 "when?"]
+    [:p "start" [:input {:name "start" :placeholder "yyyy-MM-dd hh:mm:ss"}]]
+    [:p "end" [:input {:name "end" :placeholder "yyyy-MM-dd hh:mm:ss"}]]]])
 
 (defn output-component
   []
@@ -298,6 +310,9 @@
 (defn fetch-users! []
   (GET "/api/users" {:handler #(reset! users %)}))
 
+(defn fetch-measures! []
+  (GET "/api/meas" {:handler #(reset! measures %)}))
+
 (defn ^:dev/after-load mount-components []
   (rdom/render [#'navbar] (.getElementById js/document "navbar"))
   (rdom/render [#'page] (.getElementById js/document "app")))
@@ -305,5 +320,6 @@
 (defn init! []
   (ajax/load-interceptors!)
   (fetch-users!)
+  (fetch-measures!)
   (hook-browser-navigation!)
   (mount-components))

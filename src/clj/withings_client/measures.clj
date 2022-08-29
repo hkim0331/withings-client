@@ -5,6 +5,7 @@
    [clojure.string :as str]
    [clojure.tools.logging :as log]
    ;; [withings-client.config :refer [env]]
+   [withings-client.db.core :as db]
    [withings-client.users :as users]))
 
 (defn str->timestamp
@@ -57,3 +58,7 @@
         ;; no :measuregrps
         #_:measuregrps)))
 
+(defn list-measures
+  "returns measures vector"
+  []
+  (db/list-measures))

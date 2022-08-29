@@ -29,7 +29,8 @@
              (let [ret (measures/meas %)]
                 ;; (store ret)
                (response/ok ret))
-             (catch Exception e (error e)))}]
+             (catch Exception e (error e)))
+    :get (fn [req] (response/ok (measures/list-measures)))}]
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;; tokens

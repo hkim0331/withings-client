@@ -33,6 +33,8 @@
 ;; lastupdate=int use this  instead of startdate+enddate
 ;; 'https://wbsapi.withings.net/measure'
 
+
+;; meastypes?
 (defn meas
   "get meastype between startdate and enddate,
    using `access-token` value from `users` table.

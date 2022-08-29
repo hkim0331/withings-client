@@ -2,6 +2,8 @@
   (:require
    [ajax.core :refer [GET POST]]
    ;; [cljs.core.async :refer [<!]]
+   [cljs.math :refer  [pow]]
+   [cljs.reader :refer [parse-timestamp]]
    [clojure.string :as string]
    [goog.events :as events]
    [goog.history.EventType :as HistoryEventType]
@@ -15,7 +17,7 @@
   (:import
    goog.History))
 
-(def ^:private version "0.6.3")
+(def ^:private version "0.6.4")
 
 (def redirect-uri js/redirectUrl)
 ;; (def redirect-uri "https://wc.melt.kyutech.ac.jp/callback")
@@ -32,6 +34,10 @@
 (defonce users (r/atom {}))
 (defonce measures (r/atom {}))
 (defonce output (r/atom {}))
+
+;; --------------------------------------
+;; date functions
+
 
 ;; --------------------------------------
 ;; navbar
@@ -243,6 +249,7 @@
 
 ;; ------------------
 ;; data-page
+
 (defn input-component
   "form. must pass id meatype startdate enddate.
    date format is yyyy-MM-dd hh:mm:ss"
@@ -265,11 +272,11 @@
      [:div
       [:p [:b "start "]
        [:input {:name "start"
-                :placeholder "yyyy-MM-dd hh:mm:ss"
+                :placeholder "2022-01-01 00:00:00"
                 :on-key-up #(reset! startdate (-> % .-target .-value))}]]
       [:p [:b "end "]
        [:input {:name "end"
-                :placeholder "yyyy-MM-dd hh:mm:ss"
+                :placeholder "2023-01-01 00:00:00"
                 :on-key-up #(reset! enddate (-> % .-target .-value))}]]]
      [:div
       [:button {:class "button is-primary is-small"
@@ -287,11 +294,26 @@
                     :error-handler (fn [e] (js/alert (str  "error" e)))})}
        "fetch"]]]))
 
+(defn ts->date
+  [ts]
+  (.toLocaleString (js/Date. (* 1000 ts))))
+
+(defn format-measures
+  [[{:keys [value unit]}]]
+  (/ value (pow 10 (- unit))))
+
+;; params has created param. which should be displayed?
+(defn output-one
+  [{:keys [date measures]}]
+  [:div
+   (str (ts->date date) ", " (format-measures measures))])
+
 (defn output-component
   []
   [:div
-   [:h3 "output"]
-   @output])
+   [:h3 "fetched"]
+   (for [data (:measuregrps @output)]
+     (output-one data))])
 
 (defn data-page []
   [:section.section>div.container>div.content

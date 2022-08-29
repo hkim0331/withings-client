@@ -12,9 +12,13 @@
 - visualize the viable time of access tokens.
 * edit-user-page
   delete then create is OK now.
-* pretty print JSON
 - omit reload after updating/deleting user information
+- mainly getting many data at once.
+- meastype -> meastypes
+- parse-timestamp
 
+## 0.6.4-SNAPSHOT
+- CLJS timestamp functions (.toLocaleString (js/Date. ts))
 
 ## 0.6.3 - 2022-08-29
 - GET /api/meas

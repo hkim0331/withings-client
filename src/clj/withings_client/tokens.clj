@@ -83,5 +83,5 @@
   (-> params refresh restore!))
 
 (defn refresh-and-restore-one!
-  [n]
-  (-> (users/get-user n) refresh restore!))
+  [id]
+  (-> (users/get-user id) refresh restore!))

@@ -12,6 +12,7 @@
 - mainly getting many data at once.
 - change meastype with meastypes?
 - confirmed deletion
+- refresh tokens automatically. (or just before every fetch?)
 
 
 ## 0.6.5 - 2022-08-29

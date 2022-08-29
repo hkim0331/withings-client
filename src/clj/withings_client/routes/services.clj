@@ -39,11 +39,11 @@
              (tokens/refresh-and-restore! %)
              (response/ok "refreshed"))}]
 
-  ["/token/refresh/:n"
-   {:post (fn [{{:keys [n]} :path-params}]
-            (log/info "/token/refresh/:n" n)
+  ["/token/refresh/:id"
+   {:post (fn [{{:keys [id]} :path-params}]
+            (log/info "/token/refresh/:n" id)
             (try
-              (tokens/refresh-and-restore-one! n)
+              (tokens/refresh-and-restore-one! id)
               (response/ok "refreshed")
               (catch Exception e (error e))))}]
 

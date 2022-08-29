@@ -25,12 +25,12 @@
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;; measures
   ["/meas"
-   {:post #(try
-             (let [ret (measures/meas %)]
-                ;; (store ret)
+   {:post (fn [params]
+           (try
+             (let [ret (measures/meas params)]
                (response/ok ret))
-             (catch Exception e (error e)))
-    :get (fn [req] (response/ok (measures/list-measures)))}]
+             (catch Exception e (error e))))
+    :get (fn [_] (response/ok (measures/list-measures)))}]
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;; tokens

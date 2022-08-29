@@ -48,7 +48,6 @@
           :headers {"authorization" (str "Bearer " access)}
           :query-params
           {:action    "getmeas"
-           ;; :access_token access
            :meastype  meastype
            :category  1
            :startdate (str->timestamp startdate)

@@ -241,21 +241,26 @@
    [:hr]
    version])
 
-;; -------------------------
+;; ------------------
 ;; data-page
 (defn input-component
+  "form. must pass id meatype startdate enddate.
+   date format is yyyy-MM-dd hh:mm:ss"
   []
-  [:div
-   [:div [:h3 "who?"]
+  [:div [:h3 "who?"]
+   [:select {:name "id"}
     (for [user @users]
-     [:p {:key (:id user)} (:name user)])]
+      [:option {:key (:id user) :value (:id user)} (:name user)])]
    [:div [:h3 "what?"]
-    (for [mea @measures]
-     [:p {:key (str "m" (:id mea))}
-      (:value mea) " " (:description mea)])]
+    [:select {:name "meastype"}
+     (for [mea @measures]
+       [:option {:key (str "m" (:id mea)) :value (:value mea)}
+        (:description mea)])]]
    [:div [:h3 "when?"]
-    [:p "start" [:input {:name "start" :placeholder "yyyy-MM-dd hh:mm:ss"}]]
-    [:p "end" [:input {:name "end" :placeholder "yyyy-MM-dd hh:mm:ss"}]]]])
+    [:p [:b "start "] [:input {:name "start" :placeholder "yyyy-MM-dd hh:mm:ss"}]]
+    [:p [:b "end "]   [:input {:name "end" :placeholder "yyyy-MM-dd hh:mm:ss"}]]]
+   [:div
+    [:input {:type :submit :value "data"}]]])
 
 (defn output-component
   []

@@ -247,33 +247,33 @@
   "form. must pass id meatype startdate enddate.
    date format is yyyy-MM-dd hh:mm:ss"
   []
-  (let [id        (r/atom nil)
-        meastype  (r/atom nil)
-        startdate (r/atom nil)
-        enddate   (r/atom nil)]
-    [:div [:h3 "who?"]
+  (let [id        (r/atom (:id (first @users)))
+        meastype  (r/atom (:id (first @measures)))
+        startdate (r/atom "2022-01-01 00:00:00")
+        enddate   (r/atom "2023-01-01 00:00:00")]
+    [:div [:h3 "Data"]
      [:select {:name "id"
                :on-change (fn [e] (reset! id (-> e .-target .-value)))}
       (for [user @users]
         [:option {:key (:id user) :value (:id user)} (:name user)])]
-     [:div [:h3 "what?"]
+     [:div
       [:select {:name "meastype"
                 :on-change (fn [e] (reset! meastype (-> e .-target .-value)))}
        (for [mea @measures]
          [:option {:key (str "m" (:id mea)) :value (:value mea)}
           (:description mea)])]]
-     [:div [:h3 "period?"]
+     [:div
       [:p [:b "start "]
-          [:input {:name "start"
-                   :placeholder "yyyy-MM-dd hh:mm:ss"
-                   :on-key-up #(reset! startdate (-> % .-target .-value))}]]
+       [:input {:name "start"
+                :placeholder "yyyy-MM-dd hh:mm:ss"
+                :on-key-up #(reset! startdate (-> % .-target .-value))}]]
       [:p [:b "end "]
-          [:input {:name "end"
-                   :placeholder "yyyy-MM-dd hh:mm:ss"
-                   :on-key-up #(reset! enddate (-> % .-target .-value))}]]]
+       [:input {:name "end"
+                :placeholder "yyyy-MM-dd hh:mm:ss"
+                :on-key-up #(reset! enddate (-> % .-target .-value))}]]]
      [:div
       [:button {:class "button is-primary is-small"
-                :on-click #(js/alert (str @id @meastype @startdate @enddate))}
+                :on-click #(js/alert (str [@id @meastype @startdate @enddate]))}
        "fetch"]]]))
 
 (defn output-component

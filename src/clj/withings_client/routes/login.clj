@@ -14,7 +14,6 @@
   (tokens/fetch-and-store! params)
   (response/found "/"))
 
-
 (defn login
   [request]
   (layout/render request

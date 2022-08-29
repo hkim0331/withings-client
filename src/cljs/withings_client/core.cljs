@@ -247,7 +247,7 @@
 
 ;; ------------------
 ;; data-page
-;; 
+
 (defn input-component
   "form. must pass id meatype startdate enddate.
    date format is yyyy-MM-dd hh:mm:ss"
@@ -292,7 +292,7 @@
                     :error-handler (fn [e] (js/alert (str  "error" e)))})}
        "fetch"]]]))
 
-(defn output
+(defn output-one
   [{:keys [date created measures]}]
   [:div
    (str date created measures)])
@@ -302,7 +302,7 @@
   [:div
    [:h3 "output"]
    (for [data (:measuregrps @output)]
-    (output data))])
+     (output-one data))])
 
 (defn data-page []
   [:section.section>div.container>div.content

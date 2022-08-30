@@ -15,7 +15,7 @@
   (:import
    goog.History))
 
-(def ^:private version "0.6.6")
+(def ^:private version "0.6.7")
 
 (def redirect-uri js/redirectUrl)
 ;; (def redirect-uri "https://wc.melt.kyutech.ac.jp/callback")
@@ -72,24 +72,42 @@
 ;; user page
 (defn user-page
   []
-  (let [user (:edit @session)]
+  (let [user (atom (:edit @session))]
     [:section.section>div.container>div.content
-     [:h2 (:name user)]
-     [:h3 "under construction"]
-     ;; [demo user]
-     ;; [:div {:id "demo"} (str (-> @session :demo :measuregrps))]
-     (for [[key value] user]
-       [:p {:key key} (symbol key) ": " (str value) [:br]
+     [:h3 (:name @user)]
+     [:p "エンターで変更を確定後に、update ボタンで更新します。"]
+     (for [[key value] (dissoc @user :id :userid :created_at :updated_at)]
+       [:p {:key key} (symbol key) [:br]
         [:input
-         {:on-key-up #(.log js/console (.-key %))}]]) ;; Enter でなんとかする。
+         {:placeholder (str value)
+          :on-key-up
+          (fn [^js/Event e]
+            (when (= "Enter" (.-key e))
+              (let [v (-> e .-target .-value)]
+                (js/alert (str key " " v "でよろしいですか"))
+                (swap! user assoc key v))))}]])
+     [:div
+      [:buttn
+       {:class "button is-primary is-small"
+        :on-click
+        (fn [^js/Event e]
+          (POST (str "/api/user/" (:id @user))
+            {:params @user
+             :handler #(swap! session assoc :page :home)
+             :error-handler
+             (fn [] (js/alert (.getMessage e)))}))}
+       "update"]]
+     [:br]
      [:div
       [:button
        {:class "button is-danger is-small"
         :on-click
         (fn []
-          (POST (str "/api/user/" (:id user) "/delete")
-            {:handler #(swap! session assoc :page :home)
-             :error-handler (fn [^js/Event e] (js/alert (.getMessage e)))}))}
+          (and (js/confirm "are you OK?")
+               (POST (str "/api/user/" (:id @user) "/delete")
+                 {:handler #(swap! session assoc :page :home)
+                  :error-handler
+                  (fn [^js/Event e] (js/alert (.getMessage e)))})))}
        "delete"]]]))
 
 ;; -------------------------

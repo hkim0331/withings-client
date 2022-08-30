@@ -4,20 +4,24 @@
 - undo facility.
 - update users view SPA way.
 - remote debug
-- redisplay after refreshing tokens
 - redisplay without reloading after updating/deleting user information
 - hato :async? true
 - bar chart the viable time of access tokens.
-
 - mainly getting many data at once.
-- change meastype with meastypes?
-- confirmed deletion
+  change meastype with meastypes?
+  should also change formatting functions.
 - refresh tokens automatically. (or just before every fetch?)
-- reconsider URL
+- fetch displays `98.0` as `98`
 
 
-## 0.6.6-SNAPSHOT
-* edit-user-page
+## 0.6.7 - 2022-08-30
+- confirmed delete
+- edit-user-page
+
+## 0.6.6 - 2022-08-30
+- polish up code.
+### Changed
+- /token/refresh/:n -> /token/:n/refresh
 
 ## 0.6.5 - 2022-08-29
 - deploy to kohhoh

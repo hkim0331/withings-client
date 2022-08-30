@@ -15,7 +15,7 @@
   (:import
    goog.History))
 
-(def ^:private version "0.6.5")
+(def ^:private version "0.6.6-SNAPSHOT")
 
 (def redirect-uri js/redirectUrl)
 ;; (def redirect-uri "https://wc.melt.kyutech.ac.jp/callback")
@@ -198,12 +198,12 @@
        [:button
         {:class "button is-primary is-small"
          :on-click
-         (fn [_] (POST "/api/token/refresh"
+         (fn [_] (POST (str "/api/token/" (:id user) "/refresh")
                    {:format :json
                     :headers
                     {"Accept" "application/transit+json"
                      "x-csrf-token" js/csrfToken}
-                    :params user
+                    ;; :params user
                     :handler       #(js/alert "リフレッシュ完了。")
                     :error-handler #(js/alert "失敗。")}))}
         "refresh"]]

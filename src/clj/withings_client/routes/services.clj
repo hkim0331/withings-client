@@ -19,14 +19,16 @@
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;; tokens
-  ["/token/refresh"
-   {:post #(do
-             (tokens/refresh-and-restore! %)
-             (response/ok "refreshed"))}]
+  ;; 2022-08-30
+  ;; ["/token/refresh"
+  ;;  {:post #(do
+  ;;            (tokens/refresh-and-restore! %)
+  ;;            (response/ok "refreshed"))}]
 
-  ["/token/refresh/:id"
+  ;; changed
+  ["/token/:id/refresh"
    {:post (fn [{{:keys [id]} :path-params}]
-            (log/info "/token/refresh/:n" id)
+            (log/info "/token/:n/refresh" id)
             (try
               (tokens/refresh-and-restore-one! id)
               (response/ok "refreshed")
@@ -73,6 +75,8 @@
         (users/toggle-valid! n)
         (response/ok "valid")
         (catch Exception e (error e))))}]
+
+
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;; measures

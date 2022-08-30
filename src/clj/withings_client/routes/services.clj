@@ -1,36 +1,21 @@
 (ns withings-client.routes.services
- (:require
-  [clojure.tools.logging :as log]
-  [ring.util.http-response :as response]
-  [withings-client.measures :as measures]
-  [withings-client.middleware :as middleware]
-  [withings-client.tokens :as tokens]
-  [withings-client.users :as users]))
+  (:require
+   [clojure.tools.logging :as log]
+   [ring.util.http-response :as response]
+   [withings-client.measures :as measures]
+   [withings-client.middleware :as middleware]
+   [withings-client.tokens :as tokens]
+   [withings-client.users :as users]))
 
 (defn error
- [e]
- (response/internal-server-error
-           {:errors {:server-error (.getMessage e)}}))
-
-;; (defn refresh-token
-;;   [{params :params}]
-;;   (log/info "refresh-token" params)
-;;   (response/ok {:refresh-token params}))
+  [e]
+  (response/internal-server-error
+   {:errors {:server-error (.getMessage e)}}))
 
 (defn service-routes []
  ["/api"
   {:middleware [middleware/wrap-restricted
                 middleware/wrap-formats]}
-
-  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  ;; measures
-  ["/meas"
-   {:post (fn [params]
-           (try
-             (let [ret (measures/meas params)]
-               (response/ok ret))
-             (catch Exception e (error e))))
-    :get (fn [_] (response/ok (measures/list-measures)))}]
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;; tokens
@@ -49,6 +34,14 @@
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;; users
+  ["/user"
+   {:post
+    (fn [{:keys [params]}]
+      (try
+        (users/create-user! params)
+        (response/ok params)
+        (catch Exception e (error e))))}]
+  
   ["/users"
    {:get (fn [_] (response/ok (users/users-list)))}]
 
@@ -81,10 +74,12 @@
         (response/ok "valid")
         (catch Exception e (error e))))}]
 
-  ["/user"
-   {:post
-    (fn [{:keys [params]}]
-      (try
-        (users/create-user! params)
-        (response/ok params)
-        (catch Exception e (error e))))}]])
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;; measures
+  ["/meas"
+   {:post (fn [params]
+           (try
+             (let [ret (measures/meas params)]
+               (response/ok ret))
+             (catch Exception e (error e))))
+    :get (fn [_] (response/ok (measures/list-measures)))}]])

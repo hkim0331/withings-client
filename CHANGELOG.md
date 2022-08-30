@@ -8,19 +8,24 @@
 - redisplay without reloading after updating/deleting user information
 - hato :async? true
 - bar chart the viable time of access tokens.
-* edit-user-page.
+
 - mainly getting many data at once.
 - change meastype with meastypes?
 - confirmed deletion
 - refresh tokens automatically. (or just before every fetch?)
+- reconsider URL
 
+
+## 0.6.6-SNAPSHOT
+* edit-user-page
 
 ## 0.6.5 - 2022-08-29
 - deploy to kohhoh
 - timestamp->str function
-  (java.time.Instant/ofEpochMilli 1661330819000)
 ```
-(defn ts->date
+ ;; (java.time.Instant/ofEpochMilli 1661330819000)
+ ;; core.cljs
+ (defn ts->date
   [ts]
   (.toLocaleString (js/Date. (* 1000 ts))))
 ```

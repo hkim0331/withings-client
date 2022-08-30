@@ -5,14 +5,7 @@
    [ring.util.response]
    [withings-client.layout :as layout]
    [withings-client.middleware :as middleware]
-   [withings-client.tokens :as tokens]))
-
-;; (defn callback
-;;   "auth code inside request header :params {:code ... :state dev}"
-;;   [{params :params}]
-;;   (log/info "/callback" params)
-;;   (tokens/fetch-and-store! params)
-;;   (response/found "/"))
+   #_[withings-client.tokens :as tokens]))
 
 (defn login
   [request]
@@ -20,7 +13,6 @@
                  "login.html"
                  {:flash (:flash request)}))
 
-;; FIXME: must be changed
 (defn login!
   [{{:keys [login password]} :params}]
   (log/info "login" login "password" password)
@@ -28,8 +20,7 @@
     (-> (response/found "/home/")
         (assoc-in [:session :identity] login))
     (-> (response/found "/")
-        (dissoc :session)
-        (assoc :flash "login failure"))))
+        (assoc :session {} :flash "login failure"))))
 
 (defn logout!
   [_]
@@ -40,6 +31,5 @@
   [""
    {:middleware [;; middleware/wrap-csrf
                  middleware/wrap-formats]}
-   ["/"  {:get  login
-          :post login!}]
+   ["/" {:get login :post login!}]
    ["/logout" {:get  logout!}]])

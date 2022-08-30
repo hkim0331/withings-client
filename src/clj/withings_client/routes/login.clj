@@ -29,7 +29,6 @@
 
 (defn login-routes []
   [""
-   {:middleware [;; middleware/wrap-csrf
-                 middleware/wrap-formats]}
+   {:middleware [middleware/wrap-formats]}
    ["/" {:get login :post login!}]
    ["/logout" {:get  logout!}]])

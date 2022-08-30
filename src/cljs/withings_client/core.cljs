@@ -15,7 +15,7 @@
   (:import
    goog.History))
 
-(def ^:private version "0.6.5")
+(def ^:private version "0.6.6-SNAPSHOT")
 
 (def redirect-uri js/redirectUrl)
 ;; (def redirect-uri "https://wc.melt.kyutech.ac.jp/callback")
@@ -70,7 +70,6 @@
 
 ;; -------------------------
 ;; user page
-
 (defn user-page
   []
   (let [user (:edit @session)]
@@ -198,12 +197,12 @@
        [:button
         {:class "button is-primary is-small"
          :on-click
-         (fn [_] (POST "/api/token/refresh"
+         (fn [_] (POST (str "/api/token/" (:id user) "/refresh")
                    {:format :json
                     :headers
                     {"Accept" "application/transit+json"
                      "x-csrf-token" js/csrfToken}
-                    :params user
+                    ;; :params user
                     :handler       #(js/alert "リフレッシュ完了。")
                     :error-handler #(js/alert "失敗。")}))}
         "refresh"]]
@@ -225,7 +224,6 @@
 
 ;; ------------------
 ;; data-page
-
 (defn input-component
   "id, meatype, startdate, enddate are required to work.
    date must be in  `yyyy-MM-dd hh:mm:ss` format.
@@ -268,7 +266,7 @@
                              :startdate @startdate
                              :enddate   @enddate}
                     :handler (fn [res] (reset! output res))
-                    :error-handler (fn [e] (js/alert (str  "error" e)))})}
+                    :error-handler (fn [e] (js/alert (str  "error " e)))})}
        "fetch"]]]))
 
 (defn ts->date

@@ -17,22 +17,15 @@
   {:middleware [middleware/wrap-restricted
                 middleware/wrap-formats]}
 
-  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  ;; tokens
-  ["/token/refresh"
-   {:post #(do
-             (tokens/refresh-and-restore! %)
-             (response/ok "refreshed"))}]
-
-  ["/token/refresh/:id"
+  ;; tokens. use also when creating user entry
+  ["/token/:id/refresh"
    {:post (fn [{{:keys [id]} :path-params}]
-            (log/info "/token/refresh/:n" id)
+            (log/info "/token/:n/refresh" id)
             (try
               (tokens/refresh-and-restore-one! id)
               (response/ok "refreshed")
               (catch Exception e (error e))))}]
 
-  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;; users
   ["/user"
    {:post
@@ -41,7 +34,7 @@
         (users/create-user! params)
         (response/ok params)
         (catch Exception e (error e))))}]
-  
+
   ["/users"
    {:get (fn [_] (response/ok (users/users-list)))}]
 
@@ -50,10 +43,11 @@
     (fn [{{:keys [n]} :path-params}]
       (response/ok (users/get-user n)))
 
-    ;; update, /user/:n/update is right?
+    ;; /user/:n/update is right?
     :post
     (fn [{{:keys [n]} :path-params :as request}]
       (let [params (:params request)]
+        (log/info "called not yet implemented `/user/:n`")
         (try
           (response/ok {:user n :params params})
           (catch Exception e (error e)))))}]
@@ -74,12 +68,11 @@
         (response/ok "valid")
         (catch Exception e (error e))))}]
 
-  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;; measures
   ["/meas"
    {:post (fn [params]
-           (try
-             (let [ret (measures/meas params)]
-               (response/ok ret))
-             (catch Exception e (error e))))
+            (try
+              (let [ret (measures/meas params)]
+                (response/ok ret))
+              (catch Exception e (error e))))
     :get (fn [_] (response/ok (measures/list-measures)))}]])

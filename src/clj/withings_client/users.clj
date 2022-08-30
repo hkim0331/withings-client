@@ -15,7 +15,7 @@
 
 (defn update-user!
   [params]
-  ;; (log/info "users/update-user! params" params)
+  (log/info "users" params)
   (db/update-user! params))
 
 (defn delete-user!

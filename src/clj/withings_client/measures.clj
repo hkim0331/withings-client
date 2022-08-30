@@ -7,6 +7,8 @@
    [withings-client.db.core :as db]
    [withings-client.users :as users]))
 
+(def meas-uri "https://wbsapi.withings.net/measure")
+
 ;; namespace?
 (defn str->timestamp
   "input: yyyy-MM-DD hh:mm:ss
@@ -17,8 +19,6 @@
               jt/to-sql-timestamp
               jt/to-millis-from-epoch)
           1000)))
-
-(def meas-uri "https://wbsapi.withings.net/measure")
 
 ;; curl
 ;; --header "Authorization: Bearer YOUR_ACCESS_TOKEN"
@@ -55,9 +55,7 @@
            :startdate (str->timestamp startdate)
            :enddate   (str->timestamp enddate)}})
         :body
-        :body
-        ;; no :measuregrps
-        #_:measuregrps)))
+        :body)))
 
 (defn list-measures
   "returns measures vector"

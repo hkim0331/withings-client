@@ -11,6 +11,7 @@ UPDATE users
 SET name = :name, belong = :belong, email = :email,
     cid = :cid, secret = :secret,
     access = :access, refresh = :refresh,
+    valid = :valid,
     updated_at = now()
 WHERE id = :id
 

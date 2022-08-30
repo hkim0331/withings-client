@@ -46,7 +46,7 @@
     :post
     (fn [{params :params}]
       (try
-        ;; (log/info "/user/:id, params " params)
+        (log/info "/user/:id, params " params)
         (users/update-user! params)
         (response/ok "updated")
         (catch Exception e (error e))))}]

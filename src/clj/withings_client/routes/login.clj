@@ -3,6 +3,7 @@
    [clojure.tools.logging :as log]
    [ring.util.http-response :as response]
    [ring.util.response]
+   [withings-client.config :refer [env]]
    [withings-client.layout :as layout]
    [withings-client.middleware :as middleware]
    #_[withings-client.tokens :as tokens]))
@@ -16,7 +17,11 @@
 (defn login!
   [{{:keys [login password]} :params}]
   (log/info "login" login "password" password)
-  (if (and (seq password) (= login password))
+  (log/info "env " (env :login) (env :password))
+  (if (and (seq login)
+           (seq password)
+           (= login (env :login))
+           (= password (env :password)))
     (-> (response/found "/home/")
         (assoc-in [:session :identity] login))
     (-> (response/found "/")

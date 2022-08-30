@@ -77,6 +77,7 @@
   []
   [:section.section>div.container>div.content
    [:h3 (-> @session :user :name)]
+   [:p "valid は 0/1 で変更"]
    (for [[key _] (dissoc (-> @session :user)
                          :id :userid :created_at :updated_at)]
      [:p {:key key} (symbol key) [:br]
@@ -89,6 +90,7 @@
      {:class "button is-primary is-small"
       :on-click
       (fn [^js/Event e]
+        (js/alert (str (:user @session)))
         (POST (str "/api/user/" (get-in @session [:user :id]))
           {:params (:user @session)
            :handler #(swap! session assoc :page :home)

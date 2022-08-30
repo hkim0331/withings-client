@@ -22,6 +22,12 @@ on demand OK.
 - just before fetch?
 - async refresh
 
+
+## 0.7.0-SNAPSHOT
+### Changed
+- /token/refresh-all -> /tokens/refresh-all
+- tokens/refresh-all -> /tokens/refresh-all!
+
 ## 0.6.13 - 2022-08-31
 - displays `98` as `98.00`
 ```

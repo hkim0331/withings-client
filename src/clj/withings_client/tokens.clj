@@ -73,7 +73,7 @@
   (-> (users/get-user id)
       refresh-and-restore!))
 
-(defn refresh-all
+(defn refresh-all!
   []
   (let [users (users/users-list)]
     (log/info "tokens/refresh-all (:name users)" (:name users))

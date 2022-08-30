@@ -24,14 +24,14 @@
             (if (tokens/refresh-and-restore-one! id)
               (response/ok "success")
               (response/bad-request "fail")))}]
-  
+
   ;; post?
-  ["/token/refresh-all"
+  ["/tokens/refresh-all"
     {:post (fn [_]
-             (log/info "/token/refresh-all")
+             (log/info "/tokens/refresh-all")
              (try
-               (tokens/refresh-all)
-               (response/ok "refresh all")
+               (tokens/refresh-all!)
+               (response/ok "refreshed all")
                (catch Exception e (error e))))}]
 
   ;; users

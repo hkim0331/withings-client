@@ -27,10 +27,10 @@
   []
   (db/get-users))
 
-;; no. update-user-by-name ではないと使い道がない。
-(defn update-cid!
-  [params]
-  (db/update-cid-by-name! params))
+;; ;; no. update-user-by-name ではないと使い道がない。
+;; (defn update-cid!
+;;   [params]
+;;   (db/update-cid-by-name! params))
 
 (defn user-by-name
   [name]

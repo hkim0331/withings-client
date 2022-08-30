@@ -22,11 +22,12 @@ on demand OK.
 - just before fetch?
 
 
-## 0.6.13-SNAPSHOT
+## 0.6.13 - 2022-08-31
 - displays `98` as `98.00`
 ```
 #(.toFixed % 2)
 ```
+- /api/token/refresh-all
 
 ## 0.6.12 - 2022-08-30
 - `login` and `password` environemt variables.

@@ -10,7 +10,7 @@
    [ring.middleware.anti-forgery :refer [wrap-anti-forgery]]
    [ring.middleware.defaults :refer [site-defaults wrap-defaults]]
    [ring.middleware.flash :refer [wrap-flash]]
-   [withings-client.config :refer [env]]
+   #_[withings-client.config :refer [env]]
    [withings-client.env :refer [defaults]]
    [withings-client.layout :refer [error-page]]
    [withings-client.middleware.formats :as formats]))

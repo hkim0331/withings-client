@@ -34,11 +34,9 @@
   [params]
   (-> params request-token store!))
 
-
-
 (defn refresh
   "when errors, returns {}"
-  [{:keys [cid secret refresh] :as params}]
+  [{:keys [cid secret refresh]}]
   (log/info "tokens/refresh cid" cid)
   (-> (hc/post
        oauth2-uri
@@ -50,7 +48,6 @@
          :client_secret secret
          :refresh_token refresh}})
       (get-in [:body :body])))
-
 
 (defn restore!
   "params には userid, access, refresh, access,

@@ -15,7 +15,7 @@
   (:import
    goog.History))
 
-(def ^:private version "0.6.8")
+(def ^:private version "0.6.9")
 
 (def redirect-uri js/redirectUrl)
 ;; (def redirect-uri "https://wc.melt.kyutech.ac.jp/callback")

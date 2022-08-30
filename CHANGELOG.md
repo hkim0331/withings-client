@@ -12,6 +12,11 @@
   should also change formatting functions.
 - refresh tokens automatically. (or just before every fetch?)
 - fetch displays `98.0` as `98`
+- can not change value of `valid`
+- DB interfaces
+- `updated_at` is not the refresh token time.
+- note column.
+- placeholder? value?
 
 
 ## 0.6.7 - 2022-08-30

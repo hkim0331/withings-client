@@ -25,6 +25,7 @@
 (defn users-list
   "returns users list reverse order of updated_at"
   []
+  (log/info "users-list")
   (db/get-users))
 
 ;; ;; no. update-user-by-name ではないと使い道がない。
@@ -37,6 +38,7 @@
   (db/user-by-name {:name name}))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; no use?
 (defn update-tokens-by-name!
   [params]
   (db/update-tokens-by-name! params))

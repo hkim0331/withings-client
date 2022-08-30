@@ -22,6 +22,8 @@
 - look after re-frame.
 - stop using placeholder.
 - remove `on-key-up` action.
+- remove `(let [user (:user @session)])` from `core.cljs/user-page`
+
 
 ## 0.6.7 - 2022-08-30
 - confirmed delete

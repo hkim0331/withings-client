@@ -13,11 +13,15 @@
 - change meastype with meastypes?
 - confirmed deletion
 - refresh tokens automatically. (or just before every fetch?)
-- reconsider URL
 
 
-## 0.6.6-SNAPSHOT
+## 0.6.7-SNAPSHOT
 * edit-user-page
+
+## 0.6.6 - 2022-08-30
+- polish up code.
+### Changed
+- /token/refresh/:n -> /token/:n/refresh
 
 ## 0.6.5 - 2022-08-29
 - deploy to kohhoh

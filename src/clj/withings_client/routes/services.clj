@@ -47,7 +47,7 @@
     :post
     (fn [{{:keys [n]} :path-params :as request}]
       (let [params (:params request)]
-        (log/info "called not yet implemented `/user/:n`")
+        (log/info "called `/user/:n`. sorry not yet implemented")
         (try
           (response/ok {:user n :params params})
           (catch Exception e (error e)))))}]

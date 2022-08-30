@@ -24,6 +24,8 @@
             (if (tokens/refresh-and-restore-one! id)
               (response/ok "success")
               (response/bad-request "fail")))}]
+  
+  ;; post?
   ["/token/refresh-all"
     {:post (fn [_]
              (log/info "/token/refresh-all")

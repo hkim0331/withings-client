@@ -15,7 +15,7 @@
   (:import
    goog.History))
 
-(def ^:private version "0.6.7")
+(def ^:private version "0.6.8")
 
 (def redirect-uri js/redirectUrl)
 ;; (def redirect-uri "https://wc.melt.kyutech.ac.jp/callback")
@@ -72,43 +72,38 @@
 ;; user page
 (defn user-page
   []
-  (let [user (atom (:edit @session))]
-    [:section.section>div.container>div.content
-     [:h3 (:name @user)]
-     [:p "エンターで変更を確定後に、update ボタンで更新します。"]
-     (for [[key value] (dissoc @user :id :userid :created_at :updated_at)]
-       [:p {:key key} (symbol key) [:br]
-        [:input
-         {:placeholder (str value)
-          :on-key-up
-          (fn [^js/Event e]
-            (when (= "Enter" (.-key e))
-              (let [v (-> e .-target .-value)]
-                (js/alert (str key " " v "でよろしいですか"))
-                (swap! user assoc key v))))}]])
-     [:div
-      [:buttn
-       {:class "button is-primary is-small"
-        :on-click
-        (fn [^js/Event e]
-          (POST (str "/api/user/" (:id @user))
-            {:params @user
-             :handler #(swap! session assoc :page :home)
-             :error-handler
-             (fn [] (js/alert (.getMessage e)))}))}
-       "update"]]
-     [:br]
-     [:div
-      [:button
-       {:class "button is-danger is-small"
-        :on-click
-        (fn []
-          (and (js/confirm "are you OK?")
-               (POST (str "/api/user/" (:id @user) "/delete")
-                 {:handler #(swap! session assoc :page :home)
-                  :error-handler
-                  (fn [^js/Event e] (js/alert (.getMessage e)))})))}
-       "delete"]]]))
+  [:section.section>div.container>div.content
+   [:h3 (-> @session :user :name)]
+   (for [[key _] (dissoc (-> @session :user)
+                         :id :userid :created_at :updated_at)]
+     [:p {:key key} (symbol key) [:br]
+      [:input
+       {:value (get-in @session [:user key])
+        :on-change #(swap! session
+                           assoc-in [:user key] (-> % .-target .-value))}]])
+   [:div
+    [:buttn
+     {:class "button is-primary is-small"
+      :on-click
+      (fn [^js/Event e]
+        (POST (str "/api/user/" (get-in @session [:user :id]))
+          {:params (:user @session)
+           :handler #(swap! session assoc :page :home)
+           :error-handler
+           (fn [] (js/alert (.getMessage e)))}))}
+     "update"]]
+   [:br]
+   [:div
+    [:button
+     {:class "button is-danger is-small"
+      :on-click
+      (fn []
+        (and (js/confirm "are you OK?")
+             (POST (str "/api/user/" (-> @session :user :id) "/delete")
+               {:handler #(swap! session assoc :page :home)
+                :error-handler
+                (fn [^js/Event e] (js/alert (.getMessage e)))})))}
+     "delete"]]])
 
 ;; -------------------------
 ;; home page
@@ -227,7 +222,7 @@
       [:div {:class "column"}
        [:button
         {:class "button is-primary is-small"
-         :on-click #(swap! session assoc :page :user :edit user)}
+         :on-click #(swap! session assoc :page :user :user user)}
         "edit"]]])])
 
 (defn home-page []

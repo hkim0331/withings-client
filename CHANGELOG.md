@@ -12,6 +12,17 @@
   should also change formatting functions.
 - refresh tokens automatically. (or just before every fetch?)
 - fetch displays `98.0` as `98`
+- can not change value of `valid`
+- DB interfaces
+- `updated_at` is not the refresh token time.
+- add `note` column.
+
+
+## 0.6.8 - 2022-08-30
+- look after re-frame.
+- stop using placeholder.
+- remove `on-key-up` action.
+- remove `(let [user (:user @session)])` from `core.cljs/user-page`
 
 
 ## 0.6.7 - 2022-08-30

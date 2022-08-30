@@ -14,7 +14,7 @@
 - fetch displays `98.0` as `98`
 
 
-## 0.6.7-SNAPSHOT
+## 0.6.7 - 2022-08-30
 - confirmed delete
 - edit-user-page
 

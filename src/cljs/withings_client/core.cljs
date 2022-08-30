@@ -15,7 +15,7 @@
   (:import
    goog.History))
 
-(def ^:private version "0.6.8")
+(def ^:private version "0.6.9")
 
 (def redirect-uri js/redirectUrl)
 ;; (def redirect-uri "https://wc.melt.kyutech.ac.jp/callback")
@@ -28,10 +28,11 @@
                           :email nil}))
 
 ;; should be a member of session atom?
-(defonce users (r/atom {}))
-(defonce measures (r/atom {}))
-(defonce output (r/atom {}))
-
+(defonce users     (r/atom {}))
+(defonce measures  (r/atom {}))
+(defonce output    (r/atom {}))
+(defonce startdate (r/atom "2022-01-01 00:00:00"))
+(defonce enddate   (r/atom "2022-01-01 00:00:00"))
 ;; --------------------------------------
 ;; navbar
 (defn nav-link [uri title page]
@@ -237,15 +238,15 @@
 
 ;; ------------------
 ;; data-page
+
+
 (defn input-component
   "id, meatype, startdate, enddate are required to work.
    date must be in  `yyyy-MM-dd hh:mm:ss` format.
    FIXME: validation."
   []
-  (let [id        (r/atom (:id (first @users)))
-        meastype  (r/atom (:id (first @measures)))
-        startdate (r/atom "2022-01-01 00:00:00")
-        enddate   (r/atom "2023-01-01 00:00:00")]
+  (let [id       (:id (first @users))
+        meastype (:id (first @measures))]
     [:div [:h3 "Data"]
      [:select {:name "id"
                :on-change (fn [e] (reset! id (-> e .-target .-value)))}
@@ -260,12 +261,12 @@
      [:div
       [:p [:b "start "]
        [:input {:name "start"
-                :placeholder "2022-01-01 00:00:00"
-                :on-key-up #(reset! startdate (-> % .-target .-value))}]]
+                :value @startdate
+                :on-change #(reset! startdate (-> % .-target .-value))}]]
       [:p [:b "end "]
        [:input {:name "end"
-                :placeholder "2023-01-01 00:00:00"
-                :on-key-up #(reset! enddate (-> % .-target .-value))}]]]
+                :value @enddate
+                :on-change #(reset! enddate (-> % .-target .-value))}]]]
      [:div
       [:button {:class "button is-primary is-small"
                 :on-click

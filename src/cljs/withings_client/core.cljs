@@ -15,7 +15,7 @@
   (:import
    goog.History))
 
-(def ^:private version "0.6.9")
+(def ^:private version "0.6.10")
 
 (def redirect-uri js/redirectUrl)
 ;; (def redirect-uri "https://wc.melt.kyutech.ac.jp/callback")
@@ -30,9 +30,11 @@
 ;; should be a member of session atom?
 (defonce users     (r/atom {}))
 (defonce measures  (r/atom {}))
-(defonce output    (r/atom {}))
+
 (defonce startdate (r/atom "2022-01-01 00:00:00"))
-(defonce enddate   (r/atom "2022-01-01 00:00:00"))
+(defonce enddate   (r/atom "2023-01-01 00:00:00"))
+
+(defonce output    (r/atom {}))
 ;; --------------------------------------
 ;; navbar
 (defn nav-link [uri title page]
@@ -238,7 +240,10 @@
 
 ;; ------------------
 ;; data-page
-
+(defn probe
+  [x]
+  (js/alert x)
+  x)
 
 (defn input-component
   "id, meatype, startdate, enddate are required to work.
@@ -279,7 +284,7 @@
                              :meastype  @meastype
                              :startdate @startdate
                              :enddate   @enddate}
-                    :handler (fn [res] (reset! output res))
+                    :handler (fn [res] (->> res probe (reset! output)))
                     :error-handler (fn [e] (js/alert (str  "error " e)))})}
        "fetch"]]]))
 

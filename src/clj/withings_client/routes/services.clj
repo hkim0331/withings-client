@@ -70,6 +70,7 @@
   ;; measures
   ["/meas"
    {:post (fn [params]
+            (log/info "/meas" params)
             (try
               (let [ret (measures/meas params)]
                 (response/ok ret))

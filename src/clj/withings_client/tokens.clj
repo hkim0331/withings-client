@@ -34,17 +34,12 @@
   [params]
   (-> params request-token store!))
 
-;; curl --data "action=requesttoken&
-;; grant_type=refresh_token&
-;; client_id=7573fd4a4c421ddd102dac406dc6e0e0e22f683c4a5e81ff0a5caf8b65abed67&
-;; client_secret=d9286311451fc6ed71b372a075c58c5058be158f56a77865e43ab3783255424f&
-;; refresh_token=9697c3d06ccfd1ca302f5a527d345a9f99ea88a2"
-;; 'https://wbsapi.withings.net/v2/oauth2'
+
 
 (defn refresh
   "when errors, returns {}"
   [{:keys [cid secret refresh] :as params}]
-  (log/info "tokens/refresh params" params)
+  (log/info "tokens/refresh cid" cid)
   (-> (hc/post
        oauth2-uri
        {:as :json
@@ -56,26 +51,32 @@
          :refresh_token refresh}})
       (get-in [:body :body])))
 
-;; example
-;; (refresh {:cid "f7164783bfc573217510d38c07176b798daa2a9e78edf1e320e6c1f0e5a5fa35"
-;;           :secret "027a7105dfc049d9fe4722ab8f6dbdc66a3931702b57976f437af2368813e3de"
-;;           :refresh "160395aa1d38b6635587ab4e30c410f5a6c86044"})
-
-;; {:userid 13662696,
-;;  :access_token "71781b62732d2e95ec4d2a349735cdb8b993b52d",
-;;  :refresh_token "62cfc36a72820d50a6d83c3857849e978ff007b5",
-;;  :scope "user.metrics,user.activity,user.info",
-;;  :expires_in 10800,
-;;  :token_type "Bearer"}
 
 (defn restore!
-  "params には userid, access, refresh, access, "
+  "params には userid, access, refresh, access,
+   returns true/false"
   [params]
   (log/info "tokens/restore! params" params)
-  (if (empty? params)
-    (throw (Exception. "empty param."))
-    (users/update-tokens-by-userid! params)))
+  (and (seq params)
+       (= 1 (users/update-tokens-by-userid! params))))
+
+(defn refresh-and-restore!
+  [user]
+  (log/info "refresh-and-restore")
+  (-> user
+      refresh
+      restore!))
 
 (defn refresh-and-restore-one!
   [id]
-  (-> (users/get-user id) refresh restore!))
+  (log/info "refresh-and-restore-one!" id)
+  (-> (users/get-user id)
+      refresh-and-restore!))
+
+(defn refresh-all
+  []
+  (let [users (users/users-list)]
+    (log/info "tokens/refresh-all (:name users)" (:name users))
+    (doseq [user users]
+      (log/info "user id" (:id user))
+      (refresh-and-restore-one! (:id user)))))

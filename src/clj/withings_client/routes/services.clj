@@ -21,10 +21,18 @@
   ["/token/:id/refresh"
    {:post (fn [{{:keys [id]} :path-params}]
             (log/info "/token/:n/refresh" id)
-            (try
-              (tokens/refresh-and-restore-one! id)
-              (response/ok "refreshed")
-              (catch Exception e (error e))))}]
+            (if (tokens/refresh-and-restore-one! id)
+              (response/ok "success")
+              (response/bad-request "fail")))}]
+  
+  ;; post?
+  ["/token/refresh-all"
+    {:post (fn [_]
+             (log/info "/token/refresh-all")
+             (try
+               (tokens/refresh-all)
+               (response/ok "refresh all")
+               (catch Exception e (error e))))}]
 
   ;; users
   ["/user"

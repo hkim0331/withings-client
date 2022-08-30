@@ -70,7 +70,6 @@
 
 ;; -------------------------
 ;; user page
-
 (defn user-page
   []
   (let [user (:edit @session)]
@@ -225,7 +224,6 @@
 
 ;; ------------------
 ;; data-page
-
 (defn input-component
   "id, meatype, startdate, enddate are required to work.
    date must be in  `yyyy-MM-dd hh:mm:ss` format.
@@ -268,7 +266,7 @@
                              :startdate @startdate
                              :enddate   @enddate}
                     :handler (fn [res] (reset! output res))
-                    :error-handler (fn [e] (js/alert (str  "error" e)))})}
+                    :error-handler (fn [e] (js/alert (str  "error " e)))})}
        "fetch"]]]))
 
 (defn ts->date

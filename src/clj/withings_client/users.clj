@@ -12,8 +12,10 @@
   [id]
   (db/get-user {:id id}))
 
+
 (defn update-user!
   [params]
+  ;; (log/info "users/update-user! params" params)
   (db/update-user! params))
 
 (defn delete-user!

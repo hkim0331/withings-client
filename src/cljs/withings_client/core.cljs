@@ -15,7 +15,7 @@
   (:import
    goog.History))
 
-(def ^:private version "0.6.5")
+(def ^:private version "0.6.10")
 
 (def redirect-uri js/redirectUrl)
 ;; (def redirect-uri "https://wc.melt.kyutech.ac.jp/callback")
@@ -28,10 +28,13 @@
                           :email nil}))
 
 ;; should be a member of session atom?
-(defonce users (r/atom {}))
-(defonce measures (r/atom {}))
-(defonce output (r/atom {}))
+(defonce users     (r/atom {}))
+(defonce measures  (r/atom {}))
 
+(defonce startdate (r/atom "2022-01-01 00:00:00"))
+(defonce enddate   (r/atom "2023-01-01 00:00:00"))
+
+(defonce output    (r/atom {}))
 ;; --------------------------------------
 ;; navbar
 (defn nav-link [uri title page]
@@ -70,28 +73,40 @@
 
 ;; -------------------------
 ;; user page
-
 (defn user-page
   []
-  (let [user (:edit @session)]
-    [:section.section>div.container>div.content
-     [:h2 (:name user)]
-     [:h3 "under construction"]
-     ;; [demo user]
-     ;; [:div {:id "demo"} (str (-> @session :demo :measuregrps))]
-     (for [[key value] user]
-       [:p {:key key} (symbol key) ": " (str value) [:br]
-        [:input
-         {:on-key-up #(.log js/console (.-key %))}]]) ;; Enter でなんとかする。
-     [:div
-      [:button
-       {:class "button is-danger is-small"
-        :on-click
-        (fn []
-          (POST (str "/api/user/" (:id user) "/delete")
-            {:handler #(swap! session assoc :page :home)
-             :error-handler (fn [^js/Event e] (js/alert (.getMessage e)))}))}
-       "delete"]]]))
+  [:section.section>div.container>div.content
+   [:h3 (-> @session :user :name)]
+   (for [[key _] (dissoc (-> @session :user)
+                         :id :userid :created_at :updated_at)]
+     [:p {:key key} (symbol key) [:br]
+      [:input
+       {:value (get-in @session [:user key])
+        :on-change #(swap! session
+                           assoc-in [:user key] (-> % .-target .-value))}]])
+   [:div
+    [:buttn
+     {:class "button is-primary is-small"
+      :on-click
+      (fn [^js/Event e]
+        (POST (str "/api/user/" (get-in @session [:user :id]))
+          {:params (:user @session)
+           :handler #(swap! session assoc :page :home)
+           :error-handler
+           (fn [] (js/alert (.getMessage e)))}))}
+     "update"]]
+   [:br]
+   [:div
+    [:button
+     {:class "button is-danger is-small"
+      :on-click
+      (fn []
+        (and (js/confirm "are you OK?")
+             (POST (str "/api/user/" (-> @session :user :id) "/delete")
+               {:handler #(swap! session assoc :page :home)
+                :error-handler
+                (fn [^js/Event e] (js/alert (.getMessage e)))})))}
+     "delete"]]])
 
 ;; -------------------------
 ;; home page
@@ -198,19 +213,19 @@
        [:button
         {:class "button is-primary is-small"
          :on-click
-         (fn [_] (POST "/api/token/refresh"
+         (fn [_] (POST (str "/api/token/" (:id user) "/refresh")
                    {:format :json
                     :headers
                     {"Accept" "application/transit+json"
                      "x-csrf-token" js/csrfToken}
-                    :params user
+                    ;; :params user
                     :handler       #(js/alert "リフレッシュ完了。")
                     :error-handler #(js/alert "失敗。")}))}
         "refresh"]]
       [:div {:class "column"}
        [:button
         {:class "button is-primary is-small"
-         :on-click #(swap! session assoc :page :user :edit user)}
+         :on-click #(swap! session assoc :page :user :user user)}
         "edit"]]])])
 
 (defn home-page []
@@ -225,51 +240,57 @@
 
 ;; ------------------
 ;; data-page
+(defn probe
+  [x]
+  (js/alert x)
+  x)
 
 (defn input-component
   "id, meatype, startdate, enddate are required to work.
    date must be in  `yyyy-MM-dd hh:mm:ss` format.
    FIXME: validation."
   []
-  (let [id        (r/atom (:id (first @users)))
-        meastype  (r/atom (:id (first @measures)))
-        startdate (r/atom "2022-01-01 00:00:00")
-        enddate   (r/atom "2023-01-01 00:00:00")]
-    [:div [:h3 "Data"]
-     [:select {:name "id"
-               :on-change (fn [e] (reset! id (-> e .-target .-value)))}
-      (for [user @users]
-        [:option {:key (:id user) :value (:id user)} (:name user)])]
+  (let [id       (atom (:id (first @users)))
+        meastype (atom (:id (first @measures)))]
+    [:div [:h3 "Data"]]
+    [:div
+     [:p
+      [:select {:name "id"
+                :on-change (fn [e] (reset! id (-> e .-target .-value)))}
+       (for [user @users]
+         [:option {:key (:id user) :value (:id user)} (:name user)])]]
      [:div
-      [:select {:name "meastype"
-                :on-change (fn [e] (reset! meastype (-> e .-target .-value)))}
-       (for [mea @measures]
-         [:option {:key (str "m" (:id mea)) :value (:value mea)}
-          (:description mea)])]]
+      [:p
+       [:select {:name "meastype"
+                 :on-change (fn [e] (reset! meastype (-> e .-target .-value)))}
+        (for [mea @measures]
+          [:option {:key (str "m" (:id mea)) :value (:value mea)}
+           (:description mea)])]]]
      [:div
-      [:p [:b "start "]
+      [:p
        [:input {:name "start"
-                :placeholder "2022-01-01 00:00:00"
-                :on-key-up #(reset! startdate (-> % .-target .-value))}]]
-      [:p [:b "end "]
+                :value @startdate
+                :on-change #(reset! startdate (-> % .-target .-value))}]
+       " ~ "
        [:input {:name "end"
-                :placeholder "2023-01-01 00:00:00"
-                :on-key-up #(reset! enddate (-> % .-target .-value))}]]]
+                :value @enddate
+                :on-change #(reset! enddate (-> % .-target .-value))}]]]
      [:div
-      [:button {:class "button is-primary is-small"
-                :on-click
-                #(POST "/api/meas"
-                   {:format :json
-                    :headers
-                    {"Accept" "application/transit+json"
-                     "x-csrf-token" js/csrfToken}
-                    :params {:id        @id
-                             :meastype  @meastype
-                             :startdate @startdate
-                             :enddate   @enddate}
-                    :handler (fn [res] (reset! output res))
-                    :error-handler (fn [e] (js/alert (str  "error" e)))})}
-       "fetch"]]]))
+      [:p
+       [:button {:class "button is-primary is-small"
+                 :on-click
+                 #(POST "/api/meas"
+                    {:format :json
+                     :headers
+                     {"Accept" "application/transit+json"
+                      "x-csrf-token" js/csrfToken}
+                     :params {:id        @id
+                              :meastype  @meastype
+                              :startdate @startdate
+                              :enddate   @enddate}
+                     :handler (fn [res] (->> res probe (reset! output)))
+                     :error-handler (fn [e] (js/alert (str  "error " e)))})}
+        "fetch"]]]]))
 
 (defn ts->date
   "after converting to milli, doing jobs."

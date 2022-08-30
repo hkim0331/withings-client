@@ -4,10 +4,10 @@
    [java-time :as jt]
    [clojure.string :as str]
    [clojure.tools.logging :as log]
-   ;; [withings-client.config :refer [env]]
    [withings-client.db.core :as db]
    [withings-client.users :as users]))
 
+;; namespace?
 (defn str->timestamp
   "input: yyyy-MM-DD hh:mm:ss
    returns timestamp(int)"

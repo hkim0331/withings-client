@@ -42,7 +42,7 @@
    {:get
     (fn [{{:keys [id]} :path-params}]
       (response/ok (users/get-user id)))
-    
+
     :post
     (fn [{params :params}]
       (try

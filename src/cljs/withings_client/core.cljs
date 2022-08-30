@@ -15,7 +15,8 @@
   (:import
    goog.History))
 
-(def ^:private version "0.6.12")
+
+(def ^:private version "0.6.13")
 
 (def redirect-uri js/redirectUrl)
 ;; (def redirect-uri "https://wc.melt.kyutech.ac.jp/callback")
@@ -303,7 +304,8 @@
 
 (defn format-measures
   [[{:keys [value unit]}]]
-  (/ value (pow 10 (- unit))))
+  (-> (/ value (pow 10 (- unit)))
+      (.toFixed 2)))
 
 ;; params has `created` param. which should be displayed?
 (defn output-one

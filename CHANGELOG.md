@@ -3,29 +3,33 @@
 ## Unreleased
 ### bug
 - `updated_at` is not the refresh token time
-- can not change value of `valid`
 ### controle
+- (store fetched data in DB tables)
+- (push message via LINE)
 - undo facility.
 - async fetch
 - mainly getting many data at once
   change meastype with meastypes? should also change formatting functions.
-- refresh tokens automatically. (or just before every fetch?)
-- store fetched data in DB tables
-- push message via LINE
 - add `note` column.
 ### view
 - redisplay without reloading after updating/deleting
-- fetch displays `98.0` as `98`
-- bar chart the viable time of access tokens
+- bar chart of the viable time of access tokens
 - color buttons
-- validate `startdate` and `enddate`
+- validation about `startdate` and `enddate`
 ### refresh tokens
+on demand OK.
 - periodically?
-- on demand?
-- fetch time?
+- just before fetch?
 
 
-## 0.6.11 - 2022-08-30
+## 0.6.13 - 2022-08-31
+- displays `98` as `98.00`
+```
+#(.toFixed % 2)
+```
+- /api/token/refresh-all
+
+## 0.6.12 - 2022-08-30
 - `login` and `password` environemt variables.
 - change `valid` by 0 for false, 1 for true.
 

@@ -20,7 +20,7 @@
 on demand OK.
 - periodically?
 - just before fetch?
-
+- async refresh
 
 ## 0.6.13 - 2022-08-31
 - displays `98` as `98.00`

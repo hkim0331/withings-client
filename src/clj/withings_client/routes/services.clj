@@ -40,17 +40,16 @@
 
   ["/user/:n"
    {:get
-    (fn [{{:keys [n]} :path-params}]
-      (response/ok (users/get-user n)))
-
-    ;; /user/:n/update is right?
+    (fn [{{:keys [id]} :path-params}]
+      (response/ok (users/get-user id)))
+    
     :post
-    (fn [{{:keys [n]} :path-params :as request}]
-      (let [params (:params request)]
-        (log/info "called `/user/:n`. sorry not yet implemented")
-        (try
-          (response/ok {:user n :params params})
-          (catch Exception e (error e)))))}]
+    (fn [{params :params}]
+      (try
+        ;; (log/info "/user/:id, params " params)
+        (users/update-user! params)
+        (response/ok "updated")
+        (catch Exception e (error e))))}]
 
   ["/user/:n/delete"
    {:post

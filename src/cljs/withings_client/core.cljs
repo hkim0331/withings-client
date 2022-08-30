@@ -15,7 +15,7 @@
   (:import
    goog.History))
 
-(def ^:private version "0.6.9")
+(def ^:private version "0.6.10")
 
 (def redirect-uri js/redirectUrl)
 ;; (def redirect-uri "https://wc.melt.kyutech.ac.jp/callback")
@@ -30,9 +30,11 @@
 ;; should be a member of session atom?
 (defonce users     (r/atom {}))
 (defonce measures  (r/atom {}))
-(defonce output    (r/atom {}))
+
 (defonce startdate (r/atom "2022-01-01 00:00:00"))
-(defonce enddate   (r/atom "2022-01-01 00:00:00"))
+(defonce enddate   (r/atom "2023-01-01 00:00:00"))
+
+(defonce output    (r/atom {}))
 ;; --------------------------------------
 ;; navbar
 (defn nav-link [uri title page]
@@ -238,50 +240,57 @@
 
 ;; ------------------
 ;; data-page
-
+(defn probe
+  [x]
+  (js/alert x)
+  x)
 
 (defn input-component
   "id, meatype, startdate, enddate are required to work.
    date must be in  `yyyy-MM-dd hh:mm:ss` format.
    FIXME: validation."
   []
-  (let [id       (:id (first @users))
-        meastype (:id (first @measures))]
-    [:div [:h3 "Data"]
-     [:select {:name "id"
-               :on-change (fn [e] (reset! id (-> e .-target .-value)))}
-      (for [user @users]
-        [:option {:key (:id user) :value (:id user)} (:name user)])]
+  (let [id       (atom (:id (first @users)))
+        meastype (atom (:id (first @measures)))]
+    [:div [:h3 "Data"]]
+    [:div
+     [:p
+      [:select {:name "id"
+                :on-change (fn [e] (reset! id (-> e .-target .-value)))}
+       (for [user @users]
+         [:option {:key (:id user) :value (:id user)} (:name user)])]]
      [:div
-      [:select {:name "meastype"
-                :on-change (fn [e] (reset! meastype (-> e .-target .-value)))}
-       (for [mea @measures]
-         [:option {:key (str "m" (:id mea)) :value (:value mea)}
-          (:description mea)])]]
+      [:p
+       [:select {:name "meastype"
+                 :on-change (fn [e] (reset! meastype (-> e .-target .-value)))}
+        (for [mea @measures]
+          [:option {:key (str "m" (:id mea)) :value (:value mea)}
+           (:description mea)])]]]
      [:div
-      [:p [:b "start "]
+      [:p
        [:input {:name "start"
                 :value @startdate
-                :on-change #(reset! startdate (-> % .-target .-value))}]]
-      [:p [:b "end "]
+                :on-change #(reset! startdate (-> % .-target .-value))}]
+       " ~ "
        [:input {:name "end"
                 :value @enddate
                 :on-change #(reset! enddate (-> % .-target .-value))}]]]
      [:div
-      [:button {:class "button is-primary is-small"
-                :on-click
-                #(POST "/api/meas"
-                   {:format :json
-                    :headers
-                    {"Accept" "application/transit+json"
-                     "x-csrf-token" js/csrfToken}
-                    :params {:id        @id
-                             :meastype  @meastype
-                             :startdate @startdate
-                             :enddate   @enddate}
-                    :handler (fn [res] (reset! output res))
-                    :error-handler (fn [e] (js/alert (str  "error " e)))})}
-       "fetch"]]]))
+      [:p
+       [:button {:class "button is-primary is-small"
+                 :on-click
+                 #(POST "/api/meas"
+                    {:format :json
+                     :headers
+                     {"Accept" "application/transit+json"
+                      "x-csrf-token" js/csrfToken}
+                     :params {:id        @id
+                              :meastype  @meastype
+                              :startdate @startdate
+                              :enddate   @enddate}
+                     :handler (fn [res] (->> res probe (reset! output)))
+                     :error-handler (fn [e] (js/alert (str  "error " e)))})}
+        "fetch"]]]]))
 
 (defn ts->date
   "after converting to milli, doing jobs."

@@ -1,29 +1,29 @@
 # Withings-Client
 
 ## Unreleased
-- undo facility.
-- update users view SPA way.
-- remote debug
-- redisplay without reloading after updating/deleting user information
-- hato :async? true
-- bar chart the viable time of access tokens.
-- mainly getting many data at once.
-  change meastype with meastypes?
-  should also change formatting functions.
-- refresh tokens automatically. (or just before every fetch?)
-- fetch displays `98.0` as `98`
+### bug
+- `updated_at` is not the refresh token time
 - can not change value of `valid`
-- DB interfaces
-- `updated_at` is not the refresh token time.
+### controle
+- undo facility.
+- async fetch
+- mainly getting many data at once
+  change meastype with meastypes? should also change formatting functions.
+- refresh tokens automatically. (or just before every fetch?)
+- store fetched data in DB tables
+- push message via LINE
+### view
 - add `note` column.
-
+- redisplay without reloading after updating/deleting
+- fetch displays `98.0` as `98`
+- bar chart the viable time of access tokens
+- color buttus
 
 ## 0.6.8 - 2022-08-30
 - look after re-frame.
 - stop using placeholder.
 - remove `on-key-up` action.
 - remove `(let [user (:user @session)])` from `core.cljs/user-page`
-
 
 ## 0.6.7 - 2022-08-30
 - confirmed delete

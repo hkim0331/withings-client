@@ -15,7 +15,7 @@
   (:import
    goog.History))
 
-(def ^:private version "0.6.10")
+(def ^:private version "0.6.11")
 
 (def redirect-uri js/redirectUrl)
 ;; (def redirect-uri "https://wc.melt.kyutech.ac.jp/callback")
@@ -240,9 +240,10 @@
 
 ;; ------------------
 ;; data-page
+;; usage tap>
 (defn probe
   [x]
-  (js/alert x)
+  (.log js/console x)
   x)
 
 (defn input-component
@@ -252,45 +253,43 @@
   []
   (let [id       (atom (:id (first @users)))
         meastype (atom (:id (first @measures)))]
-    [:div [:h3 "Data"]]
     [:div
-     [:p
+     [:h3 "Data"]
+     [:div
       [:select {:name "id"
                 :on-change (fn [e] (reset! id (-> e .-target .-value)))}
        (for [user @users]
          [:option {:key (:id user) :value (:id user)} (:name user)])]]
      [:div
-      [:p
-       [:select {:name "meastype"
-                 :on-change (fn [e] (reset! meastype (-> e .-target .-value)))}
-        (for [mea @measures]
-          [:option {:key (str "m" (:id mea)) :value (:value mea)}
-           (:description mea)])]]]
+      [:select {:name "meastype"
+                :on-change (fn [e] (reset! meastype (-> e .-target .-value)))}
+       (for [mea @measures]
+         [:option {:key (str "m" (:id mea)) :value (:value mea)}
+          (:description mea)])]]
      [:div
-      [:p
-       [:input {:name "start"
-                :value @startdate
-                :on-change #(reset! startdate (-> % .-target .-value))}]
-       " ~ "
-       [:input {:name "end"
-                :value @enddate
-                :on-change #(reset! enddate (-> % .-target .-value))}]]]
+      [:input {:name "start"
+               :value @startdate
+               :on-change #(reset! startdate (-> % .-target .-value))}]
+      " ~ "
+      [:input {:name "end"
+               :value @enddate
+               :on-change #(reset! enddate (-> % .-target .-value))}]]
+     [:br]
      [:div
-      [:p
-       [:button {:class "button is-primary is-small"
-                 :on-click
-                 #(POST "/api/meas"
-                    {:format :json
-                     :headers
-                     {"Accept" "application/transit+json"
-                      "x-csrf-token" js/csrfToken}
-                     :params {:id        @id
-                              :meastype  @meastype
-                              :startdate @startdate
-                              :enddate   @enddate}
-                     :handler (fn [res] (->> res probe (reset! output)))
-                     :error-handler (fn [e] (js/alert (str  "error " e)))})}
-        "fetch"]]]]))
+      [:button {:class "button is-primary is-small"
+                :on-click
+                #(POST "/api/meas"
+                   {:format :json
+                    :headers
+                    {"Accept" "application/transit+json"
+                     "x-csrf-token" js/csrfToken}
+                    :params {:id        @id
+                             :meastype  @meastype
+                             :startdate @startdate
+                             :enddate   @enddate}
+                    :handler (fn [res] (reset! output res))
+                    :error-handler (fn [e] (js/alert (str  "error " e)))})}
+       "fetch"]]]))
 
 (defn ts->date
   "after converting to milli, doing jobs."
@@ -306,16 +305,18 @@
 
 ;; params has `created` param. which should be displayed?
 (defn output-one
-  [{:keys [date measures]}]
-  [:div
+  [n {:keys [date measures]}]
+  [:div {:key n}
    (str (ts->date date) ", " (format-measures measures))])
 
 (defn output-component
   []
   [:div
    [:h3 "fetched"]
-   (for [data (reverse (:measuregrps @output))]
-     (output-one data))])
+   (if (seq @output)
+     (for [[n data] (map-indexed vector (reverse (:measuregrps @output)))]
+       (output-one n data))
+     [:p "no data"])])
 
 (defn data-page []
   [:section.section>div.container>div.content

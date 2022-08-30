@@ -12,12 +12,23 @@
 - refresh tokens automatically. (or just before every fetch?)
 - store fetched data in DB tables
 - push message via LINE
-### view
 - add `note` column.
+### view
 - redisplay without reloading after updating/deleting
 - fetch displays `98.0` as `98`
 - bar chart the viable time of access tokens
-- color buttus
+- color buttons
+- validate `startdate` and `enddate`
+### refresh tokens
+- periodically?
+- on demand?
+- fetch time?
+### auth
+- `login` and `password` environemt variables.
+
+## 0.6.10 - 2022-08-30
+- stop parinfer since it changes structure of codes. it leads some bugs.
+- use r/atom for startdate and enddate
 
 ## 0.6.8 - 2022-08-30
 - look after re-frame.

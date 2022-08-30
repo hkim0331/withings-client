@@ -23,8 +23,11 @@
 - periodically?
 - on demand?
 - fetch time?
-### auth
+
+
+## 0.6.11 - 2022-08-30
 - `login` and `password` environemt variables.
+- change `valid` by 0 for false, 1 for true.
 
 ## 0.6.10 - 2022-08-30
 - stop parinfer since it changes structure of codes. it leads some bugs.

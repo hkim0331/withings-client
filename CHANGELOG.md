@@ -15,9 +15,13 @@
 - can not change value of `valid`
 - DB interfaces
 - `updated_at` is not the refresh token time.
-- note column.
-- placeholder? value?
+- add `note` column.
 
+
+## 0.6.8 - 2022-08-30
+- look after re-frame.
+- stop using placeholder.
+- remove `on-key-up` action.
 
 ## 0.6.7 - 2022-08-30
 - confirmed delete

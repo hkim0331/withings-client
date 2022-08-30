@@ -1,8 +1,7 @@
 (ns withings-client.tokens
   (:require
-   [hato.client :as hc]
-   ;; [clojure.string :as str]
    [clojure.tools.logging :as log]
+   [hato.client :as hc]
    [withings-client.config :refer [env]]
    [withings-client.users :as users]))
 
@@ -77,11 +76,6 @@
     (throw (Exception. "empty param."))
     (users/update-tokens-by-userid! params)))
 
-(defn refresh-and-restore!
-  [{params :params}]
-  (log/info "refresh-and-restore! params" params)
-  (-> params refresh restore!))
-
 (defn refresh-and-restore-one!
-  [n]
-  (-> (users/get-user n) refresh restore!))
+  [id]
+  (-> (users/get-user id) refresh restore!))

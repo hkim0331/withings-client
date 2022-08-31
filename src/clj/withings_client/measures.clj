@@ -14,11 +14,13 @@
   "input: yyyy-MM-DD hh:mm:ss
    returns timestamp(int)"
   [s]
-  (let [[date time] (str/split s #" ")]
-    (quot (-> (str date "T" time)
-              jt/to-sql-timestamp
-              jt/to-millis-from-epoch)
-          1000)))
+  (if (seq s)
+    (let [[date time] (str/split s #" ")]
+      (quot (-> (str date "T" time)
+                jt/to-sql-timestamp
+                jt/to-millis-from-epoch)
+            1000))
+    nil))
 
 ;; curl
 ;; --header "Authorization: Bearer YOUR_ACCESS_TOKEN"
@@ -37,11 +39,12 @@
 ;; meastypes?
 (defn meas
   "get meastype between startdate and enddate,
+   also lastupdate param is available.
    using `access-token` value from `users` table.
-   Returns the result in json format."
-  [{:keys [id meastype startdate enddate]}]
+   Returns the results in json format."
+  [{:keys [id meastype startdate enddate lastupdate]}]
   (let [{:keys [access]} (users/get-user id)]
-    (log/info "meas" id meastype startdate enddate)
+    (log/info "meas" id meastype startdate enddate lastupdate)
     (log/info "access" access)
     (-> (hc/post
          meas-uri
@@ -53,9 +56,9 @@
            :meastype  meastype
            :category  1
            :startdate (str->timestamp startdate)
-           :enddate   (str->timestamp enddate)}})
-        :body
-        :body)))
+           :enddate   (str->timestamp enddate)
+           :lastupdate (str->timestamp lastupdate)}})
+        (get-in [:body :body]))))
 
 (defn list-measures
   "returns measures vector"

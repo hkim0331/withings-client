@@ -16,7 +16,7 @@
    goog.History))
 
 
-(def ^:private version "0.7.2")
+(def ^:private version "0.7.3-SNAPSHOT")
 
 (def redirect-uri js/redirectUrl)
 ;; (def redirect-uri "https://wc.melt.kyutech.ac.jp/callback")
@@ -32,8 +32,9 @@
 (defonce users     (r/atom {}))
 (defonce measures  (r/atom {}))
 
-(defonce startdate (r/atom "2022-01-01 00:00:00"))
-(defonce enddate   (r/atom "2023-01-01 00:00:00"))
+(defonce startdate  (r/atom "2022-01-01 00:00:00"))
+(defonce enddate    (r/atom "2023-01-01 00:00:00"))
+(defonce lastupdate (r/atom "2022-08-31 00:00:00"))
 
 (defonce output    (r/atom {}))
 ;; --------------------------------------
@@ -273,13 +274,20 @@
          [:option {:key (str "m" (:id mea)) :value (:value mea)}
           (:description mea)])]]
      [:div
-      [:input {:name "start"
-               :value @startdate
-               :on-change #(reset! startdate (-> % .-target .-value))}]
-      " ~ "
-      [:input {:name "end"
-               :value @enddate
-               :on-change #(reset! enddate (-> % .-target .-value))}]]
+      [:p [:b "start ~ end "]
+       [:input {:name "start"
+                :value @startdate
+                :on-change #(reset! startdate (-> % .-target .-value))}]
+       " ~ "
+       [:input {:name "end"
+                :value @enddate
+                :on-change #(reset! enddate (-> % .-target .-value))}]]]
+     [:p "or"]
+     [:div
+      [:p [:b "lastupdate "]
+       [:input {:value @lastupdate
+                :on-change #(reset! lastupdate (-> % .-target .-value))}]
+       " ~ " [:b "now"]]]
      [:br]
      [:div
       [:button {:class "button is-primary is-small"
@@ -289,10 +297,11 @@
                     :headers
                     {"Accept" "application/transit+json"
                      "x-csrf-token" js/csrfToken}
-                    :params {:id        @id
-                             :meastype  @meastype
-                             :startdate @startdate
-                             :enddate   @enddate}
+                    :params {:id         @id
+                             :meastype   @meastype
+                             :startdate  @startdate
+                             :enddate    @enddate
+                             :lastupdate @lastupdate}
                     :handler (fn [res] (reset! output res))
                     :error-handler (fn [e] (js/alert (str  "error " e)))})}
        "fetch"]]]))

@@ -1,10 +1,10 @@
 # Withings-Client
 
 ## Unreleased
-### bug
-- `updated_at` is not the refresh token time
+- upgrade libraries
+- misc namespace
 ### controle
-- (store fetched data in DB tables)
+- (store fetched data in some DB)
 - (push message via LINE)
 - undo facility.
 - async fetch
@@ -16,11 +16,14 @@
 - bar chart of the viable time of access tokens
 - color buttons
 - validation about `startdate` and `enddate`
-### refresh tokens
-on demand OK.
-- periodically?
+### tokens
+- refresh periodically?
+- just before fetching?
 - async refresh-all
 
+
+## 0.7.3-SNAPSHOT
+- lastupdate
 
 ## 0.7.2 - 2022-08-31
 ### Added

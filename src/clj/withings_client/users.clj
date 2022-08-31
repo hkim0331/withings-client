@@ -28,6 +28,10 @@
   (log/info "users-list")
   (db/get-users))
 
+(defn valid-users
+  []
+  (db/valid-users))
+
 ;; ;; no. update-user-by-name ではないと使い道がない。
 ;; (defn update-cid!
 ;;   [params]

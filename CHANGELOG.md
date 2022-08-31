@@ -22,6 +22,12 @@ on demand OK.
 - async refresh-all
 
 
+## 0.7.1-SNAPSHOT
+### Changed
+- deploy.sh: divided `start.sh` into `{stop,start,restart}.sh`
+### Added
+- get "/api/valid-users"
+
 ## 0.7.0 - 2022-08-31
 ### Changed
 - POST "/token/refresh-all" -> POST "/tokens/refresh-all"

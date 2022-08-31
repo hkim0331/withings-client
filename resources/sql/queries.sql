@@ -36,6 +36,11 @@ WHERE id = :id
 SELECT * FROM users
 ORDER BY updated_at DESC
 
+-- :name valid-users :? :*
+-- :doc get all valid users
+SELECT * FROM users
+WHERE valid = TRUE
+
 -- :name user-by-name :? :1
 -- :doc retrieves a user record given the name
 SELECT * FROM users
@@ -65,7 +70,7 @@ UPDATE users
 set valid = ! valid
 where id = :id
 
--------------
+-------------------------------------
 -- measures
 -------------
 

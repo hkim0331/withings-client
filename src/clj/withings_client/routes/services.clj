@@ -46,6 +46,9 @@
   ["/users"
    {:get (fn [_] (response/ok (users/users-list)))}]
 
+  ["/valid-users"
+   {:get (fn [_] (response/ok (users/valid-users)))}]
+
   ["/user/:n"
    {:get
     (fn [{{:keys [id]} :path-params}]
@@ -77,8 +80,8 @@
 
   ;; measures
   ["/meas"
-   {:post (fn [params]
-            (log/info "/meas" params)
+   {:post (fn [{params :params}]
+            (log/info "/meas " params)
             (try
               (let [ret (measures/meas params)]
                 (response/ok ret))

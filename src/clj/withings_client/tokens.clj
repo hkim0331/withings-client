@@ -30,6 +30,8 @@
   [params]
   (users/update-tokens-by-name! params))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 (defn fetch-and-store!
   [params]
   (-> params request-token store!))
@@ -72,7 +74,7 @@
 
 (defn refresh-all!
   []
-  (let [users (users/users-list)]
+  (let [users (users/valid-users)]
     (log/info "tokens/refresh-all")
     (doseq [user users]
       (refresh-and-restore! user))))

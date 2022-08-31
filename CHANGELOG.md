@@ -23,7 +23,7 @@
 
 
 ## 0.7.4-SNAPSHOT
-- misc namespace
+- misc namespace, defined datetime->timestamp, abbrev,,,
 
 ## 0.7.3 - 2022-08-31
 - lastupdate

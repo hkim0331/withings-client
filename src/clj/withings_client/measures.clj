@@ -1,8 +1,8 @@
 (ns withings-client.measures
   (:require
    [hato.client :as hc]
-   [java-time :as jt]
-   [clojure.string :as str]
+   ;; [java-time :as jt]
+   ;; [clojure.string :as str]
    [clojure.tools.logging :as log]
    [withings-client.db.core :as db]
    [withings-client.misc :refer [datetime->timestamp]]

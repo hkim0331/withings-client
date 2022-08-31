@@ -22,7 +22,7 @@ on demand OK.
 - async refresh-all
 
 
-## 0.7.1-SNAPSHOT
+## 0.7.1 - 2022-08-31
 ### Changed
 - deploy.sh: divided `start.sh` into `{stop,start,restart}.sh`
 ### Added
@@ -35,6 +35,7 @@ on demand OK.
   (let [ret (users/update-tokens-by-userid! params)]
     (and (seq params) (pos? ret))))
 ```
+
 ## 0.7.0 - 2022-08-31
 ### Changed
 - POST "/token/refresh-all" -> POST "/tokens/refresh-all"

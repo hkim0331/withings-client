@@ -16,7 +16,7 @@
    goog.History))
 
 
-(def ^:private version "0.7.3")
+(def ^:private version "0.7.4")
 
 (def redirect-uri js/redirectUrl)
 ;; (def redirect-uri "https://wc.melt.kyutech.ac.jp/callback")
@@ -35,8 +35,25 @@
 (defonce startdate  (r/atom "2022-01-01 00:00:00"))
 (defonce enddate    (r/atom "2023-01-01 00:00:00"))
 (defonce lastupdate (r/atom "2022-08-31 00:00:00"))
+(defonce output     (r/atom {}))
 
-(defonce output    (r/atom {}))
+;; --------------------------------------
+;; misc functions
+
+(defn ts->date
+  "after converting to milli, doing jobs."
+  [ts]
+  (-> ts
+      (* 1000)
+      js/Date.
+      .toLocaleString))
+
+(defn value->float
+  "withings-value -> float"
+  [digits [{:keys [value unit]}]]
+  (-> (/ value (pow 10 (- unit)))
+      (.toFixed digits)))
+
 ;; --------------------------------------
 ;; navbar
 (defn nav-link [uri title page]
@@ -246,11 +263,6 @@
 
 ;; ------------------
 ;; data-page
-;; usage tap>
-(defn probe
-  [x]
-  (.log js/console x)
-  x)
 
 (defn input-component
   "id, meatype, startdate, enddate are required to work.
@@ -306,24 +318,13 @@
                     :error-handler (fn [e] (js/alert (str  "error " e)))})}
        "fetch"]]]))
 
-(defn ts->date
-  "after converting to milli, doing jobs."
-  [ts]
-  (-> ts
-      (* 1000)
-      js/Date.
-      .toLocaleString))
 
-(defn format-measures
-  [[{:keys [value unit]}]]
-  (-> (/ value (pow 10 (- unit)))
-      (.toFixed 2)))
 
 ;; params has `created` param. which should be displayed?
 (defn output-one
   [n {:keys [date measures]}]
   [:div {:key n}
-   (str (ts->date date) ", " (format-measures measures))])
+   (str (ts->date date) ", " (value->float 1 measures))])
 
 ;; reverse?
 (defn output-component

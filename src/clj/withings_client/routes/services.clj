@@ -16,7 +16,7 @@
  ["/api"
   {:middleware [middleware/wrap-restricted
                 middleware/wrap-formats]}
-
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;; tokens. use also when creating user entry
   ["/token/:id/refresh"
    {:post (fn [{{:keys [id]} :path-params}]
@@ -37,7 +37,8 @@
               (tokens/refresh-all!)
               (response/ok "refreshed")
               (catch Exception e (error e))))}]
-
+  
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;; users
   ["/user"
    {:post
@@ -81,6 +82,7 @@
         (response/ok "changed")
         (catch Exception e (error e))))}]
 
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;; measures
   ["/meas"
    {:post (fn [{params :params}]

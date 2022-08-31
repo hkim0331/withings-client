@@ -5,22 +5,10 @@
    [clojure.string :as str]
    [clojure.tools.logging :as log]
    [withings-client.db.core :as db]
+   [withings-client.misc :refer [datetime->timestamp]]
    [withings-client.users :as users]))
 
 (def meas-uri "https://wbsapi.withings.net/measure")
-
-;; namespace?
-(defn str->timestamp
-  "input: yyyy-MM-DD hh:mm:ss
-   returns timestamp(int)"
-  [s]
-  (if (seq s)
-    (let [[date time] (str/split s #" ")]
-      (quot (-> (str date "T" time)
-                jt/to-sql-timestamp
-                jt/to-millis-from-epoch)
-            1000))
-    nil))
 
 ;; curl
 ;; --header "Authorization: Bearer YOUR_ACCESS_TOKEN"
@@ -55,9 +43,9 @@
           {:action    "getmeas"
            :meastype  meastype
            :category  1
-           :startdate (str->timestamp startdate)
-           :enddate   (str->timestamp enddate)
-           :lastupdate (str->timestamp lastupdate)}})
+           :startdate  (datetime->timestamp startdate)
+           :enddate    (datetime->timestamp enddate)
+           :lastupdate (datetime->timestamp lastupdate)}})
         (get-in [:body :body]))))
 
 (defn list-measures

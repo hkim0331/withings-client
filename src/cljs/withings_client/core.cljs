@@ -316,12 +316,13 @@
   [:div {:key n}
    (str (ts->date date) ", " (format-measures measures))])
 
+;; reverse?
 (defn output-component
   []
   [:div
    [:h3 "fetched"]
    (if (seq @output)
-     (for [[n data] (map-indexed vector (reverse (:measuregrps @output)))]
+     (for [[n data] (map-indexed vector (:measuregrps @output))]
        (output-one n data))
      [:p "no data"])])
 

@@ -22,11 +22,13 @@ on demand OK.
 - async refresh-all
 
 
-## 0.7.0-SNAPSHOT
+## 0.7.0 - 2022-08-31
 ### Changed
 - POST "/token/refresh-all" -> POST "/tokens/refresh-all"
 - tokens/refresh-all -> tokens/refresh-all!
 - tokens/refresh-and-restore-one! -> tokens/refresh-and-restore-id!
+- stop using `reverse` in `core.cljs/output-component`
+
 
 ## 0.6.13 - 2022-08-31
 - displays `98` as `98.00`

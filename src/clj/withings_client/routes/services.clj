@@ -25,7 +25,7 @@
               (tokens/refresh-and-restore-id! id)
               (response/ok "success")
               (catch Exception e (error e))))}]
-  
+
   ["/token/:id/toggle"
    {:post (fn [{{:keys [id]} :path-params}]
             (response/ok (users/toggle-valid! id)))}]
@@ -35,7 +35,7 @@
             (log/info "/tokens/refresh-all")
             (try
               (tokens/refresh-all!)
-              (response/ok "refreshed all")
+              (response/ok "refreshed")
               (catch Exception e (error e))))}]
 
   ;; users
@@ -58,10 +58,10 @@
     (fn [{{:keys [id]} :path-params}]
       (response/ok (users/get-user id)))
     :post
-    (fn [{params :params}]
+    (fn [{user :params}]
       (try
-        (log/info "/user/:id, params " params)
-        (users/update-user! params)
+        (log/info "/user/:id, (:name user)" (:name user))
+        (users/update-user! user)
         (response/ok "updated")
         (catch Exception e (error e))))}]
 

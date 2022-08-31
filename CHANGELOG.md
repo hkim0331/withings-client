@@ -29,6 +29,9 @@ on demand OK.
 - defined users/user-by-cid: return user record match with cid
 ### Changed
 - update-tokens-by-userid! => update-tokens!
+- shorten log
+### Removed
+- update-cid-by-name!
 
 ## 0.7.1 - 2022-08-31
 ### Changed

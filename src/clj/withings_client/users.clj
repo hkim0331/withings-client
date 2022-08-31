@@ -14,9 +14,9 @@
   (db/get-user {:id id}))
 
 (defn update-user!
-  [params]
-  (log/info "users" params)
-  (db/update-user! params))
+  [user]
+  (log/info "users" (:name user))
+  (db/update-user! user))
 
 (defn delete-user!
   [id]
@@ -57,14 +57,14 @@
   (db/update-tokens-by-name! params))
 
 (defn update-tokens!
-  "Update id's access-token and refresh-token.
+  "Update userid's access-token and refresh-token.
    Sometimes, refresh-token is not updated. So,
    return value is 1 or 2 when update successed."
   [params]
-  (log/info "update-tokens!" params)
+  (log/info "update-tokens!" (:userid params))
   (try
     (db/update-tokens! params)
-    (catch Exception _ (throw (Exception. "update-token! can not update")))))
+    (catch Exception _ (throw (Exception. "error: update-token!")))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defn toggle-valid!

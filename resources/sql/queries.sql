@@ -15,11 +15,11 @@ SET name = :name, belong = :belong, email = :email,
     updated_at = now()
 WHERE id = :id
 
--- :name update-cid-by-name! :! :n
--- :doc updates an existing user's cid record
-UPDATE users
-SET cid = :cid, updated_at = now()
-WHERE name = :name
+-- -- :name update-cid-by-name! :! :n
+-- -- :doc updates an existing user's cid record
+-- UPDATE users
+-- SET cid = :cid, updated_at = now()
+-- WHERE name = :name
 
 -- :name get-user :? :1
 -- :doc retrieves a user record given the id
@@ -50,6 +50,7 @@ WHERE name = :name
 -- :doc retrieves a user record from cid
 SELECT * FROM users
 WHERE cid = :cid
+
 -------------------------------------
 -- tokens
 

@@ -43,7 +43,7 @@
 (defn refresh
   "when errors, returns {}"
   [{:keys [cid secret refresh]}]
-  (log/info "tokens/refresh cid" cid)
+  (log/info "tokens/refresh cid" (subs cid 0 10))
   (-> (hc/post
        oauth2-uri
        {:as :json
@@ -79,6 +79,6 @@
 (defn refresh-all!
   []
   (let [users (users/valid-users)]
-    (log/info "tokens/refresh-all")
+    (log/info "tokens/refresh-all" (map :name users))
     (doseq [user users]
       (refresh-and-restore! user))))

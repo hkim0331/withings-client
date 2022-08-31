@@ -39,7 +39,7 @@
   "get meastype between startdate and enddate,
    using `access-token` value from `users` table.
    Returns the result in json format."
-  [{:keys [id meastype startdate enddate]}]
+  [{:keys [id meastype startdate enddate lastupdate]}]
   (let [{:keys [access]} (users/get-user id)]
     (log/info "meas" id meastype startdate enddate)
     (log/info "access" access)
@@ -53,9 +53,9 @@
            :meastype  meastype
            :category  1
            :startdate (str->timestamp startdate)
-           :enddate   (str->timestamp enddate)}})
-        :body
-        :body)))
+           :enddate   (str->timestamp enddate)
+           :lastupdate (str->timestamp lastupdate)}})
+        (get-in [:body :body]))))
 
 (defn list-measures
   "returns measures vector"

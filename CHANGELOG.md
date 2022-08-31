@@ -22,9 +22,16 @@ on demand OK.
 - async refresh-all
 
 
+## 0.7.2-SNAPSHOT
+### Added
+- defined /user/:id/valid: toggle the value of `valid`
+- bin/ folder to keep wc scripts
+### Changed
+- update-tokens-by-userid! => update-tokens!
+
 ## 0.7.1 - 2022-08-31
 ### Changed
-- deploy.sh: divided `start.sh` into `{stop,start,restart}.sh`
+- deploy.sh: divided `start.sh` into three, `{stop,start,restart}.sh`
 ### Added
 - get "/api/valid-users"
 ### Fixed

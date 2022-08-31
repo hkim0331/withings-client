@@ -7,6 +7,10 @@
 
 (def oauth2-uri "https://wbsapi.withings.net/v2/oauth2")
 
+;; 1. insert name, cid, secret
+;; 2. request tokens with the `name`
+;; 3. update records whose name column is `name`.
+
 (defn request-token
   "param is {:state state, :code code},
    withings returns {:access token, :refresh token, :userid id}.
@@ -52,11 +56,10 @@
       (get-in [:body :body])))
 
 (defn restore!
-  "params には userid, access, refresh, access,
+  "params = userid, access, refresh, access,
    returns true/false"
   [params]
   (let [ret (users/update-tokens! params)]
-    (log/info "tokens/restore! params" params)
     (log/info "users/update-tokens! returns" ret)
     (and (seq params) (pos? ret))))
 

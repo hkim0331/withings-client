@@ -47,6 +47,7 @@ SELECT * FROM users
 where name = :name
 
 -------------------------------------
+-- tokens
 
 -- :name update-tokens-by-name! :! :n
 -- :doc updates an existing user's tokens, key is name.
@@ -63,6 +64,7 @@ SET access = :access_token, refresh = :refresh_token,
 where userid = :userid
 
 -------------------------------------
+-- valid
 
 -- :name toggle-valid! :! :n
 -- :doc toggle id's `valid`
@@ -72,7 +74,6 @@ where id = :id
 
 -------------------------------------
 -- measures
--------------
 
 -- :name list-measures :? :*
 -- :doc get all measures

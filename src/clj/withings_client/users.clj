@@ -10,8 +10,8 @@
 
 (defn get-user
   [id]
+  (log/info "get-user" id)
   (db/get-user {:id id}))
-
 
 (defn update-user!
   [params]
@@ -56,7 +56,9 @@
    return value is 1 or 2 when update successed."
   [params]
   (log/info "update-tokens!" params)
-  (db/update-tokens! params))
+  (try
+    (db/update-tokens! params)
+    (catch Exception _ (throw (Exception. "update-token! can not update")))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defn toggle-valid!

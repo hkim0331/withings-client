@@ -43,6 +43,7 @@
   [name]
   (db/user-by-name {:name name}))
 
+;; use?
 (defn user-by-cid
   [cid]
   (db/user-by-cid {:cid cid}))

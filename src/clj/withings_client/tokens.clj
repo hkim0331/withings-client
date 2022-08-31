@@ -3,6 +3,7 @@
    [clojure.tools.logging :as log]
    [hato.client :as hc]
    [withings-client.config :refer [env]]
+   [withings-client.misc :refer [abbrev]]
    [withings-client.users :as users]))
 
 ;; 1. insert name, cid, secret
@@ -43,7 +44,7 @@
 (defn refresh
   "when errors, returns {}"
   [{:keys [cid secret refresh]}]
-  (log/info "tokens/refresh cid" (subs cid 0 10))
+  (log/info "tokens/refresh cid" (abbrev cid))
   (-> (hc/post
        oauth2-uri
        {:as :json

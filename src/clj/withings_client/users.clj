@@ -5,18 +5,18 @@
 
 (defn create-user!
   [params]
-  (println "params" (str params))
+  (log/info "create-user!")
   (db/create-user! params))
 
 (defn get-user
   [id]
+  (log/info "get-user" id)
   (db/get-user {:id id}))
 
-
 (defn update-user!
-  [params]
-  (log/info "users" params)
-  (db/update-user! params))
+  [user]
+  (log/info "users" (:name user))
+  (db/update-user! user))
 
 (defn delete-user!
   [id]
@@ -29,7 +29,9 @@
   (db/get-users))
 
 (defn valid-users
+  "returns valid users list"
   []
+  (log/info "valid-users")
   (db/valid-users))
 
 ;; ;; no. update-user-by-name ではないと使い道がない。
@@ -41,6 +43,10 @@
   [name]
   (db/user-by-name {:name name}))
 
+(defn user-by-cid
+  [cid]
+  (db/user-by-cid {:cid cid}))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defn update-tokens-by-name!
@@ -51,12 +57,14 @@
   (db/update-tokens-by-name! params))
 
 (defn update-tokens!
-  "Update id's access-token and refresh-token.
+  "Update userid's access-token and refresh-token.
    Sometimes, refresh-token is not updated. So,
    return value is 1 or 2 when update successed."
   [params]
-  (log/info "update-tokens!" params)
-  (db/update-tokens! params))
+  (log/info "update-tokens!" (:userid params))
+  (try
+    (db/update-tokens! params)
+    (catch Exception _ (throw (Exception. "error: update-token!")))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defn toggle-valid!

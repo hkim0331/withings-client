@@ -9,7 +9,7 @@
 
 (defn error
   [e]
-  (response/internal-server-error
+  (response/bad-request
    {:errors {:server-error (.getMessage e)}}))
 
 (defn service-routes []
@@ -21,18 +21,22 @@
   ["/token/:id/refresh"
    {:post (fn [{{:keys [id]} :path-params}]
             (log/info "/token/:n/refresh" id)
-            (if (tokens/refresh-and-restore-id! id)
+            (try
+              (tokens/refresh-and-restore-id! id)
               (response/ok "success")
-              (response/bad-request "fail")))}]
+              (catch Exception e (error e))))}]
 
-  ;; post?
+  ["/token/:id/toggle"
+   {:post (fn [{{:keys [id]} :path-params}]
+            (response/ok (users/toggle-valid! id)))}]
+
   ["/tokens/refresh-all"
-    {:post (fn [_]
-             (log/info "/tokens/refresh-all")
-             (try
-               (tokens/refresh-all!)
-               (response/ok "refreshed all")
-               (catch Exception e (error e))))}]
+   {:post (fn [_]
+            (log/info "/tokens/refresh-all")
+            (try
+              (tokens/refresh-all!)
+              (response/ok "refreshed")
+              (catch Exception e (error e))))}]
 
   ;; users
   ["/user"
@@ -49,16 +53,15 @@
   ["/valid-users"
    {:get (fn [_] (response/ok (users/valid-users)))}]
 
-  ["/user/:n"
+  ["/user/:id"
    {:get
     (fn [{{:keys [id]} :path-params}]
       (response/ok (users/get-user id)))
-
     :post
-    (fn [{params :params}]
+    (fn [{user :params}]
       (try
-        (log/info "/user/:id, params " params)
-        (users/update-user! params)
+        (log/info "/user/:id, (:name user)" (:name user))
+        (users/update-user! user)
         (response/ok "updated")
         (catch Exception e (error e))))}]
 
@@ -70,12 +73,12 @@
         (response/ok "deleted")
         (catch Exception e (error e))))}]
 
-  ["/user/:n/valid"
+  ["/user/:id/valid"
    {:post
-    (fn [{{:keys [n]} :path-params}]
+    (fn [{{:keys [id]} :path-params}]
       (try
-        (users/toggle-valid! n)
-        (response/ok "valid")
+        (users/toggle-valid! id)
+        (response/ok "changed")
         (catch Exception e (error e))))}]
 
   ;; measures
@@ -83,7 +86,7 @@
    {:post (fn [{params :params}]
             (log/info "/meas " params)
             (try
-              (let [ret (measures/meas params)]
-                (response/ok ret))
+              (response/ok (measures/meas params))
               (catch Exception e (error e))))
     :get (fn [_] (response/ok (measures/list-measures)))}]])
+

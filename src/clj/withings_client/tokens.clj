@@ -5,6 +5,10 @@
    [withings-client.config :refer [env]]
    [withings-client.users :as users]))
 
+;; 1. insert name, cid, secret
+;; 2. request tokens with the `name`
+;; 3. update records whose name column is `name`.
+
 (def oauth2-uri "https://wbsapi.withings.net/v2/oauth2")
 
 (defn request-token
@@ -39,7 +43,7 @@
 (defn refresh
   "when errors, returns {}"
   [{:keys [cid secret refresh]}]
-  (log/info "tokens/refresh cid" cid)
+  (log/info "tokens/refresh cid" (subs cid 0 10))
   (-> (hc/post
        oauth2-uri
        {:as :json
@@ -52,11 +56,10 @@
       (get-in [:body :body])))
 
 (defn restore!
-  "params には userid, access, refresh, access,
+  "params = userid, access, refresh, access,
    returns true/false"
   [params]
   (let [ret (users/update-tokens! params)]
-    (log/info "tokens/restore! params" params)
     (log/info "users/update-tokens! returns" ret)
     (and (seq params) (pos? ret))))
 
@@ -76,6 +79,6 @@
 (defn refresh-all!
   []
   (let [users (users/valid-users)]
-    (log/info "tokens/refresh-all")
+    (log/info "tokens/refresh-all" (map :name users))
     (doseq [user users]
       (refresh-and-restore! user))))

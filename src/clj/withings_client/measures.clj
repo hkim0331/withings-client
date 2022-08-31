@@ -39,7 +39,7 @@
   "get meastype between startdate and enddate,
    using `access-token` value from `users` table.
    Returns the result in json format."
-  [{{:keys [id meastype startdate enddate]} :params}]
+  [{:keys [id meastype startdate enddate]}]
   (let [{:keys [access]} (users/get-user id)]
     (log/info "meas" id meastype startdate enddate)
     (log/info "access" access)

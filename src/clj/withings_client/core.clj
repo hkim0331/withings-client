@@ -1,13 +1,14 @@
 (ns withings-client.core
+  #_(:refer-clojure :exclude [abs])
   (:require
-    [withings-client.handler :as handler]
-    [withings-client.nrepl :as nrepl]
-    [luminus.http-server :as http]
-    [luminus-migrations.core :as migrations]
-    [withings-client.config :refer [env]]
-    [clojure.tools.cli :refer [parse-opts]]
-    [clojure.tools.logging :as log]
-    [mount.core :as mount])
+   [clojure.tools.cli :refer [parse-opts]]
+   [clojure.tools.logging :as log]
+   [luminus-migrations.core :as migrations]
+   [luminus.http-server :as http]
+   [mount.core :as mount]
+   [withings-client.config :refer [env]]
+   [withings-client.handler :as handler]
+   [withings-client.nrepl :as nrepl])
   (:gen-class))
 
 ;; log uncaught exceptions in threads

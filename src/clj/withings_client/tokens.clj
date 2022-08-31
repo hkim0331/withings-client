@@ -34,6 +34,8 @@
   [params]
   (-> params request-token store!))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 (defn refresh
   "when errors, returns {}"
   [{:keys [cid secret refresh]}]
@@ -53,9 +55,10 @@
   "params には userid, access, refresh, access,
    returns true/false"
   [params]
-  (log/info "tokens/restore! params" params)
-  (and (seq params)
-       (= 1 (users/update-tokens-by-userid! params))))
+  (let [ret (users/update-tokens! params)]
+    (log/info "tokens/restore! params" params)
+    (log/info "users/update-tokens! returns" ret)
+    (and (seq params) (pos? ret))))
 
 (defn refresh-and-restore!
   [user]
@@ -72,7 +75,7 @@
 
 (defn refresh-all!
   []
-  (let [users (users/users-list)]
+  (let [users (users/valid-users)]
     (log/info "tokens/refresh-all")
     (doseq [user users]
       (refresh-and-restore! user))))

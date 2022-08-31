@@ -22,6 +22,20 @@ on demand OK.
 - async refresh-all
 
 
+## 0.7.1 - 2022-08-31
+### Changed
+- deploy.sh: divided `start.sh` into `{stop,start,restart}.sh`
+### Added
+- get "/api/valid-users"
+### Fixed
+- update-tokens-by-userid! は 1 じゃなくて 2 が返るもある。変更箇所が2箇所の時。
+```
+(defn restore!
+  [params]
+  (let [ret (users/update-tokens-by-userid! params)]
+    (and (seq params) (pos? ret))))
+```
+
 ## 0.7.0 - 2022-08-31
 ### Changed
 - POST "/token/refresh-all" -> POST "/tokens/refresh-all"

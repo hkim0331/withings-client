@@ -36,6 +36,11 @@ WHERE id = :id
 SELECT * FROM users
 ORDER BY updated_at DESC
 
+-- :name valid-users :? :*
+-- :doc get all valid users
+SELECT * FROM users
+WHERE valid = TRUE
+
 -- :name user-by-name :? :1
 -- :doc retrieves a user record given the name
 SELECT * FROM users
@@ -50,7 +55,7 @@ SET access = :access_token, refresh = :refresh_token, userid = :userid,
     updated_at = now()
 where name = :name
 
--- :name update-tokens-by-userid! :! :n
+-- :name update-tokens! :! :n
 -- :doc updates an existing user's tokens, key is name.
 UPDATE users
 SET access = :access_token, refresh = :refresh_token,
@@ -65,7 +70,7 @@ UPDATE users
 set valid = ! valid
 where id = :id
 
--------------
+-------------------------------------
 -- measures
 -------------
 

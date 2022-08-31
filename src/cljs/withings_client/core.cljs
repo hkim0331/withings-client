@@ -16,7 +16,7 @@
    goog.History))
 
 
-(def ^:private version "0.6.13")
+(def ^:private version "0.7.0")
 
 (def redirect-uri js/redirectUrl)
 ;; (def redirect-uri "https://wc.melt.kyutech.ac.jp/callback")
@@ -48,7 +48,8 @@
   (r/with-let [expanded? (r/atom false)]
     [:nav.navbar.is-info>div.container
      [:div.navbar-brand
-      [:a.navbar-item {:href "/" :style {:font-weight :bold}} "Withings-Client"]
+      [:a.navbar-item {:href "/" :style {:font-weight :bold}}
+       "Withings-Client"]
       [:span.navbar-burger.burger
        {:data-target :nav-menu
         :on-click #(swap! expanded? not)
@@ -173,14 +174,15 @@
                                 (-> % .-target .-value))}]]
    [:div {:class "field"}
     [:button {:class "button is-primary is-small"
-              :on-click #(let [params (select-keys
-                                       @session
-                                       [:name :cid :secret :belong :email])]
-                           (create-user! params)
-                           (swap! session
-                                  assoc
-                                  :uri
-                                  (create-url)))}
+              :on-click
+              #(let [params (select-keys
+                             @session
+                             [:name :cid :secret :belong :email])]
+                 (create-user! params)
+                 (swap! session
+                        assoc
+                        :uri
+                        (create-url)))}
      "create"]]])
 
 (defn link-component []
@@ -265,7 +267,8 @@
          [:option {:key (:id user) :value (:id user)} (:name user)])]]
      [:div
       [:select {:name "meastype"
-                :on-change (fn [e] (reset! meastype (-> e .-target .-value)))}
+                :on-change (fn [e]
+                             (reset! meastype (-> e .-target .-value)))}
        (for [mea @measures]
          [:option {:key (str "m" (:id mea)) :value (:value mea)}
           (:description mea)])]]
@@ -313,12 +316,13 @@
   [:div {:key n}
    (str (ts->date date) ", " (format-measures measures))])
 
+;; reverse?
 (defn output-component
   []
   [:div
    [:h3 "fetched"]
    (if (seq @output)
-     (for [[n data] (map-indexed vector (reverse (:measuregrps @output)))]
+     (for [[n data] (map-indexed vector (:measuregrps @output))]
        (output-one n data))
      [:p "no data"])])
 

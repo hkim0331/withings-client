@@ -19,7 +19,15 @@
 ### refresh tokens
 on demand OK.
 - periodically?
-- just before fetch?
+- async refresh-all
+
+
+## 0.7.0 - 2022-08-31
+### Changed
+- POST "/token/refresh-all" -> POST "/tokens/refresh-all"
+- tokens/refresh-all -> tokens/refresh-all!
+- tokens/refresh-and-restore-one! -> tokens/refresh-and-restore-id!
+- stop using `reverse` in `core.cljs/output-component`
 
 
 ## 0.6.13 - 2022-08-31
@@ -27,7 +35,7 @@ on demand OK.
 ```
 #(.toFixed % 2)
 ```
-- /api/token/refresh-all
+- defined /api/token/refresh-all
 
 ## 0.6.12 - 2022-08-30
 - `login` and `password` environemt variables.

@@ -8,9 +8,9 @@
 (def oauth2-uri "https://wbsapi.withings.net/v2/oauth2")
 
 (defn request-token
-  "param is {:state state :code code},
-   withings returns {:access token :refresh token :userid id}.
-   Returns the map merging the withings thing and {:name state}"
+  "param is {:state state, :code code},
+   withings returns {:access token, :refresh token, :userid id}.
+   Returns the map merging {:name state} with the withings thing."
   [{:keys [state code]}]
   (let [user (users/user-by-name state)]
     (-> (hc/post
@@ -34,11 +34,9 @@
   [params]
   (-> params request-token store!))
 
-
-
 (defn refresh
   "when errors, returns {}"
-  [{:keys [cid secret refresh] :as params}]
+  [{:keys [cid secret refresh]}]
   (log/info "tokens/refresh cid" cid)
   (-> (hc/post
        oauth2-uri
@@ -51,7 +49,6 @@
          :refresh_token refresh}})
       (get-in [:body :body])))
 
-
 (defn restore!
   "params には userid, access, refresh, access,
    returns true/false"
@@ -62,21 +59,20 @@
 
 (defn refresh-and-restore!
   [user]
-  (log/info "refresh-and-restore")
+  (log/info "refresh-and-restore" (:name user))
   (-> user
       refresh
       restore!))
 
-(defn refresh-and-restore-one!
+(defn refresh-and-restore-id!
   [id]
-  (log/info "refresh-and-restore-one!" id)
+  (log/info "refresh-and-restore-id!" id)
   (-> (users/get-user id)
       refresh-and-restore!))
 
-(defn refresh-all
+(defn refresh-all!
   []
   (let [users (users/users-list)]
-    (log/info "tokens/refresh-all (:name users)" (:name users))
+    (log/info "tokens/refresh-all")
     (doseq [user users]
-      (log/info "user id" (:id user))
-      (refresh-and-restore-one! (:id user)))))
+      (refresh-and-restore! user))))

@@ -1,11 +1,11 @@
 (ns withings-client.routes.home
   (:require
-   [clojure.tools.logging :as log]
-   [ring.util.http-response :as response]
+   #_[clojure.tools.logging :as log]
+   #_[ring.util.http-response :as response]
    [ring.util.response]
    [withings-client.layout :as layout]
    [withings-client.middleware :as middleware]
-   [withings-client.tokens :as tokens]))
+   #_[withings-client.tokens :as tokens]))
 
 (defn home-page [request]
   (layout/render request "home.html"))

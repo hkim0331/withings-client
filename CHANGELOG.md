@@ -20,20 +20,20 @@
 on demand OK.
 - periodically?
 - just before fetch?
-- async refresh
+- async refresh-all
 
 
 ## 0.7.0-SNAPSHOT
 ### Changed
-- /token/refresh-all -> /tokens/refresh-all
-- tokens/refresh-all -> /tokens/refresh-all!
+- post /token/refresh-all -> post /tokens/refresh-all
+- tokens/refresh-all -> tokens/refresh-all!
 
 ## 0.6.13 - 2022-08-31
 - displays `98` as `98.00`
 ```
 #(.toFixed % 2)
 ```
-- /api/token/refresh-all
+- defined /api/token/refresh-all
 
 ## 0.6.12 - 2022-08-30
 - `login` and `password` environemt variables.

@@ -35,8 +35,9 @@ on demand OK.
 ### Fixed
 - two accounts can have same tokens. if updates one of them
   and the update success, will return 2 since userid is same.
+  `tokens/update-tokens!` must be `update-tokens-by-userid!`
   see `0.7.1 Fixed`
-
+ 
 ## 0.7.1 - 2022-08-31
 ### Changed
 - deploy.sh: divided `start.sh` into three, `{stop,start,restart}.sh`

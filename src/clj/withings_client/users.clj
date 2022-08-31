@@ -5,7 +5,7 @@
 
 (defn create-user!
   [params]
-  (println "params" (str params))
+  (log/info "create-user!")
   (db/create-user! params))
 
 (defn get-user
@@ -29,7 +29,9 @@
   (db/get-users))
 
 (defn valid-users
+  "returns valid users list"
   []
+  (log/info "valid-users")
   (db/valid-users))
 
 ;; ;; no. update-user-by-name ではないと使い道がない。
@@ -40,6 +42,10 @@
 (defn user-by-name
   [name]
   (db/user-by-name {:name name}))
+
+(defn user-by-cid
+  [cid]
+  (db/user-by-cid {:cid cid}))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 

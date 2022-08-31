@@ -5,11 +5,11 @@
    [withings-client.config :refer [env]]
    [withings-client.users :as users]))
 
-(def oauth2-uri "https://wbsapi.withings.net/v2/oauth2")
-
 ;; 1. insert name, cid, secret
 ;; 2. request tokens with the `name`
 ;; 3. update records whose name column is `name`.
+
+(def oauth2-uri "https://wbsapi.withings.net/v2/oauth2")
 
 (defn request-token
   "param is {:state state, :code code},

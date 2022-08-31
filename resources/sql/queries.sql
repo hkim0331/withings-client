@@ -44,8 +44,12 @@ WHERE valid = TRUE
 -- :name user-by-name :? :1
 -- :doc retrieves a user record given the name
 SELECT * FROM users
-where name = :name
+WHERE name = :name
 
+-- :name user-by-cid :? :1
+-- :doc retrieves a user record from cid
+SELECT * FROM users
+WHERE cid = :cid
 -------------------------------------
 -- tokens
 
@@ -54,14 +58,14 @@ where name = :name
 UPDATE users
 SET access = :access_token, refresh = :refresh_token, userid = :userid,
     updated_at = now()
-where name = :name
+WHERE name = :name
 
 -- :name update-tokens! :! :n
 -- :doc updates an existing user's tokens, key is name.
 UPDATE users
 SET access = :access_token, refresh = :refresh_token,
     updated_at = now()
-where userid = :userid
+WHERE userid = :userid
 
 -------------------------------------
 -- valid
@@ -69,8 +73,8 @@ where userid = :userid
 -- :name toggle-valid! :! :n
 -- :doc toggle id's `valid`
 UPDATE users
-set valid = ! valid
-where id = :id
+SET valid = ! valid
+WHERE id = :id
 
 -------------------------------------
 -- measures

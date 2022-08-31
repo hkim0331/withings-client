@@ -26,6 +26,7 @@ on demand OK.
 ### Added
 - defined /user/:id/valid: toggle the value of `valid`
 - bin/ folder to keep wc scripts
+- defined users/user-by-cid: return user record match with cid
 ### Changed
 - update-tokens-by-userid! => update-tokens!
 

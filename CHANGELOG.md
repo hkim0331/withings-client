@@ -22,7 +22,7 @@ on demand OK.
 - async refresh-all
 
 
-## 0.7.2-SNAPSHOT
+## 0.7.2 - 2022-08-31
 ### Added
 - defined /user/:id/valid: toggle the value of `valid`
 - bin/ folder to keep wc scripts
@@ -32,6 +32,10 @@ on demand OK.
 - shorten log
 ### Removed
 - update-cid-by-name!
+### Fixed
+- two accounts can have same tokens. if updates one of them
+  and the update success, will return 2 since userid is same.
+  see `0.7.1 Fixed`
 
 ## 0.7.1 - 2022-08-31
 ### Changed
@@ -39,7 +43,7 @@ on demand OK.
 ### Added
 - get "/api/valid-users"
 ### Fixed
-- update-tokens-by-userid! は 1 じゃなくて 2 が返るもある。変更箇所が2箇所の時。
+- update-tokens-by-userid! returns 1 or 2 if success.
 ```
 (defn restore!
   [params]

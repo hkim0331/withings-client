@@ -21,7 +21,7 @@
   ["/token/:id/refresh"
    {:post (fn [{{:keys [id]} :path-params}]
             (log/info "/token/:n/refresh" id)
-            (if (tokens/refresh-and-restore-one! id)
+            (if (tokens/refresh-and-restore-id! id)
               (response/ok "success")
               (response/bad-request "fail")))}]
 

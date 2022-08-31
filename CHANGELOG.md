@@ -19,14 +19,14 @@
 ### refresh tokens
 on demand OK.
 - periodically?
-- just before fetch?
 - async refresh-all
 
 
 ## 0.7.0-SNAPSHOT
 ### Changed
-- post /token/refresh-all -> post /tokens/refresh-all
+- POST "/token/refresh-all" -> POST "/tokens/refresh-all"
 - tokens/refresh-all -> tokens/refresh-all!
+- tokens/refresh-and-restore-one! -> tokens/refresh-and-restore-id!
 
 ## 0.6.13 - 2022-08-31
 - displays `98` as `98.00`

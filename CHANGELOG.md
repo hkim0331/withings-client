@@ -2,21 +2,19 @@
 
 ## Unreleased
 - upgrade libraries
-- misc namespace
-### controle
 - (store fetched data in some DB)
 - (push message via LINE)
 - undo facility.
 - async fetch
 - mainly getting many data at once
   change meastype with meastypes? should also change formatting functions.
-- add `note` column.
-### view
+- add `note` column to users table.
+- flexible datetime format. supply time. upgrade misc/datetime function?
 - redisplay without reloading after updating/deleting
 - bar chart of the viable time of access tokens
 - color buttons
 - validation about `startdate` and `enddate`
-### tokens
+- favicon
 - refresh periodically?
 - just before fetching?
 - async refresh-all
@@ -25,7 +23,7 @@
 
 
 ## 0.7.4 - 2022-08-31
-- misc namespace, defined datetime->timestamp, abbrev,,,
+- misc namespace. defined datetime->timestamp, abbrev,,,
 
 ## 0.7.3 - 2022-08-31
 - lastupdate

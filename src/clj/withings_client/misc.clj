@@ -3,6 +3,7 @@
    [clojure.string :as str]
    [java-time :as jt]))
 
+;; FIXME: illegal format?
 (defn datetime->timestamp
   "input:  yyyy-MM-DD hh:mm:ss
    return: timestamp (integer)"
@@ -21,9 +22,8 @@
   )
 
 (defn abbrev
-  "default length = 8 abbreviation.
-   if want other than 8 abbrev, say n,
-   use (abbrev n s)"
+  "abbreviate string s. default 8 characters.
+   if want other than 8, say n,  use (abbrev n s)"
   ([s]
    (abbrev 8 s))
   ([n s]

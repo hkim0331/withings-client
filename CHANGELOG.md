@@ -20,6 +20,8 @@
 - refresh periodically?
 - just before fetching?
 - async refresh-all
+- randomly refresh?
+
 
 
 ## 0.7.4 - 2022-08-31

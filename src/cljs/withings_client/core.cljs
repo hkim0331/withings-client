@@ -34,7 +34,7 @@
 
 (defonce startdate  (r/atom "2022-01-01 00:00:00"))
 (defonce enddate    (r/atom "2023-01-01 00:00:00"))
-(defonce lastupdate (r/atom "2022-08-31 00:00:00"))
+(defonce lastupdate (r/atom ""))
 (defonce output     (r/atom {}))
 
 ;; --------------------------------------
@@ -299,7 +299,7 @@
       [:p [:b "lastupdate "]
        [:input {:value @lastupdate
                 :on-change #(reset! lastupdate (-> % .-target .-value))}]
-       " ~ " [:b "now"]]]
+       " ~ " [:b "now"] " 日時を記入すると優先します。カラだと start ~ end を取る。"]]
      [:br]
      [:div
       [:button {:class "button is-primary is-small"

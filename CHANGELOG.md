@@ -22,6 +22,9 @@
 - async refresh-all
 
 
+## 0.7.4-SNAPSHOT
+- misc namespace
+
 ## 0.7.3 - 2022-08-31
 - lastupdate
 

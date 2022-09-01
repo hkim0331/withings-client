@@ -184,10 +184,8 @@
    [:div [:label {:class "label"} label]]
    [:div {:class "field"}
     [:input {:value (:name @session)
-             :on-change #(swap! session
-                                assoc
-                                key
-                                (-> % .-target .-value))}]]])
+             :on-change
+             #(swap! session assoc key (-> % .-target .-value))}]]])
 
 (defn new-component []
   [:div
@@ -218,6 +216,28 @@
 ;; can not (sort-by :update_at @user)
 ;; since tagged value (:update_at @user)?
 ;; use async?
+(defn refresh-button
+  [user]
+  [:button
+   {:class "button is-primary is-small"
+    :on-click
+    (fn [_] (POST (str "/api/token/" (:id user) "/refresh")
+              {:format :json
+               :headers
+               {"Accept" "application/transit+json"
+                "x-csrf-token" js/csrfToken}
+                    ;; :params user
+               :handler #(js/alert "リフレッシュ完了。再読み込みしてください")
+               :error-handler #(js/alert "失敗。")}))}
+   "refresh"])
+
+(defn edit-button
+  [user]
+  [:button
+   {:class "button is-primary is-small"
+    :on-click #(swap! session assoc :page :user :user user)}
+   "edit"])
+
 (defn users-component []
   [:div
    [:h2 "users"]
@@ -230,24 +250,8 @@
       [:div {:class "column"} (:belong user)]
       [:div {:class "column"} (:email user)]
       [:div {:class "column"} (tm (:updated_at user))]
-      [:div {:class "column"}
-       [:button
-        {:class "button is-primary is-small"
-         :on-click
-         (fn [_] (POST (str "/api/token/" (:id user) "/refresh")
-                   {:format :json
-                    :headers
-                    {"Accept" "application/transit+json"
-                     "x-csrf-token" js/csrfToken}
-                    ;; :params user
-                    :handler #(js/alert "リフレッシュ完了。再読み込みしてください")
-                    :error-handler #(js/alert "失敗。")}))}
-        "refresh"]]
-      [:div {:class "column"}
-       [:button
-        {:class "button is-primary is-small"
-         :on-click #(swap! session assoc :page :user :user user)}
-        "edit"]]])])
+      [:div {:class "column"} [refresh-button user]]
+      [:div {:class "column"} [edit-button user]]])])
 
 (defn home-page []
   [:section.section>div.container>div.content
@@ -261,7 +265,7 @@
 
 ;; ------------------
 ;; data-page
-
+;; 
 (defn input-component
   "id, meatype, startdate, enddate are required to work.
    date must be in  `yyyy-MM-dd hh:mm:ss` format.

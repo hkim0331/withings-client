@@ -265,7 +265,66 @@
 
 ;; ------------------
 ;; data-page
-;; 
+;;
+(defn fetch-button
+  [id meastype]
+  [:div
+   [:button {:class "button is-primary is-small"
+             :on-click
+             #(POST "/api/meas"
+                {:format :json
+                 :headers {"Accept" "application/transit+json"
+                           "x-csrf-token" js/csrfToken}
+                 :params {:id         @id
+                          :meastype   @meastype
+                          :startdate  @startdate
+                          :enddate    @enddate
+                          :lastupdate @lastupdate}
+                 :handler (fn [res] (reset! output res))
+                 :error-handler (fn [e] (js/alert (str  "error " e)))})}
+    "fetch"]])
+
+(defn select-id
+  [id users]
+  [:div
+   [:select {:name "id"
+             :on-change (fn [e] (reset! id (-> e .-target .-value)))}
+    (for [user @users]
+      [:option {:key (:id user) :value (:id user)} (:name user)])]])
+
+(defn select-meatype
+  [meastype measures]
+  [:div
+   [:select {:name "meastype"
+             :on-change (fn [e]
+                          (reset! meastype (-> e .-target .-value)))}
+    (for [mea @measures]
+      [:option {:key (str "m" (:id mea)) :value (:value mea)}
+       (:description mea)])]])
+
+(defn input-startdate-enddate
+  []
+  [:div
+   [:p [:b "start ~ end "]
+    [:input {:name "start"
+             :value @startdate
+             :on-change #(reset! startdate (-> % .-target .-value))}]
+    " ~ "
+    [:input {:name "end"
+             :value @enddate
+             :on-change #(reset! enddate (-> % .-target .-value))}]
+    " hh:mm:ss を省略すると 00:00:00 と解釈します。"]])
+
+(defn input-lastupdate
+  []
+  [:div
+   [:p [:b "lastupdate "]
+    [:input {:value @lastupdate
+             :on-change #(reset! lastupdate (-> % .-target .-value))}]
+    " ~ "
+    [:b "now"]
+    " 日時を記入するとこちらを優先する。カラだと start ~ end を取る。"]])
+
 (defn input-component
   "id, meatype, startdate, enddate are required to work.
    date must be in  `yyyy-MM-dd hh:mm:ss` format.
@@ -275,52 +334,13 @@
         meastype (atom (:id (first @measures)))]
     [:div
      [:h3 "Data"]
-     [:div
-      [:select {:name "id"
-                :on-change (fn [e] (reset! id (-> e .-target .-value)))}
-       (for [user @users]
-         [:option {:key (:id user) :value (:id user)} (:name user)])]]
-     [:div
-      [:select {:name "meastype"
-                :on-change (fn [e]
-                             (reset! meastype (-> e .-target .-value)))}
-       (for [mea @measures]
-         [:option {:key (str "m" (:id mea)) :value (:value mea)}
-          (:description mea)])]]
-     [:div
-      [:p [:b "start ~ end "]
-       [:input {:name "start"
-                :value @startdate
-                :on-change #(reset! startdate (-> % .-target .-value))}]
-       " ~ "
-       [:input {:name "end"
-                :value @enddate
-                :on-change #(reset! enddate (-> % .-target .-value))}]
-       " hh:mm:ss を省略すると 00:00:00 と解釈します。"]]
+     [select-id id users]
+     [select-meatype meastype measures]
+     [input-startdate-enddate]
      [:p "or"]
-     [:div
-      [:p [:b "lastupdate "]
-       [:input {:value @lastupdate
-                :on-change #(reset! lastupdate (-> % .-target .-value))}]
-       " ~ "
-       [:b "now"]
-       " 日時を記入するとこちらを優先する。カラだと start ~ end を取る。"]]
+     [input-lastupdate]
      [:br]
-     [:div
-      [:button {:class "button is-primary is-small"
-                :on-click
-                #(POST "/api/meas"
-                   {:format :json
-                    :headers {"Accept" "application/transit+json"
-                              "x-csrf-token" js/csrfToken}
-                    :params {:id         @id
-                             :meastype   @meastype
-                             :startdate  @startdate
-                             :enddate    @enddate
-                             :lastupdate @lastupdate}
-                    :handler (fn [res] (reset! output res))
-                    :error-handler (fn [e] (js/alert (str  "error " e)))})}
-       "fetch"]]]))
+     [fetch-button id meastype]]))
 
 ;; params has `created` param. which should be displayed?
 (defn output-one

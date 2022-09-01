@@ -22,7 +22,10 @@
 
 
 ## 0.8.1 - 2022-09-01
-- wc-lastupdate.sh
+- wc-lastupdate.sh -- stop auto refresh at beginning of /mean.
+  keep independence of refresh and fetch.
+  instead, provide wc-lastupdate.sh and wc-start-end.sh,
+  which execute pre-refreshed fetchings.
 
 ## 0.8.0 - 2022-09-01
 - /dump-db/sync.sh -- syncronize localhost:withings with kohhoh:withings

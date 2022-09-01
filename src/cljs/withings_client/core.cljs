@@ -147,16 +147,16 @@
        "?response_type=code&redirect_uri=" redirect-uri "&"
        "scope=" scope "&"))
 
-(defonce home (r/atom {:name   nil
-                       :cid    nil
-                       :secret nil
-                       :belong nil
-                       :email  nil
-                       :uri    nil}))
+(defonce home-sess (r/atom {:name   nil
+                            :cid    nil
+                            :secret nil
+                            :belong nil
+                            :email  nil
+                            :uri    nil}))
 
 (defn create-url
   []
-  (str base "client_id=" (:cid @home) "&state=" (:name @home)))
+  (str base "client_id=" (:cid @home-sess) "&state=" (:name @home-sess)))
 
 (defn create-user!
   ":name, :cid, :secret are required field.
@@ -176,10 +176,10 @@
    [:button {:class "button is-primary is-small"
              :on-click
              #(let [params (select-keys
-                            @home
+                            @home-sess
                             [:name :cid :secret :belong :email])]
                 (create-user! params)
-                (swap! home
+                (swap! home-sess
                        assoc
                        :uri
                        (create-url)))}
@@ -191,18 +191,18 @@
   [:div
    [:div [:label {:class "label"} label]]
    [:div {:class "field"}
-    [:input {:value (key @home)
+    [:input {:value (key @home-sess)
              :on-change
-             #(swap! home assoc key (-> % .-target .-value))}]]])
+             #(swap! home-sess assoc key (-> % .-target .-value))}]]])
 
 (defn new-component []
   [:div
    [:h3 "new"]
-   (for [[key label] [[:name "name (*)"]
-                      [:cid "cid (*)"]
+   (for [[key label] [[:name   "name (*)"]
+                      [:cid    "cid (*)"]
                       [:secret "secret (*)"]
                       [:belong "belong"]
-                      [:email "email"]]]
+                      [:email  "email"]]]
      (sub-field key label))
    [:br]
    [create-button]
@@ -214,7 +214,7 @@
 
 (defn link-component []
   [:div
-   [:p "クリックで登録 → " [:a {:href (:uri @session)} (:name @session)]]])
+   [:p "クリックで登録 → " [:a {:href (:uri @home-sess)} (:name @home-sess)]]])
 
 (defn tm
   "returns strung yyyy-mm-dd hh:mm from tagged value tv"
@@ -244,7 +244,7 @@
   [user]
   [:button
    {:class "button is-primary is-small"
-    :on-click #(swap! session assoc :page :user :user user)}
+    :on-click #(swap! home-sess assoc :page :user :user user)}
    "edit"])
 
 (defn users-component []

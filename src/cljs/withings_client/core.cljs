@@ -17,14 +17,7 @@
 (def redirect-uri js/redirectUrl)
 ;; (def redirect-uri "https://wc.melt.kyutech.ac.jp/callback")
 
-(defonce session (r/atom {:page   :home
-                          :name   nil
-                          :cid    nil
-                          :secret nil
-                          :belong nil
-                          :email  nil}))
-
-;; should be a member of session atom?
+(defonce session   (r/atom {:page :home}))
 (defonce users     (r/atom {}))
 (defonce measures  (r/atom {}))
 
@@ -147,7 +140,7 @@
        "?response_type=code&redirect_uri=" redirect-uri "&"
        "scope=" scope "&"))
 
-(defonce home-sess (r/atom {:name   nil
+(defonce sess-home (r/atom {:name   nil
                             :cid    nil
                             :secret nil
                             :belong nil
@@ -156,7 +149,7 @@
 
 (defn create-url
   []
-  (str base "client_id=" (:cid @home-sess) "&state=" (:name @home-sess)))
+  (str base "client_id=" (:cid @sess-home) "&state=" (:name @sess-home)))
 
 (defn create-user!
   ":name, :cid, :secret are required field.
@@ -176,24 +169,23 @@
    [:button {:class "button is-primary is-small"
              :on-click
              #(let [params (select-keys
-                            @home-sess
+                            @sess-home
                             [:name :cid :secret :belong :email])]
                 (create-user! params)
-                (swap! home-sess
+                (swap! sess-home
                        assoc
                        :uri
                        (create-url)))}
     "create"]])
 
-;; BUG!
 (defn sub-field
   [key label]
   [:div
    [:div [:label {:class "label"} label]]
    [:div {:class "field"}
-    [:input {:value (key @home-sess)
+    [:input {:value (key @sess-home)
              :on-change
-             #(swap! home-sess assoc key (-> % .-target .-value))}]]])
+             #(swap! sess-home assoc key (-> % .-target .-value))}]]])
 
 (defn new-component []
   [:div
@@ -214,7 +206,7 @@
 
 (defn link-component []
   [:div
-   [:p "クリックで登録 → " [:a {:href (:uri @home-sess)} (:name @home-sess)]]])
+   [:p "クリックで登録 → " [:a {:href (:uri @sess-home)} (:name @sess-home)]]])
 
 (defn tm
   "returns strung yyyy-mm-dd hh:mm from tagged value tv"
@@ -244,7 +236,7 @@
   [user]
   [:button
    {:class "button is-primary is-small"
-    :on-click #(swap! home-sess assoc :page :user :user user)}
+    :on-click #(swap! session assoc :page :user-edit :user user)}
    "edit"])
 
 (defn users-component []
@@ -379,7 +371,7 @@
 (def pages
   {:home  #'home-page
    :about #'about-page
-   :user  #'user-edit-page
+   :user-edit #'user-edit-page
    :data  #'data-page})
 
 (defn page []
@@ -391,7 +383,7 @@
   (reitit/router
    [["/"      :home]
     ["/about" :about]
-    ["/user"  :user-edit-page]
+    ["/user"  :user-edit]
     ["/data"  :data]]))
 
 (defn match-route [uri]

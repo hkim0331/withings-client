@@ -24,7 +24,6 @@
 (defonce startdate  (r/atom "2022-01-01 00:00:00"))
 (defonce enddate    (r/atom "2023-01-01 00:00:00"))
 (defonce lastupdate (r/atom ""))
-
 (defonce output     (r/atom {}))
 
 ;; --------------------------------------

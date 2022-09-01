@@ -17,6 +17,8 @@
 - favicon (nginx setting? '/' restriction? )
 - css
 
+## 0.8.4-SNAPSHOT
+- updating core.cljs
 
 ## 0.8.3 - 2022-09-01
 - misc/datetime->timestamp

@@ -1,4 +1,10 @@
 #!/bin/sh
-https --session=auth wc.kohhoh.jp/ login=${WC_LOGIN} password=${WC_PASSWORD}
+if [ -z "$2" ]; then
+    echo "usage:"
+    echo "$0 login password"
+    exit
+fi
+
+https --session=auth wc.kohhoh.jp/ login=$1 password=$2
 
 

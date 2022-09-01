@@ -16,7 +16,7 @@
    goog.History))
 
 
-(def ^:private version "0.8.0")
+(def ^:private version "0.8.1")
 
 (def redirect-uri js/redirectUrl)
 ;; (def redirect-uri "https://wc.melt.kyutech.ac.jp/callback")
@@ -242,7 +242,7 @@
                     {"Accept" "application/transit+json"
                      "x-csrf-token" js/csrfToken}
                     ;; :params user
-                    :handler       #(js/alert "リフレッシュ完了。")
+                    :handler #(js/alert "リフレッシュ完了。再読み込みしてください")
                     :error-handler #(js/alert "失敗。")}))}
         "refresh"]]
       [:div {:class "column"}

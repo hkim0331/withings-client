@@ -59,7 +59,7 @@
   "Update userid's access-token and refresh-token.
    returns the number of rows updated"
   [params]
-  (log/info "update-tokens!" (:userid params))
+  (log/info "update-tokens! userid:" (:userid params))
   (try
     (db/update-tokens! params)
     (catch Exception _ (throw (Exception. "error: update-token!")))))

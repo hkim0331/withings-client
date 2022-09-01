@@ -20,10 +20,13 @@
 - async refresh-all
 - randomly refresh?
 
+
+## 0.8.1 - 2022-09-01
+- wc-lastupdate.sh
+
 ## 0.8.0 - 2022-09-01
 - /dump-db/sync.sh -- syncronize localhost:withings with kohhoh:withings
 - completion of datetime
-* refresh before /meas
 
 ## 0.7.4 - 2022-08-31
 - misc namespace. defined datetime->timestamp, abbrev,,,

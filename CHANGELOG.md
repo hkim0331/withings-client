@@ -9,39 +9,42 @@
 - mainly getting many data at once
   change meastype with meastypes? should also change formatting functions.
 - add `note` column to users table.
-- flexible datetime format. supply time. upgrade misc/datetime function?
 - redisplay without reloading after updating/deleting
 - bar chart of the viable time of access tokens
 - color buttons
 - validation about `startdate` and `enddate`
-- favicon
-- refresh periodically?
-- just before fetching?
 - async refresh-all
-- randomly refresh?
+- favicon (nginx setting? '/' restriction? )
+- css
+
+
+## 0.8.3 - 2022-09-01
+- misc/datetime->timestamp
 
 ## 0.8.2 - 2022-09-01
-updated bin/ scripts.
+updating tokens remotely inside fetch script.
 
+updated bin/ scripts.
 - wc-login.sh _login_ _password_ -- to start a session.
   must be executed before before any of operations bellow.
 - wc-users.sh -- get all users
 - wc-toggle-valid.sh _id_ -- toggle users validity
 - wc-lastupdate.sh _id_ _date_ -- fetch user id's last updated data.
-- wc-start-end.sh _id_ _startdate_ _enddate_ -- fetch user id's data between startdate and enddate.
+- wc-start-end.sh _id_ _startdate_ _enddate_
+  -- fetch user id's data between startdate and enddate.
 - wc-refresh-all-auto.sh
 - wc-refresh-all.sh -- refresh all existent tokens
 - wc-refresh.sh _id_ -- refresh user id's token
 
 ## 0.8.1 - 2022-09-01
-- wc-lastupdate.sh -- stop auto refresh at beginning of /mean.
-  keep independence of refresh and fetch.
-  instead, provide wc-lastupdate.sh and wc-start-end.sh,
-  which execute pre-refreshed fetchings.
+stopped auto refreshment of tokens at beginning of /mean.
+keep independency of `refresh` and `fetch` functions.
+instead, provide wc-lastupdate.sh and wc-start-end.sh,
+in which execute refreshing tokens before actual fetching.
 
 ## 0.8.0 - 2022-09-01
 - /dump-db/sync.sh -- syncronize localhost:withings with kohhoh:withings
-- completion of datetime
+- completion of datetime. supply time if omitted.
 
 ## 0.7.4 - 2022-08-31
 - misc namespace. defined datetime->timestamp, abbrev,,,

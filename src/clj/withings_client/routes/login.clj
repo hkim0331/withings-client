@@ -35,5 +35,5 @@
 (defn login-routes []
   [""
    {:middleware [middleware/wrap-formats]}
-   ["/" {:get login :post login!}]
-   ["/logout" {:get  logout!}]])
+   ["/"        {:get login :post login!}]
+   ["/logout"  {:get logout!}]])

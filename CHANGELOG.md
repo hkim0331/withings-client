@@ -20,6 +20,18 @@
 - async refresh-all
 - randomly refresh?
 
+## 0.8.2 - 2022-09-01
+updated bin/ scripts.
+
+- wc-login.sh _login_ _password_ -- to start a session.
+  must be executed before before any of operations bellow.
+- wc-users.sh -- get all users
+- wc-toggle-valid.sh _id_ -- toggle users validity
+- wc-lastupdate.sh _id_ _date_ -- fetch user id's last updated data.
+- wc-start-end.sh _id_ _startdate_ _enddate_ -- fetch user id's data between startdate and enddate.
+- wc-refresh-all-auto.sh
+- wc-refresh-all.sh -- refresh all existent tokens
+- wc-refresh.sh _id_ -- refresh user id's token
 
 ## 0.8.1 - 2022-09-01
 - wc-lastupdate.sh -- stop auto refresh at beginning of /mean.

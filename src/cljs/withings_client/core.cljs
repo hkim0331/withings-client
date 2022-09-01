@@ -1,7 +1,6 @@
 (ns withings-client.core
   (:require
    [ajax.core :refer [GET POST]]
-   ;; [cljs.core.async :refer [<!]]
    [cljs.math :refer  [pow]]
    [clojure.string :as string]
    [goog.events :as events]
@@ -10,23 +9,20 @@
    [reagent.dom :as rdom]
    [reitit.core :as reitit]
    [withings-client.ajax :as ajax])
-  #_(:require-macros
-     [cljs.core.async.macros :refer [go]])
   (:import
    goog.History))
-
 
 (def ^:private version "0.8.3")
 
 (def redirect-uri js/redirectUrl)
 ;; (def redirect-uri "https://wc.melt.kyutech.ac.jp/callback")
 
-(defonce session (r/atom {:page :home
-                          :name nil
-                          :cid nil
+(defonce session (r/atom {:page   :home
+                          :name   nil
+                          :cid    nil
                           :secret nil
                           :belong nil
-                          :email nil}))
+                          :email  nil}))
 
 ;; should be a member of session atom?
 (defonce users     (r/atom {}))
@@ -35,11 +31,11 @@
 (defonce startdate  (r/atom "2022-01-01 00:00:00"))
 (defonce enddate    (r/atom "2023-01-01 00:00:00"))
 (defonce lastupdate (r/atom ""))
+
 (defonce output     (r/atom {}))
 
 ;; --------------------------------------
 ;; misc functions
-
 (defn ts->date
   "after converting to milli, doing jobs."
   [ts]
@@ -87,15 +83,14 @@
 (defn about-page []
   [:section.section>div.container>div.content
    [:img {:src "/img/warning_clojure.png"}]
-   ;; test csrf-token
-   ;; [:p js/csrfToken]
    [:p version]])
 
 ;; -------------------------
 ;; user page
-(defn user-page
+
+(defn user-edit-component
   []
-  [:section.section>div.container>div.content
+  [:div
    [:h3 (-> @session :user :name)]
    [:p "valid は 0/1 で変更"]
    (for [[key _] (dissoc (-> @session :user)
@@ -104,31 +99,44 @@
       [:input
        {:value (get-in @session [:user key])
         :on-change #(swap! session
-                           assoc-in [:user key] (-> % .-target .-value))}]])
-   [:div
-    [:buttn
-     {:class "button is-primary is-small"
-      :on-click
-      (fn [^js/Event e]
-        (js/alert (str (:user @session)))
-        (POST (str "/api/user/" (get-in @session [:user :id]))
-          {:params (:user @session)
-           :handler #(swap! session assoc :page :home)
-           :error-handler
-           (fn [] (js/alert (.getMessage e)))}))}
-     "update"]]
+                           assoc-in [:user key] (-> % .-target .-value))}]])])
+
+(defn update-button
+  []
+  [:div
+   [:button
+    {:class "button is-primary is-small"
+     :on-click
+     (fn [^js/Event e]
+       (js/alert (str (:user @session)))
+       (POST (str "/api/user/" (get-in @session [:user :id]))
+         {:params (:user @session)
+          :handler #(swap! session assoc :page :home)
+          :error-handler
+          (fn [] (js/alert (.getMessage e)))}))}
+    "update"]])
+
+(defn delete-button
+  []
+  [:div
+   [:button
+    {:class "button is-danger is-small"
+     :on-click
+     (fn []
+       (and (js/confirm "are you OK?")
+            (POST (str "/api/user/" (-> @session :user :id) "/delete")
+              {:handler #(swap! session assoc :page :home)
+               :error-handler
+               (fn [^js/Event e] (js/alert (.getMessage e)))})))}
+    "delete"]])
+
+(defn user-page
+  []
+  [:section.section>div.container>div.content
+   [user-edit-component]
+   [update-button]
    [:br]
-   [:div
-    [:button
-     {:class "button is-danger is-small"
-      :on-click
-      (fn []
-        (and (js/confirm "are you OK?")
-             (POST (str "/api/user/" (-> @session :user :id) "/delete")
-               {:handler #(swap! session assoc :page :home)
-                :error-handler
-                (fn [^js/Event e] (js/alert (.getMessage e)))})))}
-     "delete"]]])
+   [delete-button]])
 
 ;; -------------------------
 ;; home page
@@ -149,59 +157,49 @@
   [params]
   (POST "/api/user"
     {:format :json
-     :headers
-     {"Accept" "application/transit+json"
-      "x-csrf-token" js/csrfToken}
+     :headers {"Accept" "application/transit+json"
+               "x-csrf-token" js/csrfToken}
      :params params
      :handler (fn [_] (js/alert (str "saved" params)))
      :error-handler (fn [e] (js/alert (str  "error /api/user" e)))}))
 
-(defn new-component []
+(defn create-button
+  []
+  [:div {:class "field"}
+   [:button {:class "button is-primary is-small"
+             :on-click
+             #(let [params (select-keys
+                            @session
+                            [:name :cid :secret :belong :email])]
+                (create-user! params)
+                (swap! session
+                       assoc
+                       :uri
+                       (create-url)))}
+    "create"]])
+
+(defn sub-field
+  [label key]
   [:div
-   [:h2 "new"]
-   [:div [:label {:class "label"} "name (*)"]]
+   [:div [:label {:class "label"} label]]
    [:div {:class "field"}
     [:input {:value (:name @session)
              :on-change #(swap! session
                                 assoc
-                                :name
-                                (-> % .-target .-value))}]]
-   [:div [:label {:class "label"} "cid (*)"]]
-   [:div {:class "field"}
-    [:input {:on-change #(swap! session
-                                assoc
-                                :cid
-                                (-> % .-target .-value))}]]
-   [:div [:label {:class "label"} "secret (*)"]]
-   [:div {:class "field"}
-    [:input {:on-change #(swap! session
-                                assoc
-                                :secret
-                                (-> % .-target .-value))}]]
-   [:div [:label {:class "label"} "belong"]]
-   [:div {:class "field"}
-    [:input {:on-change #(swap! session
-                                assoc
-                                :belong
-                                (-> % .-target .-value))}]]
-   [:div [:label {:class "label"} "email"]]
-   [:div {:class "field"}
-    [:input {:on-change #(swap! session
-                                assoc
-                                :email
-                                (-> % .-target .-value))}]]
-   [:div {:class "field"}
-    [:button {:class "button is-primary is-small"
-              :on-click
-              #(let [params (select-keys
-                             @session
-                             [:name :cid :secret :belong :email])]
-                 (create-user! params)
-                 (swap! session
-                        assoc
-                        :uri
-                        (create-url)))}
-     "create"]]])
+                                key
+                                (-> % .-target .-value))}]]])
+
+(defn new-component []
+  [:div
+   [:h3 "new"]
+   (for [[label key] [["name (*)" :name]
+                      ["cid (*)" :cid]
+                      ["secret (*)" :secret]
+                      ["belong" :belong]
+                      ["email" :email]]]
+     (sub-field label key))
+   [:br]
+   [create-button]])
 
 (defn link-component []
   [:div
@@ -300,16 +298,17 @@
       [:p [:b "lastupdate "]
        [:input {:value @lastupdate
                 :on-change #(reset! lastupdate (-> % .-target .-value))}]
-       " ~ " [:b "now"] " 日時を記入するとこちらを優先する。カラだと start ~ end を取る。"]]
+       " ~ "
+       [:b "now"]
+       " 日時を記入するとこちらを優先する。カラだと start ~ end を取る。"]]
      [:br]
      [:div
       [:button {:class "button is-primary is-small"
                 :on-click
                 #(POST "/api/meas"
                    {:format :json
-                    :headers
-                    {"Accept" "application/transit+json"
-                     "x-csrf-token" js/csrfToken}
+                    :headers {"Accept" "application/transit+json"
+                              "x-csrf-token" js/csrfToken}
                     :params {:id         @id
                              :meastype   @meastype
                              :startdate  @startdate
@@ -318,8 +317,6 @@
                     :handler (fn [res] (reset! output res))
                     :error-handler (fn [e] (js/alert (str  "error " e)))})}
        "fetch"]]]))
-
-
 
 ;; params has `created` param. which should be displayed?
 (defn output-one

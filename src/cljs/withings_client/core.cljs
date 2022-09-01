@@ -86,7 +86,7 @@
    [:p version]])
 
 ;; -------------------------
-;; user page
+;; user edit page
 
 (defn user-edit-component
   []
@@ -130,7 +130,7 @@
                (fn [^js/Event e] (js/alert (.getMessage e)))})))}
     "delete"]])
 
-(defn user-page
+(defn user-edit-page
   []
   [:section.section>div.container>div.content
    [user-edit-component]
@@ -138,7 +138,7 @@
    [:br]
    [delete-button]])
 
-;; -------------------------
+;; ----------------------------------------------
 ;; home page
 (def scope "user.metrics,user.activity,user.info")
 (def authorize2-uri "https://account.withings.com/oauth2_user/authorize2")
@@ -147,9 +147,16 @@
        "?response_type=code&redirect_uri=" redirect-uri "&"
        "scope=" scope "&"))
 
+(defonce home (r/atom {:name   nil
+                       :cid    nil
+                       :secret nil
+                       :belong nil
+                       :email  nil
+                       :uri    nil}))
+
 (defn create-url
   []
-  (str base "client_id=" (:cid @session) "&state=" (:name @session)))
+  (str base "client_id=" (:cid @home) "&state=" (:name @home)))
 
 (defn create-user!
   ":name, :cid, :secret are required field.
@@ -169,42 +176,44 @@
    [:button {:class "button is-primary is-small"
              :on-click
              #(let [params (select-keys
-                            @session
+                            @home
                             [:name :cid :secret :belong :email])]
                 (create-user! params)
-                (swap! session
+                (swap! home
                        assoc
                        :uri
                        (create-url)))}
     "create"]])
 
+;; BUG!
 (defn sub-field
-  [label key]
+  [key label]
   [:div
    [:div [:label {:class "label"} label]]
    [:div {:class "field"}
-    [:input {:value (:name @session)
+    [:input {:value (key @home)
              :on-change
-             #(swap! session assoc key (-> % .-target .-value))}]]])
+             #(swap! home assoc key (-> % .-target .-value))}]]])
 
 (defn new-component []
   [:div
    [:h3 "new"]
-   (for [[label key] [["name (*)" :name]
-                      ["cid (*)" :cid]
-                      ["secret (*)" :secret]
-                      ["belong" :belong]
-                      ["email" :email]]]
-     (sub-field label key))
+   (for [[key label] [[:name "name (*)"]
+                      [:cid "cid (*)"]
+                      [:secret "secret (*)"]
+                      [:belong "belong"]
+                      [:email "email"]]]
+     (sub-field key label))
    [:br]
-   [create-button]])
+   [create-button]
+   [:p "(*)は必須フィールド。belong, email はカラでもよい。"
+    [:br]
+    "create ボタンの後、下に現れるリンクをクリックすると"
+    "acccess トークン、refresh トークンの取得に取り掛かる。"
+    "ページが切り替わるのに 5 秒くらいかかる。非同期通信でスピードアップ予定。"]])
 
 (defn link-component []
   [:div
-   [:p "(*)は必須フィールド。belong, email はカラでもよい。" [:br]
-    "create ボタンの後、下に現れるリンクをクリックすると"
-    "acccess トークン、refresh トークンの取得に取り掛かる。"
-    "ページが切り替わるのに 5 秒くらいかかる。非同期通信でスピードアップ予定。"]
    [:p "クリックで登録 → " [:a {:href (:uri @session)} (:name @session)]]])
 
 (defn tm
@@ -370,7 +379,7 @@
 (def pages
   {:home  #'home-page
    :about #'about-page
-   :user  #'user-page
+   :user  #'user-edit-page
    :data  #'data-page})
 
 (defn page []
@@ -382,6 +391,7 @@
   (reitit/router
    [["/"      :home]
     ["/about" :about]
+    ["/user"  :user-edit-page]
     ["/data"  :data]]))
 
 (defn match-route [uri]

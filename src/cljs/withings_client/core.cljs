@@ -16,7 +16,7 @@
    goog.History))
 
 
-(def ^:private version "0.7.4")
+(def ^:private version "0.8.0")
 
 (def redirect-uri js/redirectUrl)
 ;; (def redirect-uri "https://wc.melt.kyutech.ac.jp/callback")
@@ -34,7 +34,7 @@
 
 (defonce startdate  (r/atom "2022-01-01 00:00:00"))
 (defonce enddate    (r/atom "2023-01-01 00:00:00"))
-(defonce lastupdate (r/atom "2022-08-31 00:00:00"))
+(defonce lastupdate (r/atom ""))
 (defonce output     (r/atom {}))
 
 ;; --------------------------------------
@@ -212,7 +212,7 @@
    [:p "クリックで登録 → " [:a {:href (:uri @session)} (:name @session)]]])
 
 (defn tm
-  "returns strung yyyy-mm-dd hh:mm from tagged value rv"
+  "returns strung yyyy-mm-dd hh:mm from tagged value tv"
   [^js/LocalDateTime tv]
   (let [s (.-rep tv)]
     (str (subs s 0 10) " " (subs s 11 16))))
@@ -293,13 +293,14 @@
        " ~ "
        [:input {:name "end"
                 :value @enddate
-                :on-change #(reset! enddate (-> % .-target .-value))}]]]
+                :on-change #(reset! enddate (-> % .-target .-value))}]
+       " hh:mm:ss を省略すると 00:00:00 と解釈します。"]]
      [:p "or"]
      [:div
       [:p [:b "lastupdate "]
        [:input {:value @lastupdate
                 :on-change #(reset! lastupdate (-> % .-target .-value))}]
-       " ~ " [:b "now"]]]
+       " ~ " [:b "now"] " 日時を記入するとこちらを優先する。カラだと start ~ end を取る。"]]
      [:br]
      [:div
       [:button {:class "button is-primary is-small"
@@ -341,7 +342,8 @@
    (input-component)
    [:hr]
    (output-component)
-   [:hr]])
+   [:hr]
+   version])
 
 ;; -------------------------
 (def pages

@@ -51,16 +51,13 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defn update-tokens-by-name!
-  "use from tokens/fetch-and-store!
-   first insert user name, cid, secret,
-   then updte the record with access, refresh token using key `name`"
+  "updates the `name`s row with `access`, `refresh` token"
   [params]
   (db/update-tokens-by-name! params))
 
 (defn update-tokens!
   "Update userid's access-token and refresh-token.
-   Sometimes, refresh-token is not updated. So,
-   return value is 1 or 2 when update successed."
+   returns the number of rows updated"
   [params]
   (log/info "update-tokens!" (:userid params))
   (try
@@ -69,6 +66,6 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defn toggle-valid!
-  "toggle colum valid"
+  "toggle user id's `valid` column"
   [id]
   (db/toggle-valid! {:id id}))

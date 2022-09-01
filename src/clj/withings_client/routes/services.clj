@@ -37,7 +37,7 @@
               (tokens/refresh-all!)
               (response/ok "refreshed")
               (catch Exception e (error e))))}]
-  
+
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;; users
   ["/user"

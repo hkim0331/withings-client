@@ -88,6 +88,8 @@
    {:post (fn [{params :params}]
             (log/info "/meas " params)
             (try
+              ;; CHANGED 0.8.1
+              ;; (tokens/refresh-and-restore-id! (:id params))
               (response/ok (measures/meas params))
               (catch Exception e (error e))))
     :get (fn [_] (response/ok (measures/list-measures)))}]])

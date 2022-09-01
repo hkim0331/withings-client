@@ -42,7 +42,9 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defn refresh
-  "when errors, returns {}"
+  "withings's `requesttoken` requires `client id`.
+   take the cid from the user data.
+   when errors, returns {}"
   [{:keys [cid secret refresh]}]
   (log/info "tokens/refresh cid" (abbrev cid))
   (-> (hc/post

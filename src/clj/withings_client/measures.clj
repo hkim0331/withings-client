@@ -3,8 +3,9 @@
    [hato.client :as hc]
    [clojure.tools.logging :as log]
    [withings-client.db.core :as db]
-   [withings-client.misc :refer [datetime->timestamp]]
-   [withings-client.users :as users]))
+   [withings-client.misc :refer [datetime->timestamp abbrev]]
+   [withings-client.users :as users]
+   [withings-client.tokens :as tokens]))
 
 (def meas-uri "https://wbsapi.withings.net/measure")
 
@@ -32,7 +33,9 @@
   [{:keys [id meastype startdate enddate lastupdate]}]
   (let [{:keys [access]} (users/get-user id)]
     (log/info "meas" id meastype startdate enddate lastupdate)
-    (log/info "access" access)
+    (log/info "access token" (abbrev access))
+    ;; never do on localhost. how? in development
+    ;; (tokens/refresh-and-restore-id! id)
     (-> (hc/post
          meas-uri
          {:as :json

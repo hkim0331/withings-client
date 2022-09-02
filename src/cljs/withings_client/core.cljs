@@ -42,7 +42,7 @@
 
 (declare fetch-users!)
 
-;; --------------------------------------
+;; ---------------------------------------------------------
 ;; misc functions
 (defn ts->date
   "after converting to milli, doing jobs."
@@ -58,7 +58,7 @@
   (-> (/ value (pow 10 (- unit)))
       (.toFixed digits)))
 
-;; --------------------------------------
+;; ---------------------------------------------------------
 ;; navbar
 (defn nav-link [uri title page]
   [:a.navbar-item
@@ -86,14 +86,14 @@
        [nav-link "/logout" "Logout"]
        [nav-link "https://developer.withings.com/api-reference" "API"]]]]))
 
-;; -------------------------
+;; ----------------------------------------------------------
 ;; about-page
 (defn about-page []
   [:section.section>div.container>div.content
    [:img {:src "/img/warning_clojure.png"}]
    [:p version]])
 
-;; -------------------------
+;; ----------------------------------------------------------
 ;; user-page
 (defn user-component
   []
@@ -112,32 +112,32 @@
 (defn update-button
   []
   [:button
-    {:class "button is-primary is-small"
-     :on-click
-     (fn [^js/Event e]
-       (js/alert (str (:user @session)))
-       (POST (str "/api/user/" (get-in @session [:user :id]))
-         {:params (:user @session)
-          :handler (fn [_]
-                     (fetch-users!)
-                     (swap! session assoc :page :home))
-          :error-handler (fn [] (js/alert (.getMessage e)))}))}
-    "update"])
+   {:class "button is-primary is-small"
+    :on-click
+    (fn [^js/Event e]
+      (js/alert (str (:user @session)))
+      (POST (str "/api/user/" (get-in @session [:user :id]))
+        {:params (:user @session)
+         :handler (fn [_]
+                    (fetch-users!)
+                    (swap! session assoc :page :home))
+         :error-handler (fn [] (js/alert (.getMessage e)))}))}
+   "update"])
 
 (defn delete-button
   []
   [:button
-    {:class "button is-danger is-small"
-     :on-click
-     (fn []
-       (and (js/confirm "are you OK?")
-            (POST (str "/api/user/" (-> @session :user :id) "/delete")
-              {:handler (fn [_]
-                          (fetch-users!)
-                          (swap! session assoc :page :home))
-               :error-handler
-               (fn [^js/Event e] (js/alert (.getMessage e)))})))}
-    "delete"])
+   {:class "button is-danger is-small"
+    :on-click
+    (fn []
+      (and (js/confirm "are you OK?")
+           (POST (str "/api/user/" (-> @session :user :id) "/delete")
+             {:handler (fn [_]
+                         (fetch-users!)
+                         (swap! session assoc :page :home))
+              :error-handler
+              (fn [^js/Event e] (js/alert (.getMessage e)))})))}
+   "delete"])
 
 (defn user-page
   []
@@ -222,15 +222,6 @@
     [:a {:href (-> @session :home :uri)}
      (-> @session :home :name)]]])
 
-(defn tm
-  "returns strung yyyy-mm-dd hh:mm from tagged value tv"
-  [^js/LocalDateTime tv]
-  (let [s (.-rep tv)]
-    (str (subs s 0 10) " " (subs s 11 16))))
-
-;; can not (sort-by :update_at @user)
-;; since tagged value (:update_at @user)?
-;; use async?
 (defn refresh-button
   [user]
   [:button
@@ -249,6 +240,13 @@
     :on-click #(swap! session assoc :user user :page :user)}
    "edit"])
 
+;; used in users-component only.
+(defn tm
+  "returns strung yyyy-mm-dd hh:mm from tagged value tv"
+  [^js/LocalDateTime tv]
+  (let [s (.-rep tv)]
+    (str (subs s 0 10) " " (subs s 11 16))))
+
 (defn users-component-aux
   [e]
   [:div {:class "column"} e])
@@ -263,7 +261,7 @@
                (:id user)
                (:name user)
                (:belong user)
-               (tm (:updated_at user))
+               (tm (:updated_at user)) ;; necessary? token's? user record?
                [refresh-button user]
                [edit-button user]]]
         (users-component-aux e))])])
@@ -288,8 +286,6 @@
              :on-click
              #(POST "/api/meas"
                 {:format :json
-                 :headers {"Accept" "application/transit+json"
-                           "x-csrf-token" js/csrfToken}
                  :params {:id         @id
                           :meastype   @meastype
                           :startdate  @startdate

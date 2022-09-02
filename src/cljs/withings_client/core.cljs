@@ -12,7 +12,7 @@
   (:import
    goog.History))
 
-(def ^:private version "0.9.0")
+(def ^:private version "0.9.1")
 
 ;; https://stackoverflow.com/questions/12655503/how-to-catch-any-javascript-exception-in-clojurescript
 (def redirect-uri
@@ -28,18 +28,15 @@
                                    :email  nil
                                    :uri    nil}
                             :users {}
+                            :measures {}
+                            :data {:lastupdate ""
+                                   :startdate "2022-01-01 00:00:00"
+                                   :enddate "2023-01-01 00:00:00"
+                                   :output nil}
                             :user {} ;; user-page
                             }))
 
-(defonce users     (r/atom {})) ;; replace with (session :users)?
-(defonce measures  (r/atom {}))
-
-;; Data
-(defonce startdate  (r/atom "2022-01-01 00:00:00"))
-(defonce enddate    (r/atom "2023-01-01 00:00:00"))
-(defonce lastupdate (r/atom ""))
-(defonce output     (r/atom {}))
-
+;; to avoid reload
 (declare fetch-users!)
 
 ;; ---------------------------------------------------------
@@ -264,7 +261,7 @@
                                    (:id user)
                                    (:name user)
                                    (:belong user)
-                                   (tm (:updated_at user)) ;; necessary? token's? user record?
+                                   (tm (:updated_at user))
                                    [refresh-button user]
                                    [edit-button user]])]
          (users-component-aux key e))]))])
@@ -282,10 +279,6 @@
 ;; ------------------------------------------------------------
 ;; data-page
 ;;
-
-
-;; valid user only OK
-;; header
 (defn select-id
   []
   [:div
@@ -294,7 +287,9 @@
              (fn [e] (swap! session assoc-in [:data :id]
                             (-> e .-target .-value)))}
     (for [user (cons {:id 0 :name "選んでください"}
-                     (-> @session :users))]
+                     (->> @session
+                          :users
+                          (filter :valid)))]
       [:option {:key (:id user) :value (:id user)} (:name user)])]])
 
 (defn select-meatype
@@ -315,20 +310,29 @@
   [:div
    [:p [:b "start ~ end "]
     [:input {:name "start"
-             :value @startdate
-             :on-change #(reset! startdate (-> % .-target .-value))}]
+             :value (-> @session :data :startdate)
+             :on-change #(swap! session
+                                assoc-in
+                                [:data :startdate]
+                                (-> % .-target .-value))}]
     " ~ "
     [:input {:name "end"
-             :value @enddate
-             :on-change #(reset! enddate (-> % .-target .-value))}]
+             :value (-> @session :data :enddate)
+             :on-change #(swap! session
+                                assoc-in
+                                [:data :enddate]
+                                (-> % .-target .-value))}]
     " hh:mm:ss を省略すると 00:00:00 と解釈します。"]])
 
 (defn input-lastupdate
   []
   [:div
    [:p [:b "lastupdate "]
-    [:input {:value @lastupdate
-             :on-change #(reset! lastupdate (-> % .-target .-value))}]
+    [:input {:value (-> @session :data :lastupdate)
+             :on-change #(swap! session
+                                assoc-in
+                                [:data :lastupdate]
+                                (-> % .-target .-value))}]
     " ~ "
     [:b "now"]
     " 日時を記入するとこちらを優先する。カラだと start ~ end を取る。"]])
@@ -342,10 +346,13 @@
                 {:format :json
                  :params {:id         (-> @session :data :id)
                           :meastype   (-> @session :data :meastype)
-                          :startdate  @startdate
-                          :enddate    @enddate
-                          :lastupdate @lastupdate}
-                 :handler (fn [res] (reset! output res))
+                          :startdate  (-> @session :data :startdate)
+                          :enddate    (-> @session :data :enddate)
+                          :lastupdate (-> @session :data :lastupdate)}
+                 :handler (fn [res] (swap! session
+                                           assoc-in
+                                           [:data :output]
+                                           res))
                  :error-handler (fn [e] (js/alert (str  "error " e)))})}
     "fetch"]])
 
@@ -370,16 +377,34 @@
   [:div {:key n}
    (str (ts->date date) ", " (value->float 1 measures))])
 
+(defn user-name
+  [id]
+  (->> @session
+       :users
+       (filter #(= id (:id %)))
+       first
+       :name))
+
+(defn measure-name
+  [id]
+  (->> @session
+       :measures
+       (filter #(= id (:id %)))
+       first
+       :description))
+
 (defn output-component
   []
   [:div
    [:h3 "fetched ("
-    (-> @session :data :id)
-    ","
-    (-> @session :data :meastype)
+    (-> @session :data :id js/parseInt user-name)
+    ", "
+    (-> @session :data :meastype js/parseInt measure-name)
     ")"]
-   (if (seq @output)
-     (for [[n data] (map-indexed vector (:measuregrps @output))]
+   (if (seq (-> @session :data :output))
+     (for [[n data] (map-indexed
+                     vector
+                     (:measuregrps (-> @session :data :output)))]
        (output-one n data))
      [:p "no data"])])
 

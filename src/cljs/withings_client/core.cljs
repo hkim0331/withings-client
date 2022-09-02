@@ -12,13 +12,26 @@
   (:import
    goog.History))
 
-(def ^:private version "0.8.4")
+(def ^:private version "0.9.0-SNAPSHOT")
 
-(def redirect-uri js/redirectUrl)
-;; (def redirect-uri "https://wc.melt.kyutech.ac.jp/callback")
+;; https://stackoverflow.com/questions/12655503/how-to-catch-any-javascript-exception-in-clojurescript
+(def redirect-uri
+  (try
+    js/redirectUrl
+    (catch js/Error _ "https://wc.kohhoh.jp/callbac")))
 
-(defonce session   (r/atom {:page :home}))
-(defonce users     (r/atom {}))
+(defonce session   (r/atom {:page :home
+                            :home {:name   nil
+                                   :cid    nil
+                                   :secret nil
+                                   :belong nil
+                                   :email  nil
+                                   :uri    nil}
+                            :users {}
+                            :user {} ;; user-page
+                            }))
+
+(defonce users     (r/atom {})) ;; replace with (session :users)?
 (defonce measures  (r/atom {}))
 
 ;; Data
@@ -26,6 +39,8 @@
 (defonce enddate    (r/atom "2023-01-01 00:00:00"))
 (defonce lastupdate (r/atom ""))
 (defonce output     (r/atom {}))
+
+(declare fetch-users!)
 
 ;; --------------------------------------
 ;; misc functions
@@ -72,15 +87,14 @@
        [nav-link "https://developer.withings.com/api-reference" "API"]]]]))
 
 ;; -------------------------
-;; about page
+;; about-page
 (defn about-page []
   [:section.section>div.container>div.content
    [:img {:src "/img/warning_clojure.png"}]
    [:p version]])
 
 ;; -------------------------
-;; use-edit page
-
+;; user-edit page
 (defn user-edit-component
   []
   [:div
@@ -88,7 +102,8 @@
    [:p "valid は 0/1 で変更"]
    (for [[key _] (dissoc (-> @session :user)
                          :id :userid :created_at :updated_at)]
-     [:p {:key key} (symbol key) [:br]
+     [:p {:key key} (symbol key)
+      [:br]
       [:input
        {:value (get-in @session [:user key])
         :on-change #(swap! session
@@ -117,7 +132,9 @@
      (fn []
        (and (js/confirm "are you OK?")
             (POST (str "/api/user/" (-> @session :user :id) "/delete")
-              {:handler #(swap! session assoc :page :home)
+              {:handler (fn [_]
+                          (fetch-users!)
+                          (swap! session assoc :page :home))
                :error-handler
                (fn [^js/Event e] (js/alert (.getMessage e)))})))}
     "delete"]])
@@ -140,16 +157,11 @@
        "?response_type=code&redirect_uri=" redirect-uri "&"
        "scope=" scope "&"))
 
-(defonce sess-home (r/atom {:name   nil
-                            :cid    nil
-                            :secret nil
-                            :belong nil
-                            :email  nil
-                            :uri    nil}))
-
 (defn create-url
   []
-  (str base "client_id=" (:cid @sess-home) "&state=" (:name @sess-home)))
+  (str base
+       "client_id=" (-> @session :home :cid)
+       "&state=" (-> @session :home :name)))
 
 (defn create-user!
   ":name, :cid, :secret are required field.
@@ -157,11 +169,12 @@
   [params]
   (POST "/api/user"
     {:format :json
-     :headers {"Accept" "application/transit+json"
-               "x-csrf-token" js/csrfToken}
      :params params
-     :handler (fn [_] (js/alert (str "saved" params)))
-     :error-handler (fn [e] (js/alert (str  "error /api/user" e)))}))
+     :handler (fn [_]
+                (js/alert (str "saved" params))
+                (fetch-users!))
+     :error-handler
+     (fn [e] (js/alert (get-in e [:response :errors :server-error])))}))
 
 (defn create-button
   []
@@ -169,10 +182,10 @@
    [:button {:class "button is-primary is-small"
              :on-click
              #(let [params (select-keys
-                            @sess-home
+                            (-> @session :home)
                             [:name :cid :secret :belong :email])]
                 (create-user! params)
-                (swap! sess-home assoc :uri (create-url)))}
+                (swap! session assoc-in [:home :uri] (create-url)))}
     "create"]])
 
 (defn sub-field
@@ -180,19 +193,19 @@
   [:div
    [:div [:label {:class "label"} label]]
    [:div {:class "field"}
-    [:input {:value (key @sess-home)
+    [:input {:value (key (-> @session :home))
              :on-change
-             #(swap! sess-home assoc key (-> % .-target .-value))}]]])
+             #(swap! session
+                     assoc-in
+                     [:home key]
+                     (-> % .-target .-value))}]]])
 
 (defn new-component []
   [:div
    [:h3 "new"]
    ;; map で？
-   (for [[key label] [[:name   "name (*)"]
-                      [:cid    "cid (*)"]
-                      [:secret "secret (*)"]
-                      [:belong "belong"]
-                      [:email  "email"]]]
+   (for [[key label] {:name "name (*)", :cid "cid (*)", :secret "secret (*)",
+                      :belong "belong", :email "email"}]
      (sub-field key label))
    [:br]
    [create-button]
@@ -203,7 +216,9 @@
 
 (defn link-component []
   [:div
-   [:p "クリックで登録 → " [:a {:href (:uri @sess-home)} (:name @sess-home)]]])
+   [:p "create してからクリックで登録 → "
+    [:a {:href (-> @session :home :uri)}
+     (-> @session :home :name)]]])
 
 (defn tm
   "returns strung yyyy-mm-dd hh:mm from tagged value tv"
@@ -221,11 +236,6 @@
     :on-click
     (fn [_] (POST (str "/api/token/" (:id user) "/refresh")
               {:format :json
-               ;; no use?
-               :headers
-               {"Accept" "application/transit+json"
-                "x-csrf-token" js/csrfToken}
-                    ;; :params user
                :handler #(js/alert "リフレッシュ完了。再読み込みしてください")
                :error-handler #(js/alert "失敗。")}))}
    "refresh"])
@@ -234,8 +244,12 @@
   [user]
   [:button
    {:class "button is-primary is-small"
-    :on-click #(swap! session assoc :page :user-edit :user user)}
+    :on-click #(swap! session assoc :user user :page :user-edit)}
    "edit"])
+
+(defn users-component-aux
+  [e]
+  [:div {:class "column"} e])
 
 (defn users-component []
   [:div
@@ -243,15 +257,14 @@
    [:p "アクセストークンは 10800 秒（3時間）で切れます。"]
    (for [user @users]
      [:div {:class "columns" :key (:id user)}
-      ;; for で？
-      [:div {:class "column"} (if (:valid user) "y" "n")]
-      [:div {:class "column"} (:id user)]
-      [:div {:class "column"} (:name user)]
-      [:div {:class "column"} (:belong user)]
-      [:div {:class "column"} (:email user)]
-      [:div {:class "column"} (tm (:updated_at user))]
-      [:div {:class "column"} [refresh-button user]]
-      [:div {:class "column"} [edit-button user]]])])
+      (for [e [(if (:valid user) "y" "n")
+               (:id user)
+               (:name user)
+               (:belong user)
+               (tm (:updated_at user))
+               [refresh-button user]
+               [edit-button user]]]
+        (users-component-aux e))])])
 
 (defn home-page []
   [:section.section>div.container>div.content

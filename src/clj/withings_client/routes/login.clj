@@ -3,17 +3,10 @@
    [clojure.tools.logging :as log]
    [ring.util.http-response :as response]
    [ring.util.response]
+   [withings-client.config :refer [env]]
    [withings-client.layout :as layout]
    [withings-client.middleware :as middleware]
-   [withings-client.tokens :as tokens]))
-
-(defn callback
-  "auth code inside request header :params {:code ... :state dev}"
-  [{params :params}]
-  (log/info "/callback" params)
-  (tokens/fetch-and-store! params)
-  (response/found "/"))
-
+   #_[withings-client.tokens :as tokens]))
 
 (defn login
   [request]
@@ -21,16 +14,18 @@
                  "login.html"
                  {:flash (:flash request)}))
 
-;; FIXME: must be changed
 (defn login!
   [{{:keys [login password]} :params}]
   (log/info "login" login "password" password)
-  (if (and (seq password) (= login password))
+  (log/info "env " (env :login) (env :password))
+  (if (and (seq login)
+           (seq password)
+           (= login (env :login))
+           (= password (env :password)))
     (-> (response/found "/home/")
         (assoc-in [:session :identity] login))
     (-> (response/found "/")
-        (dissoc :session)
-        (assoc :flash "login failure"))))
+        (assoc :session {} :flash "login failure"))))
 
 (defn logout!
   [_]
@@ -39,9 +34,6 @@
 
 (defn login-routes []
   [""
-   {:middleware [middleware/wrap-csrf
-                 middleware/wrap-formats]}
-   ["/callback" {:get callback}]
-   ["/"  {:get  login
-          :post login!}]
-   ["/logout" {:get  logout!}]])
+   {:middleware [middleware/wrap-formats]}
+   ["/"        {:get login :post login!}]
+   ["/logout"  {:get logout!}]])

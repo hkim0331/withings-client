@@ -1,21 +1,11 @@
 (ns withings-client.measures
   (:require
    [hato.client :as hc]
-   [java-time :as jt]
-   [clojure.string :as str]
    [clojure.tools.logging :as log]
-   ;; [withings-client.config :refer [env]]
-   [withings-client.users :as users]))
-
-(defn str->timestamp
-  "input: yyyy-MM-DD hh:mm:ss
-   returns timestamp(int)"
-  [s]
-  (let [[date time] (str/split s #" ")]
-    (quot (-> (str date "T" time)
-              jt/to-sql-timestamp
-              jt/to-millis-from-epoch)
-          1000)))
+   [withings-client.db.core :as db]
+   [withings-client.misc :refer [datetime->timestamp abbrev]]
+   [withings-client.users :as users]
+   [withings-client.tokens :as tokens]))
 
 (def meas-uri "https://wbsapi.withings.net/measure")
 
@@ -32,28 +22,35 @@
 ;; lastupdate=int use this  instead of startdate+enddate
 ;; 'https://wbsapi.withings.net/measure'
 
+
+;; meastypes?
 (defn meas
-  "get meastype between startdate and enddate,
-   using `access-token` value from `users` table.
-   Returns the result in json format."
-  [{{:keys [id meastype startdate enddate]} :params}]
+  "get meastype between `startdate` and `enddate`,
+  `lastupdate` is also available.
+   retrieve `access-token` from `users` table by `id`.
+   it is required to fetch meas from withings.
+   Returns the results in json format."
+  [{:keys [id meastype startdate enddate lastupdate]}]
   (let [{:keys [access]} (users/get-user id)]
-    (log/info "meas" id meastype startdate enddate)
-    (log/info "access" access)
+    (log/info "meas" id meastype startdate enddate lastupdate)
+    (log/info "access token" (abbrev access))
+    ;; never do on localhost. how? in development
+    ;; (tokens/refresh-and-restore-id! id)
     (-> (hc/post
          meas-uri
          {:as :json
-          ;; "authorization" should be lower characters!
+          ;; CAUTION: "authorization" should be lower characters!
           :headers {"authorization" (str "Bearer " access)}
           :query-params
-          {:action    "getmeas"
-           ;; :access_token access
-           :meastype  meastype
-           :category  1
-           :startdate (str->timestamp startdate)
-           :enddate   (str->timestamp enddate)}})
-        :body
-        :body
-        ;; no :measuregrps
-        #_:measuregrps)))
+          {:action     "getmeas"
+           :meastype   meastype
+           :category   1
+           :startdate  (datetime->timestamp startdate)
+           :enddate    (datetime->timestamp enddate)
+           :lastupdate (datetime->timestamp lastupdate)}})
+        (get-in [:body :body]))))
 
+(defn list-measures
+  "returns measures items in vector"
+  []
+  (db/list-measures))

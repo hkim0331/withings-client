@@ -1,67 +1,70 @@
 (ns withings-client.routes.services
- (:require
-  [clojure.tools.logging :as log]
-  [ring.util.http-response :as response]
-  [withings-client.measures :as measures]
-  [withings-client.middleware :as middleware]
-  [withings-client.tokens :as tokens]
-  [withings-client.users :as users]))
+  (:require
+   [clojure.tools.logging :as log]
+   [ring.util.http-response :as response]
+   [withings-client.measures :as measures]
+   [withings-client.middleware :as middleware]
+   [withings-client.tokens :as tokens]
+   [withings-client.users :as users]))
 
 (defn error
- [e]
- (response/internal-server-error
-           {:errors {:server-error (.getMessage e)}}))
-
-;; (defn refresh-token
-;;   [{params :params}]
-;;   (log/info "refresh-token" params)
-;;   (response/ok {:refresh-token params}))
+  [e]
+  (response/bad-request
+   {:errors {:server-error (.getMessage e)}}))
 
 (defn service-routes []
  ["/api"
-  {:middleware [middleware/wrap-formats]}
-
-  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  ;; measures
-  ["/meas"
-   {:post #(try
-             (let [ret (measures/meas %)]
-                ;; (store ret)
-               (response/ok ret))
-             (catch Exception e (error e)))}]
-
-  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  ;; tokens
-  ["/token/refresh"
-   {:post #(do
-             (tokens/refresh-and-restore! %)
-             (response/ok "refreshed"))}]
-
-  ["/token/refresh/:n"
-   {:post (fn [{{:keys [n]} :path-params}]
-            (log/info "/token/refresh/:n" n)
+  {:middleware [middleware/wrap-restricted
+                middleware/wrap-formats]}
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;; tokens. use also when creating user entry
+  ["/token/:id/refresh"
+   {:post (fn [{{:keys [id]} :path-params}]
+            (log/info "/token/:n/refresh" id)
             (try
-              (tokens/refresh-and-restore-one! n)
+              (tokens/refresh-and-restore-id! id)
+              (response/ok "success")
+              (catch Exception e (error e))))}]
+
+  ["/token/:id/toggle"
+   {:post (fn [{{:keys [id]} :path-params}]
+            (response/ok (users/toggle-valid! id)))}]
+
+  ["/tokens/refresh-all"
+   {:post (fn [_]
+            (log/info "/tokens/refresh-all")
+            (try
+              (tokens/refresh-all!)
               (response/ok "refreshed")
               (catch Exception e (error e))))}]
 
-  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;; users
+  ["/user"
+   {:post
+    (fn [{:keys [params]}]
+      (try
+        (users/create-user! params)
+        (response/ok params)
+        (catch Exception e (error e))))}]
+
   ["/users"
    {:get (fn [_] (response/ok (users/users-list)))}]
 
-  ["/user/:n"
-   {:get
-    (fn [{{:keys [n]} :path-params}]
-      (response/ok (users/get-user n)))
+  ["/valid-users"
+   {:get (fn [_] (response/ok (users/valid-users)))}]
 
-    ;; update, /user/:n/update is right?
+  ["/user/:id"
+   {:get
+    (fn [{{:keys [id]} :path-params}]
+      (response/ok (users/get-user id)))
     :post
-    (fn [{{:keys [n]} :path-params :as request}]
-      (let [params (:params request)]
-        (try
-          (response/ok {:user n :params params})
-          (catch Exception e (error e)))))}]
+    (fn [{user :params}]
+      (try
+        (log/info "/user/:id, (:name user)" (:name user))
+        (users/update-user! user)
+        (response/ok "updated")
+        (catch Exception e (error e))))}]
 
   ["/user/:n/delete"
    {:post
@@ -71,18 +74,21 @@
         (response/ok "deleted")
         (catch Exception e (error e))))}]
 
-  ["/user/:n/valid"
+  ["/user/:id/valid"
    {:post
-    (fn [{{:keys [n]} :path-params}]
+    (fn [{{:keys [id]} :path-params}]
       (try
-        (users/toggle-valid! n)
-        (response/ok "valid")
+        (users/toggle-valid! id)
+        (response/ok "changed")
         (catch Exception e (error e))))}]
 
-  ["/user"
-   {:post
-    (fn [{:keys [params]}]
-      (try
-        (users/create-user! params)
-        (response/ok params)
-        (catch Exception e (error e))))}]])
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;; measures
+  ["/meas"
+   {:post (fn [{params :params}]
+            (log/info "/meas " params)
+            (try
+              (response/ok (measures/meas params))
+              (catch Exception e (error e))))
+    :get (fn [_] (response/ok (measures/list-measures)))}]])
+

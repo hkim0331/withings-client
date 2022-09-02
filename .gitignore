@@ -12,11 +12,13 @@ test-config.edn
 profiles.clj
 /.env
 .nrepl-port
-/.shadow-cljs
+
 /node_modules
 /log
 /data
-start.sh
-deploy*.sh
+/.shadow-cljs
+/start.sh
+/deploy*.sh
+/db-dumps/*.sql
 
 

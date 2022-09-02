@@ -282,10 +282,6 @@
 ;; ------------------------------------------------------------
 ;; data-page
 ;;
-
-
-;; valid user only OK
-;; header
 (defn select-id
   []
   [:div
@@ -294,7 +290,9 @@
              (fn [e] (swap! session assoc-in [:data :id]
                             (-> e .-target .-value)))}
     (for [user (cons {:id 0 :name "選んでください"}
-                     (-> @session :users))]
+                     (->> @session
+                          :users
+                          (filter :valid)))]
       [:option {:key (:id user) :value (:id user)} (:name user)])]])
 
 (defn select-meatype
@@ -370,13 +368,29 @@
   [:div {:key n}
    (str (ts->date date) ", " (value->float 1 measures))])
 
+(defn user-name
+  [id]
+  (->> @session
+       :users
+       (filter #(= id (:id %)))
+       first
+       :name))
+
+(defn measure-name
+  [id]
+  (->> @session
+       :measures
+       (filter #(= id (:id %)))
+       first
+       :description))
+
 (defn output-component
   []
   [:div
    [:h3 "fetched ("
-    (-> @session :data :id)
-    ","
-    (-> @session :data :meastype)
+    (-> @session :data :id js/parseInt user-name)
+    ", "
+    (-> @session :data :meastype js/parseInt measure-name)
     ")"]
    (if (seq @output)
      (for [[n data] (map-indexed vector (:measuregrps @output))]

@@ -94,8 +94,8 @@
    [:p version]])
 
 ;; -------------------------
-;; user-edit page
-(defn user-edit-component
+;; user-page
+(defn user-component
   []
   [:div
    [:h3 (-> @session :user :name)]
@@ -119,7 +119,9 @@
        (js/alert (str (:user @session)))
        (POST (str "/api/user/" (get-in @session [:user :id]))
          {:params (:user @session)
-          :handler #(swap! session assoc :page :home)
+          :handler (fn [_]
+                     (fetch-users!)
+                     (swap! session assoc :page :home))
           :error-handler (fn [] (js/alert (.getMessage e)))}))}
     "update"]])
 
@@ -139,15 +141,15 @@
                (fn [^js/Event e] (js/alert (.getMessage e)))})))}
     "delete"]])
 
-(defn user-edit-page
+(defn user-page
   []
   [:section.section>div.container>div.content
-   [user-edit-component]
+   [user-component]
    [update-button]
    [:br]
    [delete-button]])
 
-;; ----------------------------------------------
+;; ----------------------------------------------------------
 ;; home page
 ;;
 (def scope "user.metrics,user.activity,user.info")
@@ -244,7 +246,7 @@
   [user]
   [:button
    {:class "button is-primary is-small"
-    :on-click #(swap! session assoc :user user :page :user-edit)}
+    :on-click #(swap! session assoc :user user :page :user)}
    "edit"])
 
 (defn users-component-aux
@@ -276,7 +278,7 @@
    [:hr]
    version])
 
-;; ------------------
+;; ------------------------------------------------------------
 ;; data-page
 ;;
 (defn fetch-button
@@ -385,7 +387,7 @@
 (def pages
   {:home  #'home-page
    :about #'about-page
-   :user-edit #'user-edit-page
+   :user #'user-page
    :data  #'data-page})
 
 (defn page []
@@ -397,7 +399,7 @@
   (reitit/router
    [["/"      :home]
     ["/about" :about]
-    ["/user"  :user-edit]
+    ["/user"  :user]
     ["/data"  :data]]))
 
 (defn match-route [uri]

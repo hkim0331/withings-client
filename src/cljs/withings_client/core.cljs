@@ -111,8 +111,7 @@
 
 (defn update-button
   []
-  [:div
-   [:button
+  [:button
     {:class "button is-primary is-small"
      :on-click
      (fn [^js/Event e]
@@ -123,12 +122,11 @@
                      (fetch-users!)
                      (swap! session assoc :page :home))
           :error-handler (fn [] (js/alert (.getMessage e)))}))}
-    "update"]])
+    "update"])
 
 (defn delete-button
   []
-  [:div
-   [:button
+  [:button
     {:class "button is-danger is-small"
      :on-click
      (fn []
@@ -139,13 +137,15 @@
                           (swap! session assoc :page :home))
                :error-handler
                (fn [^js/Event e] (js/alert (.getMessage e)))})))}
-    "delete"]])
+    "delete"])
 
 (defn user-page
   []
   [:section.section>div.container>div.content
    [user-component]
+   [:br]
    [update-button]
+   [:br]
    [:br]
    [delete-button]])
 

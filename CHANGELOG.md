@@ -10,11 +10,12 @@
 - timestamp->str function
   (java.time.Instant/ofEpochMilli 1661330819000)
 - visualize the viable time of access tokens.
+- basic auth? not session auth.
 
 
 ## 0.7.0-SNAPSHOT
 * edit-user-page
-  delete then create is OK now.
+  delete then create is OK now.  use form? not ajax.
 * pretty print JSON
 
 

@@ -21,6 +21,7 @@
 (defonce users     (r/atom {}))
 (defonce measures  (r/atom {}))
 
+;; Data
 (defonce startdate  (r/atom "2022-01-01 00:00:00"))
 (defonce enddate    (r/atom "2023-01-01 00:00:00"))
 (defonce lastupdate (r/atom ""))
@@ -78,7 +79,7 @@
    [:p version]])
 
 ;; -------------------------
-;; user edit page
+;; use-edit page
 
 (defn user-edit-component
   []
@@ -104,8 +105,7 @@
        (POST (str "/api/user/" (get-in @session [:user :id]))
          {:params (:user @session)
           :handler #(swap! session assoc :page :home)
-          :error-handler
-          (fn [] (js/alert (.getMessage e)))}))}
+          :error-handler (fn [] (js/alert (.getMessage e)))}))}
     "update"]])
 
 (defn delete-button
@@ -132,6 +132,7 @@
 
 ;; ----------------------------------------------
 ;; home page
+;;
 (def scope "user.metrics,user.activity,user.info")
 (def authorize2-uri "https://account.withings.com/oauth2_user/authorize2")
 (def base
@@ -171,10 +172,7 @@
                             @sess-home
                             [:name :cid :secret :belong :email])]
                 (create-user! params)
-                (swap! sess-home
-                       assoc
-                       :uri
-                       (create-url)))}
+                (swap! sess-home assoc :uri (create-url)))}
     "create"]])
 
 (defn sub-field
@@ -189,6 +187,7 @@
 (defn new-component []
   [:div
    [:h3 "new"]
+   ;; map で？
    (for [[key label] [[:name   "name (*)"]
                       [:cid    "cid (*)"]
                       [:secret "secret (*)"]
@@ -197,11 +196,10 @@
      (sub-field key label))
    [:br]
    [create-button]
-   [:p "(*)は必須フィールド。belong, email はカラでもよい。"
-    [:br]
-    "create ボタンの後、下に現れるリンクをクリックすると"
-    "acccess トークン、refresh トークンの取得に取り掛かる。"
-    "ページが切り替わるのに 5 秒くらいかかる。非同期通信でスピードアップ予定。"]])
+   [:p "(*)は必須フィールド。belong, email はカラでもよい。"]
+   [:p "create ボタンの後、下に現れるリンクをクリックすると
+        acccess トークン、refresh トークンの取得に取り掛かる。
+        ページが切り替わるのに 5 秒くらいかかる。非同期通信でスピードアップ予定。"]])
 
 (defn link-component []
   [:div
@@ -223,6 +221,7 @@
     :on-click
     (fn [_] (POST (str "/api/token/" (:id user) "/refresh")
               {:format :json
+               ;; no use?
                :headers
                {"Accept" "application/transit+json"
                 "x-csrf-token" js/csrfToken}
@@ -244,6 +243,7 @@
    [:p "アクセストークンは 10800 秒（3時間）で切れます。"]
    (for [user @users]
      [:div {:class "columns" :key (:id user)}
+      ;; for で？
       [:div {:class "column"} (if (:valid user) "y" "n")]
       [:div {:class "column"} (:id user)]
       [:div {:class "column"} (:name user)]
@@ -284,6 +284,7 @@
                  :error-handler (fn [e] (js/alert (str  "error " e)))})}
     "fetch"]])
 
+;; update!
 (defn select-id
   [id users]
   [:div
@@ -292,6 +293,7 @@
     (for [user @users]
       [:option {:key (:id user) :value (:id user)} (:name user)])]])
 
+;; update!
 (defn select-meatype
   [meastype measures]
   [:div

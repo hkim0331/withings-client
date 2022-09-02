@@ -100,14 +100,15 @@
   [:div
    [:h3 (-> @session :user :name)]
    [:p "valid は 0/1 で変更"]
-   (for [[key _] (dissoc (-> @session :user)
-                         :id :userid :created_at :updated_at)]
-     [:p {:key key} (symbol key)
-      [:br]
-      [:input
-       {:value (get-in @session [:user key])
-        :on-change #(swap! session
-                           assoc-in [:user key] (-> % .-target .-value))}]])])
+   (doall (for [[key _] (dissoc (-> @session :user)
+                                :id :userid :created_at :updated_at)]
+            [:p {:key key} (symbol key)
+             [:br]
+             [:input
+              {:value (get-in @session [:user key])
+               :on-change
+               #(swap! session
+                       assoc-in [:user key] (-> % .-target .-value))}]]))])
 
 (defn update-button
   []
@@ -192,7 +193,7 @@
 
 (defn sub-field
   [key label]
-  [:div
+  [:div {:key key}
    [:div [:label {:class "label"} label]]
    [:div {:class "field"}
     [:input {:value (key (-> @session :home))
@@ -205,10 +206,10 @@
 (defn new-component []
   [:div
    [:h3 "new"]
-   ;; map で？
-   (for [[key label] {:name "name (*)", :cid "cid (*)", :secret "secret (*)",
-                      :belong "belong", :email "email"}]
-     (sub-field key label))
+   (doall
+    (for [[key label] {:name "name (*)", :cid "cid (*)", :secret "secret (*)",
+                       :belong "belong", :email "email"}]
+     (sub-field key label)))
    [:br]
    [create-button]
    [:p "(*)は必須フィールド。belong, email はカラでもよい。"]
@@ -248,23 +249,25 @@
     (str (subs s 0 10) " " (subs s 11 16))))
 
 (defn users-component-aux
-  [e]
-  [:div {:class "column"} e])
+  [key e]
+  [:div {:key key :class "column"} e])
 
 (defn users-component []
   [:div
    [:h2 "users"]
    [:p "アクセストークンは 10800 秒（3時間）で切れます。"]
-   (for [user @users]
+   (doall
+    (for [user (-> @session :users)]
      [:div {:class "columns" :key (:id user)}
-      (for [e [(if (:valid user) "y" "n")
-               (:id user)
-               (:name user)
-               (:belong user)
-               (tm (:updated_at user)) ;; necessary? token's? user record?
-               [refresh-button user]
-               [edit-button user]]]
-        (users-component-aux e))])])
+      (for [[key e] (map-indexed vector 
+                           [(if (:valid user) "y" "n")
+                            (:id user)
+                            (:name user)
+                            (:belong user)
+                            (tm (:updated_at user)) ;; necessary? token's? user record?
+                            [refresh-button user]
+                            [edit-button user]])]
+        (users-component-aux key e))]))])
 
 (defn home-page []
   [:section.section>div.container>div.content
@@ -418,7 +421,7 @@
 ;; -------------------------
 ;; Initialize app
 (defn fetch-users! []
-  (GET "/api/users" {:handler #(reset! users %)}))
+  (GET "/api/users" {:handler #(swap! session assoc :users %)}))
 
 (defn fetch-measures! []
   (GET "/api/meas" {:handler #(reset! measures %)}))

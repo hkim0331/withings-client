@@ -209,7 +209,7 @@
    (doall
     (for [[key label] {:name "name (*)", :cid "cid (*)", :secret "secret (*)",
                        :belong "belong", :email "email"}]
-     (sub-field key label)))
+      (sub-field key label)))
    [:br]
    [create-button]
    [:p "(*)は必須フィールド。belong, email はカラでもよい。"]
@@ -258,16 +258,16 @@
    [:p "アクセストークンは 10800 秒（3時間）で切れます。"]
    (doall
     (for [user (-> @session :users)]
-     [:div {:class "columns" :key (:id user)}
-      (for [[key e] (map-indexed vector 
-                           [(if (:valid user) "y" "n")
-                            (:id user)
-                            (:name user)
-                            (:belong user)
-                            (tm (:updated_at user)) ;; necessary? token's? user record?
-                            [refresh-button user]
-                            [edit-button user]])]
-        (users-component-aux key e))]))])
+      [:div {:class "columns" :key (:id user)}
+       (for [[key e] (map-indexed vector
+                                  [(if (:valid user) "y" "n")
+                                   (:id user)
+                                   (:name user)
+                                   (:belong user)
+                                   (tm (:updated_at user)) ;; necessary? token's? user record?
+                                   [refresh-button user]
+                                   [edit-button user]])]
+         (users-component-aux key e))]))])
 
 (defn home-page []
   [:section.section>div.container>div.content
@@ -282,39 +282,31 @@
 ;; ------------------------------------------------------------
 ;; data-page
 ;;
-(defn fetch-button
-  [id meastype]
-  [:div
-   [:button {:class "button is-primary is-small"
-             :on-click
-             #(POST "/api/meas"
-                {:format :json
-                 :params {:id         @id
-                          :meastype   @meastype
-                          :startdate  @startdate
-                          :enddate    @enddate
-                          :lastupdate @lastupdate}
-                 :handler (fn [res] (reset! output res))
-                 :error-handler (fn [e] (js/alert (str  "error " e)))})}
-    "fetch"]])
 
-;; update!
+
+;; valid user only OK
+;; header
 (defn select-id
-  [id users]
+  []
   [:div
    [:select {:name "id"
-             :on-change (fn [e] (reset! id (-> e .-target .-value)))}
-    (for [user @users]
+             :on-change
+             (fn [e] (swap! session assoc-in [:data :id]
+                            (-> e .-target .-value)))}
+    (for [user (cons {:id 0 :name "選んでください"}
+                     (-> @session :users))]
       [:option {:key (:id user) :value (:id user)} (:name user)])]])
 
-;; update!
 (defn select-meatype
-  [meastype measures]
+  []
   [:div
    [:select {:name "meastype"
-             :on-change (fn [e]
-                          (reset! meastype (-> e .-target .-value)))}
-    (for [mea @measures]
+             :on-change
+             (fn [e]
+               (swap! session assoc-in [:data :meastype]
+                      (-> e .-target .-value)))}
+    (for [mea (cons {:id 0 :description "選んでください"}
+                    (-> @session :measures))]
       [:option {:key (str "m" (:id mea)) :value (:value mea)}
        (:description mea)])]])
 
@@ -341,22 +333,36 @@
     [:b "now"]
     " 日時を記入するとこちらを優先する。カラだと start ~ end を取る。"]])
 
+(defn fetch-button
+  []
+  [:div
+   [:button {:class "button is-primary is-small"
+             :on-click
+             #(POST "/api/meas"
+                {:format :json
+                 :params {:id         (-> @session :data :id)
+                          :meastype   (-> @session :data :meastype)
+                          :startdate  @startdate
+                          :enddate    @enddate
+                          :lastupdate @lastupdate}
+                 :handler (fn [res] (reset! output res))
+                 :error-handler (fn [e] (js/alert (str  "error " e)))})}
+    "fetch"]])
+
 (defn input-component
   "id, meatype, startdate, enddate are required to work.
    date must be in  `yyyy-MM-dd hh:mm:ss` format.
    FIXME: validation."
   []
-  (let [id       (atom (:id (first @users)))
-        meastype (atom (:id (first @measures)))]
-    [:div
-     [:h3 "Data"]
-     [select-id id users]
-     [select-meatype meastype measures]
-     [input-startdate-enddate]
-     [:p "or"]
-     [input-lastupdate]
-     [:br]
-     [fetch-button id meastype]]))
+  [:div
+   [:h3 "Data"]
+   [select-id]
+   [select-meatype]
+   [input-startdate-enddate]
+   [:p "or"]
+   [input-lastupdate]
+   [:br]
+   [fetch-button]])
 
 ;; params has `created` param. which should be displayed?
 (defn output-one
@@ -364,11 +370,14 @@
   [:div {:key n}
    (str (ts->date date) ", " (value->float 1 measures))])
 
-;; reverse?
 (defn output-component
   []
   [:div
-   [:h3 "fetched"]
+   [:h3 "fetched ("
+    (-> @session :data :id)
+    ","
+    (-> @session :data :meastype)
+    ")"]
    (if (seq @output)
      (for [[n data] (map-indexed vector (:measuregrps @output))]
        (output-one n data))
@@ -382,11 +391,11 @@
    [:hr]
    version])
 
-;; -------------------------
+;; ------------------------------------------------------------
 (def pages
   {:home  #'home-page
    :about #'about-page
-   :user #'user-page
+   :user  #'user-page
    :data  #'data-page})
 
 (defn page []
@@ -424,7 +433,7 @@
   (GET "/api/users" {:handler #(swap! session assoc :users %)}))
 
 (defn fetch-measures! []
-  (GET "/api/meas" {:handler #(reset! measures %)}))
+  (GET "/api/meas" {:handler #(swap! session assoc :measures %)}))
 
 (defn ^:dev/after-load mount-components []
   (rdom/render [#'navbar] (.getElementById js/document "navbar"))

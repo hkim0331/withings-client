@@ -8,12 +8,11 @@
    [reagent.core :as r]
    [reagent.dom :as rdom]
    [reitit.core :as reitit]
-   [withings-client.ajax :as ajax]
-   [buddy.auth.backends.session :as session])
+   [withings-client.ajax :as ajax])
   (:import
    goog.History))
 
-(def ^:private version "0.9.0")
+(def ^:private version "0.9.1")
 
 ;; https://stackoverflow.com/questions/12655503/how-to-catch-any-javascript-exception-in-clojurescript
 (def redirect-uri
@@ -36,12 +35,6 @@
                                    :output nil}
                             :user {} ;; user-page
                             }))
-
-;; Data
-;; (defonce startdate  (r/atom "2022-01-01 00:00:00"))
-;; (defonce enddate    (r/atom "2023-01-01 00:00:00"))
-;; (defonce lastupdate (r/atom ""))
-;; (defonce output     (r/atom {}))
 
 ;; to avoid reload
 (declare fetch-users!)
@@ -268,7 +261,7 @@
                                    (:id user)
                                    (:name user)
                                    (:belong user)
-                                   (tm (:updated_at user)) ;; necessary? token's? user record?
+                                   (tm (:updated_at user))
                                    [refresh-button user]
                                    [edit-button user]])]
          (users-component-aux key e))]))])

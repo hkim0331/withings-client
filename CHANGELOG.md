@@ -9,7 +9,6 @@
 - mainly getting many data at once
   change meastype with meastypes? should also change formatting functions.
 - add `note` column to users table.
-- redisplay without reloading after updating/deleting
 - bar chart of the viable time of access tokens
 - color buttons
 - validation about `startdate` and `enddate`
@@ -17,9 +16,11 @@
 - favicon (nginx setting? '/' restriction? )
 - css
 
+
 ## 0.9.1 -2022-09-02
 - refactored continued. lastupdate, startdate, enddate.
 - refactored output
+- redisplay without reloading after updating/deleting
 
 ## 0.9.0 - 2022-09-02
 - refactor. use session globally in `core.cljs`.

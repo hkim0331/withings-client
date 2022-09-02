@@ -12,7 +12,7 @@
   (:import
    goog.History))
 
-(def ^:private version "0.9.0-SNAPSHOT")
+(def ^:private version "0.9.0")
 
 ;; https://stackoverflow.com/questions/12655503/how-to-catch-any-javascript-exception-in-clojurescript
 (def redirect-uri

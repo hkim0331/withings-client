@@ -17,8 +17,8 @@
 - favicon (nginx setting? '/' restriction? )
 - css
 
-## 0.9.0-SNAPSHOT
-- refactor
+## 0.9.0 - 2022-09-02
+- refactor. use session globally in `core.cljs`.
 
 ## 0.8.4 - 2022-09-01
 - rewrote `core.cljs`s long components with functions. looks consice.

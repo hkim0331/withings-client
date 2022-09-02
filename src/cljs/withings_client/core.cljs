@@ -28,11 +28,10 @@
                                    :email  nil
                                    :uri    nil}
                             :users {}
+                            :measures {}
+                            :data {}
                             :user {} ;; user-page
                             }))
-
-(defonce users     (r/atom {})) ;; replace with (session :users)?
-(defonce measures  (r/atom {}))
 
 ;; Data
 (defonce startdate  (r/atom "2022-01-01 00:00:00"))
@@ -40,6 +39,7 @@
 (defonce lastupdate (r/atom ""))
 (defonce output     (r/atom {}))
 
+;; to avoid reload
 (declare fetch-users!)
 
 ;; ---------------------------------------------------------

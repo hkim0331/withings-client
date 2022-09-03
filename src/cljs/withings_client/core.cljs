@@ -12,29 +12,29 @@
   (:import
    goog.History))
 
-(def ^:private version "0.10.0")
+(def ^:private version "0.10.1-SNAPSHOT")
 
-;; https://stackoverflow.com/questions/12655503/how-to-catch-any-javascript-exception-in-clojurescript
+;; FIXME: better way?
 (def redirect-uri
   (try
     js/redirectUrl
     (catch js/Error _ "https://wc.kohhoh.jp/callback")))
 
-(defonce session   (r/atom {:page :home
-                            :home {:name   nil
-                                   :cid    nil
-                                   :secret nil
-                                   :belong nil
-                                   :email  nil
-                                   :uri    nil}
-                            :users {}
-                            :measures {}
-                            :data {:lastupdate "2022-09-01"
-                                   :startdate  "2022-01-01 00:00:00"
-                                   :enddate    "2023-01-01 00:00:00"
-                                   :output nil}
-                            :user {} ;; user-page
-                            }))
+(defonce session
+  (r/atom {:page :home
+           :home {:name   nil
+                  :cid    nil
+                  :secret nil
+                  :belong nil
+                  :email  nil
+                  :uri    nil}
+           :users {}
+           :measures {}
+           :data {:lastupdate "2022-09-01"
+                  :startdate  "2022-01-01 00:00:00"
+                  :enddate    "2023-01-01 00:00:00"
+                  :output nil}
+           :user {}})) ;; user-page
 
 ;; to avoid reload
 (declare fetch-users!)
@@ -227,7 +227,9 @@
     :on-click
     (fn [_] (POST (str "/api/token/" (:id user) "/refresh")
               {:format :json
-               :handler #(js/alert "リフレッシュ完了。再読み込みしてください")
+               :handler (fn [_]
+                          (fetch-users!)
+                          (js/alert "リフレッシュ完了。"))
                :error-handler #(js/alert "失敗。")}))}
    "refresh"])
 

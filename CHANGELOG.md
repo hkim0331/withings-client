@@ -17,7 +17,10 @@
 - css
 
 
-## 0.9.1 -2022-09-02
+## 0.10.0 - 2022-09-03
+- clojure -Tantq outdated :upgrade true
+
+## 0.9.1 - 2022-09-02
 - refactored continued. lastupdate, startdate, enddate.
 - refactored output
 - redisplay without reloading after updating/deleting

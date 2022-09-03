@@ -12,13 +12,13 @@
   (:import
    goog.History))
 
-(def ^:private version "0.9.1")
+(def ^:private version "0.10.0")
 
 ;; https://stackoverflow.com/questions/12655503/how-to-catch-any-javascript-exception-in-clojurescript
 (def redirect-uri
   (try
     js/redirectUrl
-    (catch js/Error _ "https://wc.kohhoh.jp/callbac")))
+    (catch js/Error _ "https://wc.kohhoh.jp/callback")))
 
 (defonce session   (r/atom {:page :home
                             :home {:name   nil
@@ -29,9 +29,9 @@
                                    :uri    nil}
                             :users {}
                             :measures {}
-                            :data {:lastupdate ""
-                                   :startdate "2022-01-01 00:00:00"
-                                   :enddate "2023-01-01 00:00:00"
+                            :data {:lastupdate "2022-09-01"
+                                   :startdate  "2022-01-01 00:00:00"
+                                   :enddate    "2023-01-01 00:00:00"
                                    :output nil}
                             :user {} ;; user-page
                             }))

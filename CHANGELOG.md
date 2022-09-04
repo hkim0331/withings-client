@@ -16,6 +16,8 @@
 - favicon (nginx setting? '/' restriction? )
 - css
 
+## 0.10.2-SNAPSHOT
+- reloading never requried after successfull refresh.
 
 ## 0.10.0 - 2022-09-03
 - clojure -Tantq outdated :upgrade true
@@ -36,7 +38,6 @@
 
 ## 0.8.2 - 2022-09-01
 updating tokens remotely inside fetch script.
-
 updated bin/ scripts.
 - wc-login.sh _login_ _password_ -- to start a session.
   must be executed before before any of operations bellow.
@@ -70,11 +71,14 @@ in which execute refreshing tokens before actual fetching.
 - defined /user/:id/valid: toggle the value of `valid`
 - bin/ folder to keep wc scripts
 - defined users/user-by-cid: return user record match with cid
+
 ### Changed
 - update-tokens-by-userid! => update-tokens!
 - shorten log
+
 ### Removed
 - update-cid-by-name!
+
 ### Fixed
 - two accounts can have same tokens. if updates one of them
   and the update success, will return 2 since userid is same.
@@ -84,8 +88,10 @@ in which execute refreshing tokens before actual fetching.
 ## 0.7.1 - 2022-08-31
 ### Changed
 - deploy.sh: divided `start.sh` into three, `{stop,start,restart}.sh`
+
 ### Added
 - get "/api/valid-users"
+
 ### Fixed
 - update-tokens-by-userid! returns 1 or 2 if success.
 ```
@@ -130,6 +136,7 @@ in which execute refreshing tokens before actual fetching.
 
 ## 0.6.6 - 2022-08-30
 - polish up code.
+
 ### Changed
 - /token/refresh/:n -> /token/:n/refresh
 
@@ -149,6 +156,7 @@ in which execute refreshing tokens before actual fetching.
 
 ## 0.6.3 - 2022-08-29
 - GET /api/meas
+
 ### FIXME
 - can not (migrate) SQL syntax error occurred.
   however, `mycli -u $USER $DB < $migration.sql` goes well.
@@ -157,6 +165,7 @@ in which execute refreshing tokens before actual fetching.
 - depart callback from login.clj
 - kohhoh did not update.
   -> used old deploy.sh for app.melt
+
 ### Added
 - mysql/mysqldump can not dump maridb database.
 - db-dump/{dump.sh,restore.sh}
@@ -199,9 +208,11 @@ in which execute refreshing tokens before actual fetching.
 - deploy as https://wc.kohhoh.jp
 
 ## 0.4.12 - 2022-08-26
+
 ### Added
 - measure namespace
 - timestamp int using java-time
+
 ### Info
 - to append additional request header in hato, use :headers.
 ```
@@ -213,6 +224,7 @@ in which execute refreshing tokens before actual fetching.
 
 ## 0.4.11 - 2022-08-26
 - meas
+
 ### FIXME
 - hato request header
 
@@ -238,6 +250,7 @@ in which execute refreshing tokens before actual fetching.
 - link to Withings in navbar
 - defined `/user/:n/valid`
 - got tokens via `wc.melt.kyutech.ac.jp/callback`
+
 ### Changed
 - routes conflict `/user/delete/:n` and `/usr/:n/valid`.
   changed to `/user/:n/delete` and `/user/:n/valid`. valid should be toggle-valid
@@ -259,6 +272,7 @@ in which execute refreshing tokens before actual fetching.
 ### Added
 - secret は cid と共に、access/refresh を取得する際に必要。
 - /callback で auth を受け取ったらすぐ access/refresh/userid をゲット。
+
 ### Changed
 - users テーブルに userid varchar(255) 追加した。
 
@@ -285,8 +299,10 @@ js/redirectUrl は、ブラウザを開く前、コンパイル時には未定�
 ## 0.4.3 - 2022-08-23
 - create のタイミングで name, cid のほか、
   埋めてあったら secret, belong, email を insert する。
+
 ### Fixed
 - core.cljs: session アトムは上記すべてのフィールドをあらかじめ持ってる必要あり。
+
 ### Added
 名前を揃えたほうがいいか？
 - db/update-cid-by-name!

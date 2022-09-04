@@ -4,8 +4,6 @@ if [ -z "$1" ]; then
     exit 1
 fi
 DB=withings
-CMD="mysql -u user -p -h 127.0.0.1"
-#${CMD} -c "drop database ${DB}"
-#${CMD} -c "create database ${DB}"
+CMD="mysql -u user -p -h 127.0.0.1 --port=3306"
 ${CMD} withings < $1
 

@@ -113,7 +113,7 @@
    {:class "button is-primary is-small"
     :on-click
     (fn [^js/Event e]
-      (js/alert (str (:user @session)))
+      ;; (js/alert (str (:user @session)))
       (POST (str "/api/user/" (get-in @session [:user :id]))
         {:params (:user @session)
          :handler (fn [_]

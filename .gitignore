@@ -17,8 +17,7 @@ profiles.clj
 /log
 /data
 /.shadow-cljs
-/start.sh
-/deploy*.sh
+/*.sh
 /db-dumps/*.sql
 
 

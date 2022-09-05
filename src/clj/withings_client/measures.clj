@@ -48,7 +48,7 @@
            :startdate  (datetime->timestamp startdate)
            :enddate    (datetime->timestamp enddate)
            :lastupdate (datetime->timestamp lastupdate)}})
-        (get-in [:body :body]))))
+        (get-in [:body :body :measuregrps]))))
 
 (defn list-measures
   "returns measures items in vector"

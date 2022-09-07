@@ -14,18 +14,18 @@
 - css, color buttons
 - message(alert) if access-token expired.
 - display README.md or bin script usage.
+- use cljs-time?
 
-
-## 0.10.4-SNAPSHOT
+## 0.10.4 - 2022-09-07
 ### Added
 - bin/wc-id-name.clj
 - bin/weights.sh
 - bin/users.sh
 ### Fixed
 - DateTimeFormatter -- "hh" is for 12-hours time format.
-  "HH" is for 24-hour time format.
+  "HH" is for 24-hour time format. How in CLJS? cljs-time?
 
-## 0.10.3 -2022-09-07
+## 0.10.3 - 2022-09-07
 ### Fixed
 - forgot to merge? /meas returns (get in [:body :body])
   it should be (getin [:body :body :measuregrps])

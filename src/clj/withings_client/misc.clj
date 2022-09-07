@@ -1,5 +1,6 @@
 (ns withings-client.misc
   (:require
+   [clojure.tools.logging :as log]
    [clojure.string :as str]
    [java-time :as jt]))
 

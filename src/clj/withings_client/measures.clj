@@ -3,9 +3,9 @@
    [hato.client :as hc]
    [clojure.tools.logging :as log]
    [withings-client.db.core :as db]
-   [withings-client.misc :refer [datetime->timestamp abbrev]]
+   [withings-client.misc :refer [abbrev datetime->timestamp]]
    [withings-client.users :as users]
-   [withings-client.tokens :as tokens]))
+   #_[withings-client.tokens :as tokens]))
 
 (def meas-uri "https://wbsapi.withings.net/measure")
 

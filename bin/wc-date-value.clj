@@ -47,18 +47,18 @@
   ([n]
    (second->str "yyyy-MM-dd hh:mm:dd" n))
   ([fmt n]
-   (println "n" n)
+   ;; (println "n" n)
    (->> (second->datetime n)
         (.format (DateTimeFormatter/ofPattern fmt)))))
 
 (defn print-date-value
   [{:keys [date measures]}]
   (let [{:keys [value unit]} (first measures)]
-    (println date value unit)
+    ;; (println date value unit)
     (println (second->str date) (* 1.0 value (power 10 unit)))))
 
 ;;;;;;;;;;;;;;;;;;;;;
 ;; main starts here
 (doseq [j (json/parse-stream (clojure.java.io/reader *in*) true)]
-  (println (str j))
+  ;; (println (str j))
   (print-date-value j))

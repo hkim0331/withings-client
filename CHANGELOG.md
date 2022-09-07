@@ -16,6 +16,10 @@
 - favicon (nginx setting? '/' restriction? )
 - css
 
+## 0.10.3-SNAPSHOT
+- forgot to merge? /meas returns (get in [:body :body])
+  it should be (getin [:body :body :measures :measuregrps])
+
 ## 0.10.2 - 2022-09-07
 ### Added
 - bin/wc-date-value.clj

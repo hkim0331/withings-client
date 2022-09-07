@@ -5,5 +5,5 @@ if [ -z "$3" ]; then
     exit
 fi
 
-https --session=auth post wc.kohhoh.jp/api/token/$1/refresh
-https --session=auth post wc.kohhoh.jp/api/meas id=$1 meastype=1 startdate="$2" enddate="$3"
+https --session=auth post wc.kohhoh.jp/api/token/$1/refresh >/dev/null
+https -pb --session=auth post wc.kohhoh.jp/api/meas id=$1 meastype=1 startdate="$2" enddate="$3"

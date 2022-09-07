@@ -15,5 +15,6 @@ if [ -z "$2" ]; then
 else
     DATE="$2"
 fi
+
 https --session=auth post wc.kohhoh.jp/api/token/${ID}/refresh >/dev/null
 https -pb --session=auth post wc.kohhoh.jp/api/meas id=${ID} meastype=1 lastupdate=${DATE}

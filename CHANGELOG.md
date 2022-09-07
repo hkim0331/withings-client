@@ -16,8 +16,9 @@
 - favicon (nginx setting? '/' restriction? )
 - css
 
-## 0.10.2-SNAPSHOT
-- reloading never requried after successfull refresh.
+## 0.10.2 - 2022-09-07
+### Added
+- bin/wc-date-value.clj
 
 ## 0.10.0 - 2022-09-03
 - clojure -Tantq outdated :upgrade true

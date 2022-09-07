@@ -14,13 +14,22 @@ generated using Luminus version "4.40"
 
 [1]: https://github.com/technomancy/leiningen
 
-## Running
+## Run (develop)
 
 To start a web server for the application, run:
 
     lein run
 
-## bin/ scripts
+## Run kohhoh
+
+Use /home/ubuntu/wc/{start,stop,restart}.sh scripts.
+
+## Usage
+
+  % wc-login.sh user password
+  % wc-lastupdate.sh | wc-date-value.clj
+
+## bin/
 
 - wc-login.sh _login_ _password_ -- to start a session.
   must be executed before before any of operations bellow.

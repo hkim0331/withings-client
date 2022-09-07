@@ -35,4 +35,3 @@ https -pb --session=auth post wc.kohhoh.jp/api/meas \
   lastupdate=${LASTUPDATE} \
   startdate=${STARTDATE} \
   enddate=${ENDDATE} | wc-date-value.clj
-

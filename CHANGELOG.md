@@ -1,26 +1,29 @@
 # Withings-Client
 
 ## Unreleased
-- upgrade libraries
 - (store fetched data in some DB)
 - (push message via LINE)
-- undo facility.
-- async fetch
+- (undo facility)
 - mainly getting many data at once
   change meastype with meastypes? should also change formatting functions.
 - add `note` column to users table.
 - bar chart of the viable time of access tokens
-- color buttons
 - validation about `startdate` and `enddate`
 - async refresh-all
 - favicon (nginx setting? '/' restriction? )
-- css
+- css, color buttons
 - message(alert) if access-token expired.
-- display README.md
+- display README.md or bin script usage.
+
 
 ## 0.10.4-SNAPSHOT
 ### Added
-- /bin/wc-weights.sh
+- bin/wc-id-name.clj
+- bin/weights.sh
+- bin/users.sh
+### Fixed
+- DateTimeFormatter -- "hh" is for 12-hours time format.
+  "HH" is for 24-hour time format.
 
 ## 0.10.3 -2022-09-07
 ### Fixed

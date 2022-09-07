@@ -12,7 +12,7 @@
   (:import
    goog.History))
 
-(def ^:private version "0.10.1")
+(def ^:private version "0.10.2")
 
 ;; FIXME: better way?
 (def redirect-uri

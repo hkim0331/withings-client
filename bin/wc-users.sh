@@ -1,2 +1,2 @@
 #!/bin/sh
-https --session=auth wc.kohhoh.jp/api/users
+https -pb --session=auth wc.kohhoh.jp/api/users

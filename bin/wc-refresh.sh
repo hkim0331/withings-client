@@ -5,4 +5,4 @@ if [ -z "$1" ]; then
     exit
 fi
 
-https --session=auth post wc.kohhoh.jp/api/token/$1/refresh
+https -pb --session=auth post wc.kohhoh.jp/api/token/$1/refresh

@@ -6,6 +6,7 @@
    [withings-client.misc :refer [abbrev]]
    [withings-client.users :as users]))
 
+;;;
 ;; 1. insert name, cid, secret
 ;; 2. request tokens with the `name`
 ;; 3. update records whose name column is `name`.

@@ -40,8 +40,6 @@
 ;; to avoid reload
 (declare fetch-users!)
 
-
-
 ;; ---------------------------------------------------------
 ;; navbar
 (defn nav-link [uri title page]
@@ -273,8 +271,7 @@
   "after converting to milli, doing jobs."
   [ts]
   (-> (* 1000 ts)
-      (js/Date.)
-      #_(.toLocaleString)
+      js/Date.
       (.toLocaleString "en-GB"))) ;; for 24-hour time format
 
 (defn value->float

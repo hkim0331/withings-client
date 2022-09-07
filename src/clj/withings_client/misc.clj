@@ -7,8 +7,9 @@
 (declare date->timestamp)
 
 (defn datetime->timestamp
-  "input:  yyyy-MM-DD hh:mm:ss
-   return: timestamp (integer)"
+  "Convert datetime object into timestamp integer.
+   Input is a string formatted as 'yyyy-MM-DD hh:mm:ss'.
+   Return value is timestamp, integer."
   [s]
   (when (seq s)
     (let [[date time] (str/split s #" ")]

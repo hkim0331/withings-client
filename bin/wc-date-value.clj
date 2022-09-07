@@ -47,6 +47,7 @@
   ([n]
    (second->str "yyyy-MM-dd hh:mm:dd" n))
   ([fmt n]
+   ;; (println "n" n)
    (->> (second->datetime n)
         (.format (DateTimeFormatter/ofPattern fmt)))))
 
@@ -59,4 +60,5 @@
 ;;;;;;;;;;;;;;;;;;;;;
 ;; main starts here
 (doseq [j (json/parse-stream (clojure.java.io/reader *in*) true)]
+  ;; (println (str j))
   (print-date-value j))

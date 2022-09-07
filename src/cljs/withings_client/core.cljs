@@ -12,7 +12,7 @@
   (:import
    goog.History))
 
-(def ^:private version "0.10.2")
+(def ^:private version "0.10.3")
 
 ;; FIXME: better way?
 (def redirect-uri
@@ -33,6 +33,7 @@
            :data {:lastupdate "2022-09-01"
                   :startdate  "2022-01-01 00:00:00"
                   :enddate    "2023-01-01 00:00:00"
+                  :results    nil
                   :output nil}
            :user {}})) ;; user-page
 
@@ -353,7 +354,7 @@
                           :lastupdate (-> @session :data :lastupdate)}
                  :handler (fn [res] (swap! session
                                            assoc-in
-                                           [:data :output]
+                                           [:data :results]
                                            res))
                  :error-handler (fn [e] (js/alert (str  "error " e)))})}
     "fetch"]])
@@ -403,10 +404,10 @@
     ", "
     (-> @session :data :meastype js/parseInt measure-name)
     ")"]
-   (if (seq (-> @session :data :output))
+   (if (seq (-> @session :data :results))
      (for [[n data] (map-indexed
                      vector
-                     (:measuregrps (-> @session :data :output)))]
+                     (-> @session :data :results))]
        (output-one n data))
      [:p "no data"])])
 

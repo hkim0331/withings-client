@@ -15,7 +15,12 @@
 - async refresh-all
 - favicon (nginx setting? '/' restriction? )
 - css
+- message(alert) if access-token expired.
+- display README.md
 
+## 0.10.4-SNAPSHOT
+### Added
+- /bin/wc-weights.sh
 
 ## 0.10.3 -2022-09-07
 ### Fixed

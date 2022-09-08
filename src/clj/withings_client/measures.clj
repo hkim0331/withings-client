@@ -50,7 +50,7 @@
            :startdate  (datetime->second startdate)
            :enddate    (datetime->second enddate)
            :lastupdate (datetime->second lastupdate)}})
-        (check-response)
+        probe
         (get-in [:body :body :measuregrps]))))
 
 (defn list-measures

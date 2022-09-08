@@ -5,4 +5,4 @@ if [ -z "$1" ]; then
     exit
 fi
 
-https --session=auth post wc.kohhoh.jp/api/user/$1/valid
+https -pb --session=auth post wc.kohhoh.jp/api/user/$1/valid

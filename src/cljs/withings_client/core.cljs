@@ -33,8 +33,7 @@
            :data {:lastupdate "2022-09-01"
                   :startdate  "2022-01-01 00:00:00"
                   :enddate    "2023-01-01 00:00:00"
-                  :results    nil
-                  :output nil}
+                  :results    nil}
            :user {}})) ;; user-page
 
 ;; to avoid reload

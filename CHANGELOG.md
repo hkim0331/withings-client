@@ -17,7 +17,7 @@
 - css
 
 
-## 0.10.3 -2022-09-07
+## 0.10.3 - 2022-09-07
 ### Fixed
 - forgot to merge? /meas returns (get in [:body :body])
   it should be (getin [:body :body :measuregrps])

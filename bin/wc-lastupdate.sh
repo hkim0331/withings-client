@@ -1,9 +1,5 @@
 #!/bin/sh
-# if [ -z "$2" ]; then
-#     echo "usage:"
-#     echo "$0 id lastupdate"
-#     exit
-# fi
+# retrieve today's measures of id=16 
 
 if [ -z "$1" ]; then
     ID=16

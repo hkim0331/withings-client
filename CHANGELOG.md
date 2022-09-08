@@ -1,23 +1,33 @@
 # Withings-Client
 
 ## Unreleased
-- upgrade libraries
 - (store fetched data in some DB)
 - (push message via LINE)
-- undo facility.
-- async fetch
+- (undo facility)
 - mainly getting many data at once
   change meastype with meastypes? should also change formatting functions.
 - add `note` column to users table.
 - bar chart of the viable time of access tokens
-- color buttons
 - validation about `startdate` and `enddate`
 - async refresh-all
 - favicon (nginx setting? '/' restriction? )
-- css
+- css, color buttons
+- display README.md or bin script usage.
+- use cljs-time? (deprecated)
 
+## 0.10.5 - 2022-09-09
+- display message(alert) if access-token need refresh.
 
-## 0.10.3 -2022-09-07
+## 0.10.4 - 2022-09-07
+### Added
+- bin/wc-id-name.clj
+- bin/weights.sh
+- bin/users.sh
+### Fixed
+- DateTimeFormatter -- "hh" is for 12-hours time format.
+  "HH" is for 24-hour time format. How in CLJS? cljs-time?
+
+## 0.10.3 - 2022-09-07
 ### Fixed
 - forgot to merge? /meas returns (get in [:body :body])
   it should be (getin [:body :body :measuregrps])
@@ -41,7 +51,7 @@
 - rewrote `core.cljs`s long components with functions. looks consice.
 
 ## 0.8.3 - 2022-09-01
-- misc/datetime->timestamp
+- misc/datetime->second
 
 ## 0.8.2 - 2022-09-01
 updating tokens remotely inside fetch script.

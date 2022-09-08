@@ -9,13 +9,19 @@
 
 (defn error
   [e]
-  (response/bad-request
-   {:errors {:server-error (.getMessage e)}}))
+  (response/bad-request (.getMessage e)))
 
 (defn service-routes []
  ["/api"
   {:middleware [middleware/wrap-restricted
                 middleware/wrap-formats]}
+
+  ["/error"
+   {:get (fn [_]
+          (try
+           (throw (Exception. "error occurs"))
+           (catch Exception e (error e))))}]
+
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;; tokens. use also when creating user entry
   ["/token/:id/refresh"
@@ -57,7 +63,9 @@
   ["/user/:id"
    {:get
     (fn [{{:keys [id]} :path-params}]
-      (response/ok (users/get-user id)))
+      (try
+        (response/ok (users/get-user id))
+        (catch Exception e (error e))))
     :post
     (fn [{user :params}]
       (try

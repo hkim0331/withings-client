@@ -3,7 +3,7 @@
    [hato.client :as hc]
    [clojure.tools.logging :as log]
    [withings-client.db.core :as db]
-   [withings-client.misc :refer [abbrev datetime->timestamp]]
+   [withings-client.misc :refer [abbrev datetime->second probe]]
    [withings-client.users :as users]
    #_[withings-client.tokens :as tokens]))
 
@@ -22,6 +22,10 @@
 ;; lastupdate=int use this  instead of startdate+enddate
 ;; 'https://wbsapi.withings.net/measure'
 
+(defn check-response
+ [{resp :body}]
+ (when-not (= 200 (:status resp))
+  (throw (Exception. "トークンが古いんじゃ？"))))
 
 ;; meastypes?
 (defn meas
@@ -34,20 +38,19 @@
   (let [{:keys [access]} (users/get-user id)]
     (log/info "meas" id meastype startdate enddate lastupdate)
     (log/info "access token" (abbrev access))
-    ;; never do on localhost. how? in development
-    ;; (tokens/refresh-and-restore-id! id)
     (-> (hc/post
          meas-uri
          {:as :json
-          ;; CAUTION: "authorization" should be lower characters!
+          ;; CAUTION: "authorization" must be lower characters!
           :headers {"authorization" (str "Bearer " access)}
           :query-params
           {:action     "getmeas"
            :meastype   meastype
            :category   1
-           :startdate  (datetime->timestamp startdate)
-           :enddate    (datetime->timestamp enddate)
-           :lastupdate (datetime->timestamp lastupdate)}})
+           :startdate  (datetime->second startdate)
+           :enddate    (datetime->second enddate)
+           :lastupdate (datetime->second lastupdate)}})
+        (check-response)
         (get-in [:body :body :measuregrps]))))
 
 (defn list-measures

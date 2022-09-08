@@ -49,7 +49,7 @@
 - rewrote `core.cljs`s long components with functions. looks consice.
 
 ## 0.8.3 - 2022-09-01
-- misc/datetime->timestamp
+- misc/datetime->second
 
 ## 0.8.2 - 2022-09-01
 updating tokens remotely inside fetch script.

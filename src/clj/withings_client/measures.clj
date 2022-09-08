@@ -3,7 +3,7 @@
    [hato.client :as hc]
    [clojure.tools.logging :as log]
    [withings-client.db.core :as db]
-   [withings-client.misc :refer [abbrev datetime->timestamp]]
+   [withings-client.misc :refer [abbrev datetime->second]]
    [withings-client.users :as users]
    #_[withings-client.tokens :as tokens]))
 
@@ -45,9 +45,9 @@
           {:action     "getmeas"
            :meastype   meastype
            :category   1
-           :startdate  (datetime->timestamp startdate)
-           :enddate    (datetime->timestamp enddate)
-           :lastupdate (datetime->timestamp lastupdate)}})
+           :startdate  (datetime->second startdate)
+           :enddate    (datetime->second enddate)
+           :lastupdate (datetime->second lastupdate)}})
         (get-in [:body :body :measuregrps]))))
 
 (defn list-measures

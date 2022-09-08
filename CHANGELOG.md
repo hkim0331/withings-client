@@ -12,9 +12,11 @@
 - async refresh-all
 - favicon (nginx setting? '/' restriction? )
 - css, color buttons
-- message(alert) if access-token expired.
 - display README.md or bin script usage.
-- use cljs-time?
+- use cljs-time? (deprecated)
+
+## 0.10.5-SNAPSHOT
+- message(alert) if access-token expired.
 
 ## 0.10.4 - 2022-09-07
 ### Added

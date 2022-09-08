@@ -4,7 +4,6 @@
    [clojure.string :as str]
    [java-time :as jt]))
 
-
 (defn probe
   ([x]
    (probe x #(log/info "probe" %)))

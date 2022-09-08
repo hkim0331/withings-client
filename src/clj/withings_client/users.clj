@@ -14,7 +14,7 @@
   (let [ret (db/get-user {:id id})]
     (if (seq ret)
       ret
-      (throw (Exception. "no such id")))))
+      (throw (Exception. {:error "no such id"})))))
 
 (defn update-user!
   [user]

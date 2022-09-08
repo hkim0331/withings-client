@@ -15,11 +15,13 @@
  ["/api"
   {:middleware [middleware/wrap-restricted
                 middleware/wrap-formats]}
+
   ["/error"
-   {:get (try
-          (throw (Exception "error occurs"))
-          (catch Exception e (error e)))}]
- 
+   {:get (fn [_]
+          (try
+           (throw (Exception. "error occurs"))
+           (catch Exception e (error e))))}]
+
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;; tokens. use also when creating user entry
   ["/token/:id/refresh"

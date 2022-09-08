@@ -15,8 +15,8 @@
 - display README.md or bin script usage.
 - use cljs-time? (deprecated)
 
-## 0.10.5-SNAPSHOT
-- message(alert) if access-token expired.
+## 0.10.5 - 2022-09-09
+- display message(alert) if access-token need refresh.
 
 ## 0.10.4 - 2022-09-07
 ### Added

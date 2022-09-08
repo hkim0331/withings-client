@@ -11,12 +11,6 @@
    (f x)
    x))
 
-(comment
-  (-> 3
-      probe
-      (+ 3)
-      probe))
-
 (defn datetime->second
   "Convert date-time string into timestamp integer.
    Input is a string formatted as 'yyyy-MM-DD hh:mm:ss'.

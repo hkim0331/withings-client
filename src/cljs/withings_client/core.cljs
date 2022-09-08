@@ -352,7 +352,7 @@
                                            assoc-in
                                            [:data :results]
                                            res))
-                 :error-handler (fn [e] (js/alert (str  "error " e)))})}
+                 :error-handler (fn [e] (js/alert (:response e)))})}
     "fetch"]])
 
 (defn input-component

@@ -22,6 +22,10 @@
 ;; lastupdate=int use this  instead of startdate+enddate
 ;; 'https://wbsapi.withings.net/measure'
 
+(defn check-response
+ [{resp :body}]
+ (when-not (= 200 (:status resp))
+  (throw (Exception. "トークンが古いんじゃ？"))))
 
 ;; meastypes?
 (defn meas
@@ -46,9 +50,8 @@
            :startdate  (datetime->second startdate)
            :enddate    (datetime->second enddate)
            :lastupdate (datetime->second lastupdate)}})
-        probe
-        (get-in [:body :body :measuregrps])
-        probe)))
+        (check-response)
+        (get-in [:body :body :measuregrps]))))
 
 (defn list-measures
   "returns measures items in vector"

@@ -11,7 +11,10 @@
 (defn get-user
   [id]
   (log/info "get-user" id)
-  (db/get-user {:id id}))
+  (let [ret (db/get-user {:id id})]
+    (if (seq ret)
+      ret
+      (throw (Exception. "no such id")))))
 
 (defn update-user!
   [user]

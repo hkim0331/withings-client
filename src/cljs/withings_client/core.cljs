@@ -12,7 +12,7 @@
   (:import
    goog.History))
 
-(def ^:private version "0.10.3")
+(def ^:private version "0.10.4")
 
 ;; FIXME: better way?
 (def redirect-uri
@@ -38,22 +38,6 @@
 
 ;; to avoid reload
 (declare fetch-users!)
-
-;; ---------------------------------------------------------
-;; misc functions
-(defn ts->date
-  "after converting to milli, doing jobs."
-  [ts]
-  (-> ts
-      (* 1000)
-      js/Date.
-      .toLocaleString))
-
-(defn value->float
-  "withings-value -> float"
-  [digits [{:keys [value unit]}]]
-  (-> (/ value (pow 10 (- unit)))
-      (.toFixed digits)))
 
 ;; ---------------------------------------------------------
 ;; navbar
@@ -281,6 +265,19 @@
 ;; ------------------------------------------------------------
 ;; data-page
 ;;
+;; misc functions
+(defn ts->date
+  "after converting to milli, doing jobs."
+  [ts]
+  (-> (* 1000 ts)
+      js/Date.
+      (.toLocaleString "en-GB"))) ;; for 24-hour time format
+
+(defn value->float
+  "withings-value -> float"
+  [digits [{:keys [value unit]}]]
+  (-> (/ value (pow 10 (- unit)))
+      (.toFixed digits)))
 (defn select-id
   []
   [:div

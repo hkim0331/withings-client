@@ -1,471 +1,365 @@
-(ns withings-client.core
-  (:require
-   [ajax.core :refer [GET POST]]
-   [cljs.math :refer  [pow]]
-   [clojure.string :as string]
-   [goog.events :as events]
-   [goog.history.EventType :as HistoryEventType]
-   [reagent.core :as r]
-   [reagent.dom :as rdom]
-   [reitit.core :as reitit]
-   [withings-client.ajax :as ajax])
-  (:import
-   goog.History))
+# Withings-Client
 
-(def ^:private version "0.10.5-SNAPSHOT")
+## Unreleased
+- (store fetched data in some DB)
+- (push message via LINE)
+- (undo facility)
+- mainly getting many data at once
+  change meastype with meastypes? should also change formatting functions.
+- add `note` column to users table.
+- bar chart of the viable time of access tokens
+- validation about `startdate` and `enddate`
+- async refresh-all
+- favicon (nginx setting? '/' restriction?)
+- css, color buttons
+- display README.md or bin script usage.
+- use cljs-time? (deprecated)
 
-;; FIXME: better way?
-(def redirect-uri
-  (try
-    js/redirectUrl
-    (catch js/Error _ "https://wc.kohhoh.jp/callback")))
+## 0.10.5-SNAPSHOT
+- message(alert) if access-token expired.
 
-(defonce session
-  (r/atom {:page :home
-           :home {:name   nil
-                  :cid    nil
-                  :secret nil
-                  :belong nil
-                  :email  nil
-                  :uri    nil}
-           :users {}
-           :measures {}
-           :data {:lastupdate "2022-09-01"
-                  :startdate  "2022-01-01 00:00:00"
-                  :enddate    "2023-01-01 00:00:00"
-                  :results    nil}
-           :user {}})) ;; user-page
+## 0.10.4 - 2022-09-07
+### Added
+- bin/wc-id-name.clj
+- bin/weights.sh
+- bin/users.sh
+### Fixed
+- DateTimeFormatter -- "hh" is for 12-hours time format.
+  "HH" is for 24-hour time format. How in CLJS? cljs-time?
 
-;; to avoid reload
-(declare fetch-users!)
+## 0.10.3 - 2022-09-07
+### Fixed
+- forgot to merge? /meas returns (get in [:body :body])
+  it should be (getin [:body :body :measuregrps])
 
-;; ---------------------------------------------------------
-;; navbar
-(defn nav-link [uri title page]
-  [:a.navbar-item
-   {:href   uri
-    :class (when (= page (:page @session)) "is-active")}
-   title])
+## 0.10.2 - 2022-09-07
+### Added
+- bin/wc-date-value.clj
 
-(defn navbar []
-  (r/with-let [expanded? (r/atom false)]
-    [:nav.navbar.is-info>div.container
-     [:div.navbar-brand
-      [:a.navbar-item {:href "/" :style {:font-weight :bold}}
-       "Withings-Client"]
-      [:span.navbar-burger.burger
-       {:data-target :nav-menu
-        :on-click #(swap! expanded? not)
-        :class (when @expanded? :is-active)}
-       [:span] [:span] [:span]]]
-     [:div#nav-menu.navbar-menu
-      {:class (when @expanded? :is-active)}
-      [:div.navbar-start
-       [nav-link "#/" "Home" :home]
-       [nav-link "#/data" "Data" :data]
-       [nav-link "#/about" "About" :about]
-       [nav-link "/logout" "Logout"]
-       [nav-link "https://developer.withings.com/api-reference" "API"]]]]))
+## 0.10.0 - 2022-09-03
+- clojure -Tantq outdated :upgrade true
 
-;; ----------------------------------------------------------
-;; about-page
-(defn about-page []
-  [:section.section>div.container>div.content
-   [:img {:src "/img/warning_clojure.png"}]
-   [:p version]])
+## 0.9.1 - 2022-09-02
+- refactored continued. lastupdate, startdate, enddate.
+- refactored output
+- redisplay without reloading after updating/deleting
 
-;; ----------------------------------------------------------
-;; user-page
-(defn user-component
-  []
-  [:div
-   [:h3 (-> @session :user :name)]
-   [:p "valid は 0/1 で変更"]
-   (doall (for [[key _] (dissoc (-> @session :user)
-                                :id :userid :created_at :updated_at)]
-            [:p {:key key} (symbol key)
-             [:br]
-             [:input
-              {:value (get-in @session [:user key])
-               :on-change
-               #(swap! session
-                       assoc-in [:user key] (-> % .-target .-value))}]]))])
+## 0.9.0 - 2022-09-02
+- refactor. use session globally in `core.cljs`.
 
-(defn update-button
-  []
-  [:button
-   {:class "button is-primary is-small"
-    :on-click
-    (fn [^js/Event e]
-      ;; (js/alert (str (:user @session)))
-      (POST (str "/api/user/" (get-in @session [:user :id]))
-        {:params (:user @session)
-         :handler (fn [_]
-                    (fetch-users!)
-                    (swap! session assoc :page :home))
-         :error-handler (fn [] (js/alert (.getMessage e)))}))}
-   "update"])
+## 0.8.4 - 2022-09-01
+- rewrote `core.cljs`s long components with functions. looks consice.
 
-(defn delete-button
-  []
-  [:button
-   {:class "button is-danger is-small"
-    :on-click
-    (fn []
-      (and (js/confirm "are you OK?")
-           (POST (str "/api/user/" (-> @session :user :id) "/delete")
-             {:handler (fn [_]
-                         (fetch-users!)
-                         (swap! session assoc :page :home))
-              :error-handler
-              (fn [^js/Event e] (js/alert (.getMessage e)))})))}
-   "delete"])
+## 0.8.3 - 2022-09-01
+- misc/datetime->second
 
-(defn user-page
-  []
-  [:section.section>div.container>div.content
-   [user-component]
-   [:br]
-   [update-button]
-   [:br]
-   [:br]
-   [delete-button]])
+## 0.8.2 - 2022-09-01
+updating tokens remotely inside fetch script.
+updated bin/ scripts.
+- wc-login.sh _login_ _password_ -- to start a session.
+  must be executed before before any of operations bellow.
+- wc-users.sh -- get all users
+- wc-toggle-valid.sh _id_ -- toggle users validity
+- wc-lastupdate.sh _id_ _date_ -- fetch user id's last updated data.
+- wc-start-end.sh _id_ _startdate_ _enddate_
+  -- fetch user id's data between startdate and enddate.
+- wc-refresh-all-auto.sh
+- wc-refresh-all.sh -- refresh all existent tokens
+- wc-refresh.sh _id_ -- refresh user id's token
 
-;; ----------------------------------------------------------
-;; home page
-;;
-(def scope "user.metrics,user.activity,user.info")
-(def authorize2-uri "https://account.withings.com/oauth2_user/authorize2")
-(def base
-  (str authorize2-uri
-       "?response_type=code&redirect_uri=" redirect-uri "&"
-       "scope=" scope "&"))
+## 0.8.1 - 2022-09-01
+stopped auto refreshment of tokens at beginning of /mean.
+keep independency of `refresh` and `fetch` functions.
+instead, provide wc-lastupdate.sh and wc-start-end.sh,
+in which execute refreshing tokens before actual fetching.
 
-(defn create-url
-  []
-  (str base
-       "client_id=" (-> @session :home :cid)
-       "&state=" (-> @session :home :name)))
+## 0.8.0 - 2022-09-01
+- /dump-db/sync.sh -- syncronize localhost:withings with kohhoh:withings
+- completion of datetime. supply time if omitted.
 
-(defn create-user!
-  ":name, :cid, :secret are required field.
-   FIXME: lack validations."
+## 0.7.4 - 2022-08-31
+- misc namespace. defined datetime->timestamp, abbrev,,,
+
+## 0.7.3 - 2022-08-31
+- lastupdate
+
+## 0.7.2 - 2022-08-31
+### Added
+- defined /user/:id/valid: toggle the value of `valid`
+- bin/ folder to keep wc scripts
+- defined users/user-by-cid: return user record match with cid
+
+### Changed
+- update-tokens-by-userid! => update-tokens!
+- shorten log
+
+### Removed
+- update-cid-by-name!
+
+### Fixed
+- two accounts can have same tokens. if updates one of them
+  and the update success, will return 2 since userid is same.
+  `tokens/update-tokens!` must be `update-tokens-by-userid!`
+  see `0.7.1 Fixed`
+
+## 0.7.1 - 2022-08-31
+### Changed
+- deploy.sh: divided `start.sh` into three, `{stop,start,restart}.sh`
+
+### Added
+- get "/api/valid-users"
+
+### Fixed
+- update-tokens-by-userid! returns 1 or 2 if success.
+```
+(defn restore!
   [params]
-  (POST "/api/user"
-    {:format :json
-     :params params
-     :handler (fn [_]
-                (js/alert (str "saved" params))
-                (fetch-users!))
-     :error-handler
-     (fn [e] (js/alert (get-in e [:response :errors :server-error])))}))
+  (let [ret (users/update-tokens-by-userid! params)]
+    (and (seq params) (pos? ret))))
+```
 
-(defn create-button
-  []
-  [:div {:class "field"}
-   [:button {:class "button is-primary is-small"
-             :on-click
-             #(let [params (select-keys
-                            (-> @session :home)
-                            [:name :cid :secret :belong :email])]
-                (create-user! params)
-                (swap! session assoc-in [:home :uri] (create-url)))}
-    "create"]])
+## 0.7.0 - 2022-08-31
+### Changed
+- POST "/token/refresh-all" -> POST "/tokens/refresh-all"
+- tokens/refresh-all -> tokens/refresh-all!
+- tokens/refresh-and-restore-one! -> tokens/refresh-and-restore-id!
+- stop using `reverse` in `core.cljs/output-component`
 
-(defn sub-field
-  [key label]
-  [:div {:key key}
-   [:div [:label {:class "label"} label]]
-   [:div {:class "field"}
-    [:input {:value (key (-> @session :home))
-             :on-change
-             #(swap! session
-                     assoc-in
-                     [:home key]
-                     (-> % .-target .-value))}]]])
 
-(defn new-component []
-  [:div
-   [:h3 "new"]
-   (doall
-    (for [[key label] {:name "name (*)", :cid "cid (*)", :secret "secret (*)",
-                       :belong "belong", :email "email"}]
-      (sub-field key label)))
-   [:br]
-   [create-button]
-   [:p "(*)は必須フィールド。belong, email はカラでもよい。"]
-   [:p "create ボタンの後、下に現れるリンクをクリックすると
-        acccess トークン、refresh トークンの取得に取り掛かる。
-        ページが切り替わるのに 5 秒くらいかかる。非同期通信でスピードアップ予定。"]])
+## 0.6.13 - 2022-08-31
+- displays `98` as `98.00`
+```
+#(.toFixed % 2)
+```
+- defined /api/token/refresh-all
 
-(defn link-component []
-  [:div
-   [:p "create してからクリックで登録 → "
-    [:a {:href (-> @session :home :uri)}
-     (-> @session :home :name)]]])
+## 0.6.12 - 2022-08-30
+- `login` and `password` environemt variables.
+- change `valid` by 0 for false, 1 for true.
 
-(defn refresh-button
-  [user]
-  [:button
-   {:class "button is-primary is-small"
-    :on-click
-    (fn [_] (POST (str "/api/token/" (:id user) "/refresh")
-              {:format :json
-               :handler (fn [_]
-                          (fetch-users!)
-                          (js/alert "リフレッシュ完了。"))
-               :error-handler #(js/alert "失敗。")}))}
-   "refresh"])
+## 0.6.10 - 2022-08-30
+- stop parinfer since it changes structure of codes. it leads some bugs.
+- use r/atom for startdate and enddate
 
-(defn edit-button
-  [user]
-  [:button
-   {:class "button is-primary is-small"
-    :on-click #(swap! session assoc :user user :page :user)}
-   "edit"])
+## 0.6.8 - 2022-08-30
+- look after re-frame.
+- stop using placeholder.
+- remove `on-key-up` action.
+- remove `(let [user (:user @session)])` from `core.cljs/user-page`
 
-;; used in users-component only.
+## 0.6.7 - 2022-08-30
+- confirmed delete
+- edit-user-page
+
+## 0.6.6 - 2022-08-30
+- polish up code.
+
+### Changed
+- /token/refresh/:n -> /token/:n/refresh
+
+## 0.6.5 - 2022-08-29
+- deploy to kohhoh
+- timestamp->str function
+```
+ ;; (java.time.Instant/ofEpochMilli 1661330819000)
+ ;; core.cljs
+ (defn ts->date
+  [ts]
+  (.toLocaleString (js/Date. (* 1000 ts))))
+```
+
+## 0.6.4 - 2022-08-29
+- CLJS timestamp functions (.toLocaleString (js/Date. ts))
+
+## 0.6.3 - 2022-08-29
+- GET /api/meas
+
+### FIXME
+- can not (migrate) SQL syntax error occurred.
+  however, `mycli -u $USER $DB < $migration.sql` goes well.
+
+## 0.6.2 - 2022-08-29
+- depart callback from login.clj
+- kohhoh did not update.
+  -> used old deploy.sh for app.melt
+
+### Added
+- mysql/mysqldump can not dump maridb database.
+- db-dump/{dump.sh,restore.sh}
+
+## 0.6.1 - 2022-08-29
+- departed /callback from login.clj
+- session auth /api/
+```
+% http --session=auth :3000/ login='####' password='######'
+% http --session=auth :3000/api/users ;; OK
+% http :3000/api/users ;; NG
+```
+- demo weights between 2022-01-01 and 2022-09-30
+
+## 0.6.0 - 2022-08-28
+### Added
+- buddy
+```
+  (ring/ring-handler
+    (ring/router
+      [(login-routes) (home-routes) (service-routes)]))
+```
+- without adding `wrap-auth` line in wrap-base function,
+  could not access allowed pages.
+```
+(defn wrap-base [handler]
+  (-> ((:middleware defaults) handler)
+      wrap-auth ;; restriction
+      wrap-flash))
+```
+
+## 0.5.2 - 2022-08-28
+- core.cljs: added `:key` to seq elements
+- core.cljs: delete user. need reload. improve.
+
+## 0.5.1 - 2022-08-26
+- demo
+
+## 0.5.0 - 2022-08-26
+- deploy as https://wc.kohhoh.jp
+
+## 0.4.12 - 2022-08-26
+
+### Added
+- measure namespace
+- timestamp int using java-time
+
+### Info
+- to append additional request header in hato, use :headers.
+```
+   (-> (hc/post
+         meas-uri
+         {:headers {"authorization" (str "Bearer " access)}}
+         ...))
+```
+
+## 0.4.11 - 2022-08-26
+- meas
+
+### FIXME
+- hato request header
+
+## 0.4.10 - 2022-08-25
+- /api/token/refresh/:id
+- post /api/token/refresh:n
+
+## 0.4.9 - 2022-08-25
+- update-token. access-token expires 10800 sec.
+- refresh
+- /api/token/refresh
+- tokens/refresh
+- tokens/restore!
+- tokens/refresh-and-restore!
+
+## 0.4.8 - 2022-08-25
+- resolve `tokens/auth` into `request-token` and `store!`,
+  defined `tokens/fetch-and-store!`.
+- list users reverse order.
+  could not use (sort-by :update_at @users), maybe for tagged value.
+
+## 0.4.7 - 2022-08-24
+- link to Withings in navbar
+- defined `/user/:n/valid`
+- got tokens via `wc.melt.kyutech.ac.jp/callback`
+
+### Changed
+- routes conflict `/user/delete/:n` and `/usr/:n/valid`.
+  changed to `/user/:n/delete` and `/user/:n/valid`. valid should be toggle-valid
+- resume up and down `new` and `users` in `core.cljs`
+
+## 0.4.6 - 2022-08-24
+- users 表示。
+- ページに version ナンバー
+- #object[Transit$TaggedValue [TaggedValue: LocalDateTime, 2022-08-24T20:00:33.000]] を表示するため、tm を定義した。
+```
 (defn tm
-  "returns strung yyyy-mm-dd hh:mm from tagged value tv"
+  "returns strung yyyy-mm-dd hh:mm from tagged value rv"
   [^js/LocalDateTime tv]
   (let [s (.-rep tv)]
     (str (subs s 0 10) " " (subs s 11 16))))
+```
 
-(defn users-component-aux
-  [key e]
-  [:div {:key key :class "column"} e])
+## 0.4.5 - 2022-08-24
+### Added
+- secret は cid と共に、access/refresh を取得する際に必要。
+- /callback で auth を受け取ったらすぐ access/refresh/userid をゲット。
 
-(defn users-component []
-  [:div
-   [:h2 "users"]
-   [:p "アクセストークンは 10800 秒（3時間）で切れます。"]
-   (doall
-    (for [user (-> @session :users)]
-      [:div {:class "columns" :key (:id user)}
-       (for [[key e] (map-indexed vector
-                                  [(if (:valid user) "y" "n")
-                                   (:id user)
-                                   (:name user)
-                                   (:belong user)
-                                   (tm (:updated_at user))
-                                   [refresh-button user]
-                                   [edit-button user]])]
-         (users-component-aux key e))]))])
+### Changed
+- users テーブルに userid varchar(255) 追加した。
 
-(defn home-page []
-  [:section.section>div.container>div.content
-   (new-component)
-   [:br]
-   (link-component)
-   [:hr]
-   (users-component)
-   [:hr]
-   version])
+## 0.4.4 - 2022-08-24
+### Added
+- 必須フィールドを(*)で表示
+- users/user-by-name
+- withings-client/tokens.clj
+- core.cljs: (def redirect-uri js/redirectUrl)
 
-;; ------------------------------------------------------------
-;; data-page
-;;
-;; misc functions
-(defn ts->date
-  "after converting to milli, doing jobs."
-  [ts]
-  (-> (* 1000 ts)
-      js/Date.
-      (.toLocaleString "en-GB"))) ;; for 24-hour time format
+dev_config.edn で次の定義をし、
+```
+:redirect-url "https://wc.melt.kyutech.ac.jp/callback"
+```
+利用したい ns で参照後、
+```
+[withings-client.config :refer [env]]
+(env :redirect-url)
+```
+これを layout.clj/render の :params で渡すと JS にも渡る。
+js/redirectUrl は、ブラウザを開く前、コンパイル時には未定義エラーになる。しょうがないね。
 
-(defn value->float
-  "withings-value -> float"
-  [digits [{:keys [value unit]}]]
-  (-> (/ value (pow 10 (- unit)))
-      (.toFixed digits)))
-(defn select-id
-  []
-  [:div
-   [:select {:name "id"
-             :on-change
-             (fn [e] (swap! session assoc-in [:data :id]
-                            (-> e .-target .-value)))}
-    (for [user (cons {:id 0 :name "選んでください"}
-                     (->> @session
-                          :users
-                          (filter :valid)))]
-      [:option {:key (:id user) :value (:id user)} (:name user)])]])
 
-(defn select-meatype
-  []
-  [:div
-   [:select {:name "meastype"
-             :on-change
-             (fn [e]
-               (swap! session assoc-in [:data :meastype]
-                      (-> e .-target .-value)))}
-    (for [mea (cons {:id 0 :description "選んでください"}
-                    (-> @session :measures))]
-      [:option {:key (str "m" (:id mea)) :value (:value mea)}
-       (:description mea)])]])
+## 0.4.3 - 2022-08-23
+- create のタイミングで name, cid のほか、
+  埋めてあったら secret, belong, email を insert する。
 
-(defn input-startdate-enddate
-  []
-  [:div
-   [:p [:b "start ~ end "]
-    [:input {:name "start"
-             :value (-> @session :data :startdate)
-             :on-change #(swap! session
-                                assoc-in
-                                [:data :startdate]
-                                (-> % .-target .-value))}]
-    " ~ "
-    [:input {:name "end"
-             :value (-> @session :data :enddate)
-             :on-change #(swap! session
-                                assoc-in
-                                [:data :enddate]
-                                (-> % .-target .-value))}]
-    " hh:mm:ss を省略すると 00:00:00 と解釈します。"]])
+### Fixed
+- core.cljs: session アトムは上記すべてのフィールドをあらかじめ持ってる必要あり。
 
-(defn input-lastupdate
-  []
-  [:div
-   [:p [:b "lastupdate "]
-    [:input {:value (-> @session :data :lastupdate)
-             :on-change #(swap! session
-                                assoc-in
-                                [:data :lastupdate]
-                                (-> % .-target .-value))}]
-    " ~ "
-    [:b "now"]
-    " 日時を記入するとこちらを優先する。カラだと start ~ end を取る。"]])
+### Added
+名前を揃えたほうがいいか？
+- db/update-cid-by-name!
+- users/update-user!
+- db/updat-user!
+- users/update-cid!
 
-(defn fetch-button
-  []
-  [:div
-   [:button {:class "button is-primary is-small"
-             :on-click
-             #(POST "/api/meas"
-                {:format :json
-                 :params {:id         (-> @session :data :id)
-                          :meastype   (-> @session :data :meastype)
-                          :startdate  (-> @session :data :startdate)
-                          :enddate    (-> @session :data :enddate)
-                          :lastupdate (-> @session :data :lastupdate)}
-                 :handler (fn [res] (swap! session
-                                           assoc-in
-                                           [:data :results]
-                                           res))
-                 :error-handler (fn [e] (js/alert (str  "error " e)))})}
-    "fetch"]])
+## 0.4.2 - 2022-08-23
+- GET /api/users/:n
+- POST /api/users/del/:n
+- POST /api/user/:n for update(PUT)
 
-(defn input-component
-  "id, meatype, startdate, enddate are required to work.
-   date must be in  `yyyy-MM-dd hh:mm:ss` format.
-   FIXME: validation."
-  []
-  [:div
-   [:h3 "Data"]
-   [select-id]
-   [select-meatype]
-   [input-startdate-enddate]
-   [:p "or"]
-   [input-lastupdate]
-   [:br]
-   [fetch-button]])
+## 0.4.1 - 2022-08-23
+- created /src/routes/services.clj
+- created /src/users.clj
+- GET /api/users
+- POST /api/user {:name "name" :cid "cid"}
+- create のタイミングで name, belong, email を insert する。
+  対応する値が "" の時、null が "" に書き換わる。
 
-;; params has `created` param. which should be displayed?
-(defn output-one
-  [n {:keys [date measures]}]
-  [:div {:key n}
-   (str (ts->date date) ", " (value->float 1 measures))])
+## 0.3.0 - 2022-08-23
+- Makefile -- npm install xmlhttprequest
+- secret フィールド追加
+- mariadb, withings データベース、テーブル users を定義した。
+- wc.melt で auth token 取得できることを確認。
+- start.sh: app.melt で java -jar したスクリプトのコピー。gitignored しておく。
 
-(defn user-name
-  [id]
-  (->> @session
-       :users
-       (filter #(= id (:id %)))
-       first
-       :name))
+## 0.2.0 - 2022-08-22
+- ajax-cljs の GET は CORS に抵触する
 
-(defn measure-name
-  [id]
-  (->> @session
-       :measures
-       (filter #(= id (:id %)))
-       first
-       :description))
+  localhost/:1 Access to XMLHttpRequest at 'https://account.withings.com/oauth2_user/authorize2?response_type=code&client_id=aaa&scope=user.metrics%2Cuser.activity&redirect_uri=https%3A%2F%2Fwc.melt.kyutech.ac.jp%2Fcallback&state=aaa' from origin 'http://localhost:3000' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource.
 
-(defn output-component
-  []
-  [:div
-   [:h3 "fetched ("
-    (-> @session :data :id js/parseInt user-name)
-    ", "
-    (-> @session :data :meastype js/parseInt measure-name)
-    ")"]
-   (if (seq (-> @session :data :results))
-     (for [[n data] (map-indexed
-                     vector
-                     (-> @session :data :results))]
-       (output-one n data))
-     [:p "no data"])])
+  GET https://account.withings.com/oauth2_user/authorize2?response_type=code&client_id=aaa&scope=user.metrics%2Cuser.activity&redirect_uri=https%3A%2F%2Fwc.melt.kyutech.ac.jp%2Fcallback&state=aaa
+- URL を作ってクリックさせる方法で auth-token が取れた。
+- gitignored /data フォルダを作った。
 
-(defn data-page []
-  [:section.section>div.container>div.content
-   (input-component)
-   [:hr]
-   (output-component)
-   [:hr]
-   version])
+## 0.1.0 - 2022-08-22
+- https://wc.melt 準備。callback は HTTPS じゃないとダメになった。
+- そのほか、変更になったものは？
+- withings の用語の揺れに注意。cid が client_id, あとなんだ？
 
-;; ------------------------------------------------------------
-(def pages
-  {:home  #'home-page
-   :about #'about-page
-   :user  #'user-page
-   :data  #'data-page})
-
-(defn page []
-  [(pages (:page @session))])
-
-;; -------------------------
-;; Routes
-(def router
-  (reitit/router
-   [["/"      :home]
-    ["/about" :about]
-    ["/user"  :user]
-    ["/data"  :data]]))
-
-(defn match-route [uri]
-  (->> (or (not-empty (string/replace uri #"^.*#" "")) "/")
-       (reitit/match-by-path router)
-       :data
-       :name))
-
-;; -------------------------
-;; History
-;; must be called after routes have been defined
-(defn hook-browser-navigation! []
-  (doto (History.)
-    (events/listen
-     HistoryEventType/NAVIGATE
-     (fn [^js/Event.token event]
-       (swap! session assoc :page (match-route (.-token event)))))
-    (.setEnabled true)))
-
-;; -------------------------
-;; Initialize app
-(defn fetch-users! []
-  (GET "/api/users" {:handler #(swap! session assoc :users %)}))
-
-(defn fetch-measures! []
-  (GET "/api/meas" {:handler #(swap! session assoc :measures %)}))
-
-(defn ^:dev/after-load mount-components []
-  (rdom/render [#'navbar] (.getElementById js/document "navbar"))
-  (rdom/render [#'page] (.getElementById js/document "app")))
-
-(defn init! []
-  (ajax/load-interceptors!)
-  (fetch-users!)
-  (fetch-measures!)
-  (hook-browser-navigation!)
-  (mount-components))
+## 0.0.0 - 2022-08-21
+project started.

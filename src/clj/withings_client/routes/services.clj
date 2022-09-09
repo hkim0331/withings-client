@@ -15,6 +15,7 @@
  ["/api"
   {:middleware [middleware/wrap-restricted
                 middleware/wrap-formats]}
+<<<<<<< HEAD
 
   ["/error"
    {:get (fn [_]
@@ -22,6 +23,9 @@
            (throw (Exception. "error occurs"))
            (catch Exception e (error e))))}]
 
+=======
+ 
+>>>>>>> feature/docker
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;; tokens. use also when creating user entry
   ["/token/:id/refresh"

@@ -15,6 +15,14 @@
 - display README.md or bin script usage.
 - docker container AMD64 can rebuild for AARC64 if have Dockerfile?
 
+
+## 0.11.2 - 2022-09-09
+- can remote debug on nuc.local. docker-compose.
+
+## 0.11.1 - 2022-09-09
+### !!VScode BUG!!
+- VScode overwrote measures.clj and commit it. why?
+
 ## 0.11.0 - 2022-09-09
 ### Added
 - docker-compose.yml

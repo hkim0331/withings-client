@@ -12,7 +12,7 @@
   (:import
    goog.History))
 
-(def ^:private version "0.11.0-SNAPSHOT")
+(def ^:private version "0.11.0")
 
 ;; FIXME: better way?
 (def redirect-uri
@@ -348,11 +348,12 @@
                           :startdate  (-> @session :data :startdate)
                           :enddate    (-> @session :data :enddate)
                           :lastupdate (-> @session :data :lastupdate)}
-                 :handler (fn [res] (swap! session
-                                           assoc-in
-                                           [:data :results]
-                                           res))
-                 :error-handler (fn [e] (js/alert (:response e)))})}
+                 :handler
+                 (fn [res]
+                   (swap! session assoc-in [:data :results] res))
+                 :error-handler
+                 (fn [e]
+                   (js/alert (-> e :response :body)))})}
     "fetch"]])
 
 (defn input-component

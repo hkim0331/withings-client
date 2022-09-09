@@ -4,32 +4,34 @@
    [clojure.string :as str]
    [java-time :as jt]))
 
-(declare date->timestamp)
+(defn probe
+  ([x]
+   (probe x #(log/info "probe" %)))
+  ([x f]
+   (f x)
+   x))
 
-(defn datetime->timestamp
-  "Convert datetime object into timestamp integer.
+(defn datetime->second
+  "Convert date-time string into timestamp integer.
    Input is a string formatted as 'yyyy-MM-DD hh:mm:ss'.
-   Return value is timestamp, integer."
+   if lacked 'hh:mm:ss' part, redo supplying '00:00:00'.
+   Return value is seconds from epoch. integer."
   [s]
-  (when (seq s)
-    (let [[date time] (str/split s #" ")]
-      (if (seq time)
-        (quot (-> (str date "T" time)
-                  jt/to-sql-timestamp
-                  jt/to-millis-from-epoch)
-              1000)
-        (date->timestamp date)))))
+  {:pre [(string? s)]}
+  (let [[date time] (str/split s #" ")]
+    (if (seq time)
+      (-> (str date "T" time)
+          jt/to-sql-timestamp
+          jt/to-millis-from-epoch
+          (quot 1000))
+      (datetime->second (str date " 00:00:00")))))
 
-(defn date->timestamp
-  [s]
-  (datetime->timestamp (str s " 00:00:00")))
-
-(defn timestamp->datetime
-  "returns a string like '2022-08-31T12:34:56'
-   should replace 'T' with ' '?"
+(defn second->datetime
+  "returns a string like '2022-08-31T12:34:56'.
+   Inverse of datetime->second.
+   caution to 'T' between date and time."
   [n]
-  (-> n
-      (* 1000)
+  (-> (* n 1000)
       jt/instant->sql-timestamp
       jt/local-date-time
       str))
@@ -42,17 +44,3 @@
   ([n s]
    (let [re (re-pattern (format "^(.{%d}).*" n))]
      (str/replace s re (str "$1" "...")))))
-
-(comment
-  (throw (Exception. "example exception"))
-  (datetime->timestamp "2022-08-31 12:34:56")
-  (timestamp->datetime (datetime->timestamp "2022-08-31 12:34:56"))
-  (<  (datetime->timestamp "2022-08-31 12:34:56")
-      2000000000)
-  (date->timestamp "2022-09-01")
-  (-> "2022-09-01"
-      date->timestamp
-      timestamp->datetime))
-
-(comment
-  (abbrev (-> (range 10) (str/join))))

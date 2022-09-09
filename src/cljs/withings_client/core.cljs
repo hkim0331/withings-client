@@ -12,7 +12,7 @@
   (:import
    goog.History))
 
-(def ^:private version "0.10.4")
+(def ^:private version "0.10.5-SNAPSHOT")
 
 ;; FIXME: better way?
 (def redirect-uri
@@ -352,7 +352,7 @@
                                            assoc-in
                                            [:data :results]
                                            res))
-                 :error-handler (fn [e] (js/alert (str  "error " e)))})}
+                 :error-handler (fn [e] (js/alert (:response e)))})}
     "fetch"]])
 
 (defn input-component

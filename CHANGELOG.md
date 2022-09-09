@@ -12,9 +12,11 @@
 - async refresh-all
 - favicon (nginx setting? '/' restriction? )
 - css, color buttons
-- message(alert) if access-token expired.
 - display README.md or bin script usage.
-- use cljs-time?
+- use cljs-time? (deprecated)
+
+## 0.10.5 - 2022-09-09
+- display message(alert) if access-token need refresh.
 
 ## 0.10.4 - 2022-09-07
 ### Added
@@ -49,7 +51,7 @@
 - rewrote `core.cljs`s long components with functions. looks consice.
 
 ## 0.8.3 - 2022-09-01
-- misc/datetime->timestamp
+- misc/datetime->second
 
 ## 0.8.2 - 2022-09-01
 updating tokens remotely inside fetch script.

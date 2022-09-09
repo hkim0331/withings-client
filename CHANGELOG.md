@@ -15,6 +15,13 @@
 - display README.md or bin script usage.
 - docker container AMD64 can rebuild for AARC64 if have Dockerfile?
 
+## 0.11.2 - 2022-09-09
+VScode bug happens again.
+A VScode buffer was overwritten by other buffer's content.
+### Changed
+- measures.clj replace check-respose with misc/probe
+  probe function is safer. (no forget to return values)
+
 ## 0.11.0 - 2022-09-09
 ### Added
 - docker-compose.yml

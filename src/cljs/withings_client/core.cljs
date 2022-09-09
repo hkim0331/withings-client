@@ -32,7 +32,7 @@
            :measures {}
            :data {:lastupdate "2022-09-01"
                   :startdate  "2022-01-01 00:00:00"
-                  :enddate    "2023-01-01 00:00:00"
+                  :enddate    "2022-12-31 23:59:59"
                   :results    nil}
            :user {}})) ;; user-page
 
@@ -339,21 +339,22 @@
 (defn fetch-button
   []
   [:div
-   [:button {:class "button is-primary is-small"
-             :on-click
-             #(POST "/api/meas"
-                {:format :json
-                 :params {:id         (-> @session :data :id)
-                          :meastype   (-> @session :data :meastype)
-                          :startdate  (-> @session :data :startdate)
-                          :enddate    (-> @session :data :enddate)
-                          :lastupdate (-> @session :data :lastupdate)}
-                 :handler
-                 (fn [res]
-                   (swap! session assoc-in [:data :results] res))
-                 :error-handler
-                 (fn [e]
-                   (js/alert (-> e :response :body)))})}
+   [:button
+    {:class "button is-primary is-small"
+     :on-click
+     #(POST "/api/meas"
+        {:format :json
+         :params {:id         (-> @session :data :id)
+                  :meastype   (-> @session :data :meastype)
+                  :startdate  (-> @session :data :startdate)
+                  :enddate    (-> @session :data :enddate)
+                  :lastupdate (-> @session :data :lastupdate)}
+         :handler
+         (fn [res]
+           (swap! session assoc-in [:data :results] res))
+         :error-handler
+         (fn [e]
+           (js/alert (-> e :response :body)))})}
     "fetch"]])
 
 (defn input-component

@@ -13,4 +13,4 @@ else
 fi
 
 https --session=auth post wc.kohhoh.jp/api/token/${ID}/refresh >/dev/null
-https -pb --session=auth post wc.kohhoh.jp/api/meas id=${ID} meastype=1 lastupdate=${DATE}
+https -phb --session=auth post wc.kohhoh.jp/api/meas id=${ID} meastype=1 lastupdate=${DATE}

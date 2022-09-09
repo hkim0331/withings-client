@@ -1,5 +1,5 @@
 #!/bin/sh
-# retrieve today's measures of id=16 
+# retrieve today's measures of id=16
 
 if [ -z "$1" ]; then
     ID=16
@@ -13,4 +13,4 @@ else
 fi
 
 https --session=auth post wc.kohhoh.jp/api/token/${ID}/refresh >/dev/null
-https -pb --session=auth post wc.kohhoh.jp/api/meas id=${ID} meastype=1 lastupdate=${DATE}
+https -phb --session=auth post wc.kohhoh.jp/api/meas id=${ID} meastype=1 lastupdate=${DATE}

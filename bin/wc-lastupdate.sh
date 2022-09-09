@@ -1,5 +1,5 @@
 #!/bin/sh
-# retrieve today's measures of id=16 
+# retrieve today's measures of id=16
 
 if [ -z "$1" ]; then
     ID=16

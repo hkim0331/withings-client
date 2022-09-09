@@ -11,13 +11,14 @@
    (f x)
    x))
 
+;; FIXME: case (nil? s)
 (defn datetime->second
   "Convert date-time string into timestamp integer.
    Input is a string formatted as 'yyyy-MM-DD hh:mm:ss'.
    if lacked 'hh:mm:ss' part, redo supplying '00:00:00'.
    Return value is seconds from epoch. integer."
   [s]
-  {:pre [(string? s)]}
+  ;; {:pre [(string? s)]}
   (let [[date time] (str/split s #" ")]
     (if (seq time)
       (-> (str date "T" time)

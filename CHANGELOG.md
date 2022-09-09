@@ -14,7 +14,11 @@
 - css, color buttons
 - display README.md or bin script usage.
 - use cljs-time? (deprecated)
+- docker container AMD64 can rebuild for AARC64 if have Dockerfile?
 
+## 0.11.0-SNAPSHOT
+- docker
+  
 ## 0.10.5 - 2022-09-09
 - display message(alert) if access-token need refresh.
 

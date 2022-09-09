@@ -1,3 +1,5 @@
+use withings;
+
 DROP TABLE if exists users;
 CREATE TABLE users (
   id INTEGER PRIMARY KEY AUTO_INCREMENT,

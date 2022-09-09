@@ -10,7 +10,7 @@ services:
     ports:
       - "7002:7002"
     working_dir: /usr/src/app
-    command: "npx shadow-cljs watch app"
+    command: "npx shadow-cljs watch app; sleep 99999"
 
   clojure:
     image: clojure:lein

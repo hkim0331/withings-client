@@ -1,3 +1,5 @@
+USE withings;
+
 DROP TABLE if exists measures;
 CREATE TABLE measures (
   id INTEGER PRIMARY KEY AUTO_INCREMENT,

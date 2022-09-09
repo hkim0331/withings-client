@@ -1,3 +1,5 @@
+use withings;
+
 INSERT INTO measures
 (value, description)
 VALUES

@@ -22,10 +22,13 @@
 ;; lastupdate=int use this  instead of startdate+enddate
 ;; 'https://wbsapi.withings.net/measure'
 
-(defn check-response
- [{resp :body}]
- (when-not (= 200 (:status resp))
-  (throw (Exception. "トークンが古いんじゃ？"))))
+;; (defn check-response
+;;  [resp]
+;;  ;;(log/info "check-response" resp)
+;;  (log/info "status" (:status resp))
+;;  (when-not (= 200 (:status resp))
+;;   (throw (Exception. "トークンが古いんじゃ？")))
+;;  resp)
 
 ;; meastypes?
 (defn meas
@@ -50,8 +53,9 @@
            :startdate  (datetime->second startdate)
            :enddate    (datetime->second enddate)
            :lastupdate (datetime->second lastupdate)}})
-        ;; need validation
-        ;; probe
+        ;;(check-response)
+        (probe #(when-not (= 200 (:status %))
+                  (throw (Exception. "トークンが古いんじゃ？"))))
         (get-in [:body :body :measuregrps]))))
 
 (defn list-measures

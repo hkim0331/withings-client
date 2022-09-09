@@ -9,8 +9,8 @@ generated using Luminus version "4.40"
 ## Prerequisites
 
 * [Leiningen][1] 2.0 or above installed.
-
 * mariadb 10.3 or mysql
+* npm (maybe nodejs)
 
 [1]: https://github.com/technomancy/leiningen
 

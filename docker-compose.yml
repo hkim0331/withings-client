@@ -1,0 +1,45 @@
+version: "3.8"
+
+services:
+
+  cljs:
+    image: raffinate/cljs-ci
+    volumes:
+      - .:/usr/src/app
+      - .m2:/root/.m2
+    ports:
+      - "7002:7002"
+      - "9630:9630"
+    working_dir: /usr/src/app
+    command: "npx shadow-cljs watch app; sleep 99999"
+
+  clojure:
+    image: clojure:lein
+    tty: true
+    environment:
+      LEIN_REPL_PORT: 46123
+      LEIN_REPL_HOST: 0.0.0.0
+    ports:
+      - "3000:3000"
+      - "46123:46123"
+    volumes:
+      - .:/usr/src/app
+      - .m2:/root/.m2
+    working_dir: /usr/src/app
+
+  db:
+    image: mariadb
+    restart: always
+    environment:
+      MARIADB_ROOT_PASSWORD: admin
+      MARIADB_USER: user
+      MARIADB_PASSWORD: secret
+    ports:
+      - "33001:3306"
+    volumes:
+      - ./initdb.d:/docker-entrypoint-initdb.d
+      - withings:/var/lib/mysql
+
+volumes:
+  withings:
+    driver: local

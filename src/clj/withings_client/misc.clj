@@ -17,7 +17,7 @@
    if lacked 'hh:mm:ss' part, redo supplying '00:00:00'.
    Return value is seconds from epoch. integer."
   [s]
-  ;; (log/info "datetime->second s" s)
+  (log/info "datetime->second s" s)
   (when (seq s)
     (let [[date time] (str/split s #" ")]
       (if (seq time)

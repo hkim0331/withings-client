@@ -50,6 +50,7 @@
            :startdate  (datetime->second startdate)
            :enddate    (datetime->second enddate)
            :lastupdate (datetime->second lastupdate)}})
+        ;; この辺でレスポンスボディ見て throw のはず。
         probe
         (get-in [:body :body :measuregrps]))))
 

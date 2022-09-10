@@ -5,12 +5,12 @@ services:
   cljs:
     image: raffinate/cljs-ci
     volumes:
-      - .:/usr/src/app
+      - .:/root/app
       - .m2:/root/.m2
     ports:
       - "7002:7002"
       - "9630:9630"
-    working_dir: /usr/src/app
+    working_dir: /root/app
     command: "npx shadow-cljs watch app"
 
   clojure:
@@ -23,9 +23,9 @@ services:
       - "3000:3000"
       - "46123:46123"
     volumes:
-      - .:/usr/src/app
+      - .:/root/app
       - .m2:/root/.m2
-    working_dir: /usr/src/app
+    working_dir: /root/app
 
   db:
     image: mariadb

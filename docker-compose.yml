@@ -5,12 +5,11 @@ services:
   cljs:
     image: raffinate/cljs-ci
     volumes:
-      - .:/usr/src/app
-      - .m2:/root/.m2
+      - .:/root
     ports:
       - "7002:7002"
       - "9630:9630"
-    working_dir: /usr/src/app
+    working_dir: /root/withings-client
     command: "npx shadow-cljs watch app"
 
   clojure:
@@ -23,9 +22,9 @@ services:
       - "3000:3000"
       - "46123:46123"
     volumes:
-      - .:/usr/src/app
+      - .:/root/withing-client
       - .m2:/root/.m2
-    working_dir: /usr/src/app
+    working_dir: /root/withing-client
 
   db:
     image: mariadb

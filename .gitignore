@@ -20,4 +20,5 @@ profiles.clj
 /*.sh
 /db-dumps/*.sql
 
-
+/.bash_history
+/.vscode-server

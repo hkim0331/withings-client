@@ -4,12 +4,14 @@ services:
 
   cljs:
     image: raffinate/cljs-ci
+#    image: theasp/clojurescript-nodejs:shadow-cljs
     volumes:
-      - .:/root
+      - ${PWD}:/root/app
+      - .m2:/root/.m2
     ports:
       - "7002:7002"
       - "9630:9630"
-    working_dir: /root/withings-client
+    working_dir: /root/app
     command: "npx shadow-cljs watch app"
 
   clojure:
@@ -22,9 +24,9 @@ services:
       - "3000:3000"
       - "46123:46123"
     volumes:
-      - .:/root/withing-client
+      - .:/root/app
       - .m2:/root/.m2
-    working_dir: /root/withing-client
+    working_dir: /root/app
 
   db:
     image: mariadb

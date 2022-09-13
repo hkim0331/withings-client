@@ -9,11 +9,12 @@
 - add `note` column to users table.
 - bar chart of the viable time of access tokens
 - validation about `startdate` and `enddate`
-- async refresh-all
+- async APIs
 - favicon (nginx setting? '/' restriction? )
 - css, color buttons
 - display README.md or bin script usage.
 - docker container AMD64 can rebuild for AARC64 if have Dockerfile?
+
 
 ## 0.11.2 - 2022-09-09
 VScode bug happens again.

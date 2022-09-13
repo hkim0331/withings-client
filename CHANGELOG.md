@@ -15,6 +15,8 @@
 - display README.md or bin script usage.
 - docker container AMD64 can rebuild for AARC64 if have Dockerfile?
 
+## 0.11.3 - 2022-09-09
+- can remote debug using docker compose and vscode using 
 
 ## 0.11.2 - 2022-09-09
 VScode bug happens again.

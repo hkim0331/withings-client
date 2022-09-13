@@ -22,7 +22,15 @@
 ;; lastupdate=int use this  instead of startdate+enddate
 ;; 'https://wbsapi.withings.net/measure'
 
-;; use meastypes?
+;; (defn check-response
+;;  [resp]
+;;  ;;(log/info "check-response" resp)
+;;  (log/info "status" (:status resp))
+;;  (when-not (= 200 (:status resp))
+;;   (throw (Exception. "トークンが古いんじゃ？")))
+;;  resp)
+
+;; meastypes?
 (defn meas
   "get meastype between `startdate` and `enddate`,
   `lastupdate` is also available.

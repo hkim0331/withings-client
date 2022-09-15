@@ -9,7 +9,7 @@
 - add `note` column to users table.
 - bar chart of the viable time of access tokens
 - validation about `startdate` and `enddate`
-- async refresh-all
+- async APIs
 - favicon (nginx setting? '/' restriction? )
 - css, color buttons
 - display README.md or bin script usage.

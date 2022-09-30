@@ -17,6 +17,9 @@
 - catch exceptions. for example, execute weights.sh before login.sh.
 
 
+## 0.11.4 - 2022-09-30
+- git add .clj-kondo
+
 ## 0.11.3 - 2022-09-09
 - can remote debug using docker compose and vscode using
 

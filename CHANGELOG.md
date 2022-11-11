@@ -9,11 +9,36 @@
 - add `note` column to users table.
 - bar chart of the viable time of access tokens
 - validation about `startdate` and `enddate`
-- async refresh-all
+- async APIs
 - favicon (nginx setting? '/' restriction? )
 - css, color buttons
 - display README.md or bin script usage.
 - docker container AMD64 can rebuild for AARC64 if have Dockerfile?
+- catch exceptions. for example, execute weights.sh before login.sh.
+- WARNING #1 -
+
+```
+-----------------------------------------------------------
+ File: /Users/hkim/clojure/withings-client/src/cljs/withings_client/core.cljs:20:4
+--------------------------------------------------------------------------------
+  17 | ;; FIXME: better way?
+  18 | (def redirect-uri
+  19 |   (try
+  20 |     js/redirectUrl
+----------^-------------------------------------------------------
+ unreachable code
+```
+
+## 0.12.0 - 2022-11-11
+- users テーブルに line_id 追加。
+- Makefile にエントリー uberjar, deploy, clean.
+- kohhoh に withings-client.service
+ 
+## 0.11.4 - 2022-09-30
+- git add .clj-kondo
+
+## 0.11.3 - 2022-09-09
+- can remote debug using docker compose and vscode using
 
 ## 0.11.2 - 2022-09-09
 VScode bug happens again.

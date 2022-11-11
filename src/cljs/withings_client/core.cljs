@@ -12,7 +12,7 @@
   (:import
    goog.History))
 
-(def ^:private version "0.11.3")
+(def ^:private version "0.12.0")
 
 ;; FIXME: better way?
 (def redirect-uri
@@ -86,7 +86,8 @@
             [:p {:key key} (symbol key)
              [:br]
              [:input
-              {:value (get-in @session [:user key])
+              {:class "input"
+               :value (get-in @session [:user key])
                :on-change
                #(swap! session
                        assoc-in [:user key] (-> % .-target .-value))}]]))])
@@ -177,7 +178,8 @@
   [:div {:key key}
    [:div [:label {:class "label"} label]]
    [:div {:class "field"}
-    [:input {:value (key (-> @session :home))
+    [:input {:class "input"
+             :value (key (-> @session :home))
              :on-change
              #(swap! session
                      assoc-in
@@ -188,12 +190,16 @@
   [:div
    [:h3 "new"]
    (doall
-    (for [[key label] {:name "name (*)", :cid "cid (*)", :secret "secret (*)",
-                       :belong "belong", :email "email"}]
+    (for [[key label] {:name    "name (*)"
+                       :cid     "cid (*)"
+                       :secret  "secret (*)"
+                       :belong  "belong"
+                       :email   "email"
+                       :line_id "line_id"}]
       (sub-field key label)))
    [:br]
    [create-button]
-   [:p "(*)は必須フィールド。belong, email はカラでもよい。"]
+   [:p "(*)は Withings からのダウンロードに必須。bot_name もいるか？"]
    [:p "create ボタンの後、下に現れるリンクをクリックすると
         acccess トークン、refresh トークンの取得に取り掛かる。
         ページが切り替わるのに 5 秒くらいかかる。非同期通信でスピードアップ予定。"]])

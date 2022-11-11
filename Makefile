@@ -19,8 +19,8 @@ target/default+uberjar/withings-client.jar:
 
 deploy: target/default+uberjar/withings-client.jar
 	scp target/default+uberjar/withings-client.jar ${DEST}:wc/withings-client.jar && \
-	ssh ${DEST} 'sudo systemctl restart wc' && \
-	ssh ${DEST} 'systemctl status wc'
+	ssh ${DEST} 'sudo systemctl restart withings-client' && \
+	ssh ${DEST} 'systemctl status withings-client'
 
 clean:
 	${RM} target/default+uberjar/withings-client.jar

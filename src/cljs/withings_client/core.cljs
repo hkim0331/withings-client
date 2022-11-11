@@ -86,7 +86,8 @@
             [:p {:key key} (symbol key)
              [:br]
              [:input
-              {:value (get-in @session [:user key])
+              {:class "input"
+               :value (get-in @session [:user key])
                :on-change
                #(swap! session
                        assoc-in [:user key] (-> % .-target .-value))}]]))])
@@ -177,7 +178,8 @@
   [:div {:key key}
    [:div [:label {:class "label"} label]]
    [:div {:class "field"}
-    [:input {:value (key (-> @session :home))
+    [:input {:class "input"
+             :value (key (-> @session :home))
              :on-change
              #(swap! session
                      assoc-in

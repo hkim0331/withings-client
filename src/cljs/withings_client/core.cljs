@@ -190,12 +190,13 @@
   [:div
    [:h3 "new"]
    (doall
-    (for [[key label] {:name    "name (*)"
-                       :cid     "cid (*)"
-                       :secret  "secret (*)"
-                       :belong  "belong"
-                       :email   "email"
-                       :line_id "line_id"}]
+    (for [[key label] {:name     "name (*)"
+                       :cid      "cid (*)"
+                       :secret   "secret (*)"
+                       :belong   "belong"
+                       :email    "email"
+                       :line_id  "line_id"
+                       :bot_name "bot_name"}]
       (sub-field key label)))
    [:br]
    [create-button]

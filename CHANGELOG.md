@@ -29,11 +29,16 @@
  unreachable code
 ```
 
+## 0.12.1 - 2022-11-11
+- users テーブルに bot_name 追加。home.cljs もそれに伴い core.cljs に
+  input フィールド追加。
+
 ## 0.12.0 - 2022-11-11
 - users テーブルに line_id 追加。
+- input フィールド幅を Bulma の input クラスで。余白の多さを調整するより、入力値がすべて見えた方がいい。
 - Makefile にエントリー uberjar, deploy, clean.
 - kohhoh に withings-client.service
- 
+
 ## 0.11.4 - 2022-09-30
 - git add .clj-kondo
 

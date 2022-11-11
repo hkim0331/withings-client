@@ -6,4 +6,3 @@ fi
 DB=withings
 CMD="mysql -u user -p -h localhost --port=3306"
 ${CMD} withings < $1
-

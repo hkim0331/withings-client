@@ -6,6 +6,14 @@ CREATE TABLE measures (
   j_desc       VARCHAR(255));
 
 -- no insertion?
+-- when (migrate), following error happened.
+-- ; Execution error (SQLSyntaxErrorException) at com.mysql.cj.jdbc.exceptions.SQLError/createSQLException (SQLError.java:120).
+-- ; You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'INSERT INTO measures
+-- ; (value, description)
+-- ; VALUES
+-- ; (1, 'Weight (kg)'),
+-- ; (4, 'Hei...' at line 9
+
 INSERT INTO measures
 (value, description)
 VALUES
@@ -25,7 +33,7 @@ VALUES
 (77, 'Hydration (kg)'),
 (88, 'Bone Mass (kg)'),
 (91, 'Pulse Wave Velocity (m/s)'),
-(123, 'VO2 max is a numerical measurement of your body’s ability to consume oxygen (ml/min/kg).'),
+(123, 'VO2 max is a numerical measurement of your bodys ability to consume oxygen (ml/min/kg).'),
 (135, 'QRS interval duration based on ECG signal'),
 (136, 'PR interval duration based on ECG signal'),
 (137, 'QT interval duration based on ECG signal'),

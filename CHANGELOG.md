@@ -29,11 +29,9 @@
  unreachable code
 ```
 
-## 0.12.1 - 2022-11-11
-- Makefile にエントリー uberjar, deploy, clean.
-
 ## 0.12.0 - 2022-11-11
 - users テーブルに line_id 追加。
+- Makefile にエントリー uberjar, deploy, clean.
 
 ## 0.11.4 - 2022-09-30
 - git add .clj-kondo

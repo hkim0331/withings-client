@@ -27,7 +27,9 @@
                   :secret nil
                   :belong nil
                   :email  nil
-                  :uri    nil}
+                  :uri    nil
+                  :line_id  nil
+                  :bot_name nil}
            :users {}
            :measures {}
            :data {:lastupdate "2022-09-01"

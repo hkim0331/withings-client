@@ -15,7 +15,35 @@
 - display README.md or bin script usage.
 - docker container AMD64 can rebuild for AARC64 if have Dockerfile?
 - catch exceptions. for example, execute weights.sh before login.sh.
+- WARNING #1 -
 
+```
+-----------------------------------------------------------
+ File: /Users/hkim/clojure/withings-client/src/cljs/withings_client/core.cljs:20:4
+--------------------------------------------------------------------------------
+  17 | ;; FIXME: better way?
+  18 | (def redirect-uri
+  19 |   (try
+  20 |     js/redirectUrl
+----------^-------------------------------------------------------
+ unreachable code
+```
+
+
+## 0.12.2 - 2022-11-14
+- favicon.ico 反映しないか？
+### Bugfix
+- can not update line_id, bot_name field
+  -> updated resources/sql/queries.sql
+## 0.12.1 - 2022-11-11
+- users テーブルに bot_name 追加。home.cljs もそれに伴い core.cljs に
+  input フィールド追加。
+
+## 0.12.0 - 2022-11-11
+- users テーブルに line_id 追加。
+- input フィールド幅を Bulma の input クラスで。余白の多さを調整するより、入力値がすべて見えた方がいい。
+- Makefile にエントリー uberjar, deploy, clean.
+- kohhoh に withings-client.service
 
 ## 0.11.4 - 2022-09-30
 - git add .clj-kondo

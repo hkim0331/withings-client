@@ -1,0 +1,1 @@
+alter table users add column bot_name varchar(255);

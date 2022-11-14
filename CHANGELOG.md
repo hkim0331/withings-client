@@ -31,9 +31,10 @@
 
 
 ## 0.12.2 - 2022-11-14
+- favicon.ico 反映しないか？
 ### Bugfix
 - can not update line_id, bot_name field
-
+  -> updated resources/sql/queries.sql
 ## 0.12.1 - 2022-11-11
 - users テーブルに bot_name 追加。home.cljs もそれに伴い core.cljs に
   input フィールド追加。

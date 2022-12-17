@@ -12,7 +12,7 @@
   (:import
    goog.History))
 
-(def ^:private version "0.12.0")
+(def ^:private version "0.12.2")
 
 ;; FIXME: better way?
 (def redirect-uri
@@ -27,7 +27,10 @@
                   :secret nil
                   :belong nil
                   :email  nil
-                  :uri    nil}
+                  :uri    nil
+                  ;; こっちじゃないか。
+                  :line_id  nil
+                  :bot_name nil}
            :users {}
            :measures {}
            :data {:lastupdate "2022-09-01"

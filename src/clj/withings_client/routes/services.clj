@@ -70,6 +70,7 @@
     (fn [{user :params}]
       (try
         (log/info "/user/:id, (:name user)" (:name user))
+        (log/info "params" user)
         (users/update-user! user)
         (response/ok "updated")
         (catch Exception e (error e))))}]

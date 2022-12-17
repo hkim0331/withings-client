@@ -19,6 +19,12 @@ profiles.clj
 /.shadow-cljs
 /*.sh
 /db-dumps/*.sql
+/db-dumps/old/
 
 /.bash_history
 /.vscode-server
+
+/.calva/output-window/
+/.clj-kondo/.cache/
+/.lsp/.cache/
+

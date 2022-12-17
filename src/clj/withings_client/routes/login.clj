@@ -1,4 +1,4 @@
-(ns withings-client.routes.login
+ht(ns withings-client.routes.login)
   (:require
    [clojure.tools.logging :as log]
    [ring.util.http-response :as response]
@@ -6,7 +6,7 @@
    [withings-client.config :refer [env]]
    [withings-client.layout :as layout]
    [withings-client.middleware :as middleware]
-   #_[withings-client.tokens :as tokens]))
+   #_[withings-client.tokens :as tokens])
 
 (defn login
   [request]

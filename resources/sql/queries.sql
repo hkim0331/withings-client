@@ -8,10 +8,15 @@ VALUES
 -- :name update-user! :! :n
 -- :doc updates an existing user's records
 UPDATE users
-SET name = :name, belong = :belong, email = :email,
-    cid = :cid, secret = :secret,
-    access = :access, refresh = :refresh,
-    valid = :valid,
+SET name     = :name,
+    belong   = :belong,
+    email    = :email,
+    cid      = :cid,
+    secret   = :secret,
+    access   = :access, refresh = :refresh,
+    valid    = :valid,
+    line_id  = :line_id,
+    bot_name = :bot_name,
     updated_at = now()
 WHERE id = :id
 

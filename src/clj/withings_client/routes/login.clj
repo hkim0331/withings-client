@@ -1,4 +1,4 @@
-ht(ns withings-client.routes.login)
+(ns withings-client.routes.login
   (:require
    [clojure.tools.logging :as log]
    [ring.util.http-response :as response]
@@ -6,7 +6,7 @@ ht(ns withings-client.routes.login)
    [withings-client.config :refer [env]]
    [withings-client.layout :as layout]
    [withings-client.middleware :as middleware]
-   #_[withings-client.tokens :as tokens])
+   #_[withings-client.tokens :as tokens]))
 
 (defn login
   [request]
@@ -24,7 +24,7 @@ ht(ns withings-client.routes.login)
            (= password (env :password)))
     (-> (response/found "/home/")
         (assoc-in [:session :identity] login))
-    (-> (response/found "/")
+    (-> (response/found "/login")
         (assoc :session {} :flash "login failure"))))
 
 (defn logout!
@@ -33,7 +33,7 @@ ht(ns withings-client.routes.login)
       (assoc-in [:session :identity] nil)))
 
 (defn login-routes []
-  [""
+  ["" {:get (response/ok "please login")}
    {:middleware [middleware/wrap-formats]}
-   ["/"        {:get login :post login!}]
+   ["/"   {:get login :post login!}]
    ["/logout"  {:get logout!}]])

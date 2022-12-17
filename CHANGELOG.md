@@ -25,7 +25,8 @@
 ----------^-------------------------------------------------------
  unreachable code
 ```
-
+## 0.13.1 - 2022-12-17
+- can login with scripts/login.clj
 
 ## 0.13.0 - 2022-12-17
 reactivate project

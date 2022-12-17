@@ -9,11 +9,9 @@
 - add `note` column to users table.
 - bar chart of the viable time of access tokens
 - validation about `startdate` and `enddate`
-- async APIs
+- refresh-all async
 - favicon (nginx setting? '/' restriction? )
-- css, color buttons
 - display README.md or bin script usage.
-- docker container AMD64 can rebuild for AARC64 if have Dockerfile?
 - catch exceptions. for example, execute weights.sh before login.sh.
 - WARNING #1 -
 
@@ -32,6 +30,7 @@
 ## 0.12.1 - 2022-11-11
 - users テーブルに bot_name 追加。home.cljs もそれに伴い core.cljs に
   input フィールド追加。
+- update users set bot_name='SAGA_JUDO' where id>20;
 
 ## 0.12.0 - 2022-11-11
 - users テーブルに line_id 追加。

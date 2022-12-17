@@ -22,3 +22,8 @@ profiles.clj
 
 /.bash_history
 /.vscode-server
+
+/.calva/output-window/
+/.clj-kondo/.cache/
+/.lsp/.cache/
+

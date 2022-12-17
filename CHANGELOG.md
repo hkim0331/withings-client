@@ -14,7 +14,6 @@
 - display README.md or bin script usage.
 - catch exceptions. for example, execute weights.sh before login.sh.
 - WARNING #1 -
-
 ```
 -----------------------------------------------------------
  File: /Users/hkim/clojure/withings-client/src/cljs/withings_client/core.cljs:20:4
@@ -27,6 +26,8 @@
  unreachable code
 ```
 
+## 0.13.0 - 2022-12-17
+- reactivate project
 
 ## 0.12.2 - 2022-11-14
 - favicon.ico 反映しないか？

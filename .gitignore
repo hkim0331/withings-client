@@ -27,4 +27,3 @@ profiles.clj
 /.calva/output-window/
 /.clj-kondo/.cache/
 /.lsp/.cache/
-

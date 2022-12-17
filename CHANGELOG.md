@@ -26,6 +26,7 @@
  unreachable code
 ```
 
+
 ## 0.13.0 - 2022-12-17
 reactivate project
 ### migration
@@ -33,14 +34,15 @@ reactivate project
 ### CHANGED
 - bin/wc-date-value.clj: yyyy-mm-dd HH:mm:ss, ss 追加。
   体重も ww.w に直したい。93.60000000000001 のような表示が混ざる。
-### babashka
+### kohhou にbabashka を準備
 ```
-sudo bash < <(curl -s https://raw.githubusercontent.com/babashka/babashka/master/install)
+kohhoh$ sudo bash < <(curl -s https://raw.githubusercontent.com/babashka/babashka/master/install)
 Downloading https://github.com/babashka/babashka/releases/download/v1.0.168/babashka-1.0.168-linux-amd64-static.tar.gz to /tmp/tmp.cWrCVk1z7i
 Successfully installed bb in /usr/local/bin
 ```
 ### Added
-- bin/update-meas.clj
+- bin/update-meas.clj: login, fetch, store できること。
+
 
 ## 0.12.2 - 2022-11-14
 - favicon.ico 反映しないか？

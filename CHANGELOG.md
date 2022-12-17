@@ -27,7 +27,20 @@
 ```
 
 ## 0.13.0 - 2022-12-17
-- reactivate project
+reactivate project
+### migration
+- (#'user/migrate) でできず、手動でマイグレートした。
+### CHANGED
+- bin/wc-date-value.clj: yyyy-mm-dd HH:mm:ss, ss 追加。
+  体重も ww.w に直したい。93.60000000000001 のような表示が混ざる。
+### babashka
+```
+sudo bash < <(curl -s https://raw.githubusercontent.com/babashka/babashka/master/install)
+Downloading https://github.com/babashka/babashka/releases/download/v1.0.168/babashka-1.0.168-linux-amd64-static.tar.gz to /tmp/tmp.cWrCVk1z7i
+Successfully installed bb in /usr/local/bin
+```
+### Added
+- bin/update-meas.clj
 
 ## 0.12.2 - 2022-11-14
 - favicon.ico 反映しないか？

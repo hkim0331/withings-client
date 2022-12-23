@@ -26,7 +26,7 @@
   ;; tokens. use also when creating user entry
   ["/token/:id/refresh"
    {:post (fn [{{:keys [id]} :path-params}]
-            (log/info "/token/:n/refresh" id)
+            (log/info "/token/:id/refresh" id)
             (try
               (tokens/refresh-and-restore-id! id)
               (response/ok "success")

@@ -470,7 +470,10 @@
 (defn fetch-users! []
   (GET "/api/users" {:handler #(swap! session assoc :users %)}))
 
-(defn fetch-measures! []
+(defn fetch-measures!
+  "Get English/Japanese descriptions of measure types.
+   Many Japanese descriptions are empty."
+  []
   (GET "/api/measures" {:handler #(swap! session assoc :measures %)}))
 
 (defn ^:dev/after-load mount-components []

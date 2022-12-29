@@ -11,9 +11,13 @@
 - validation about `startdate` and `enddate`
 - display README.md or bin script usage.
 - catch exceptions. for example, execute weights.sh before login.sh.
+- measures テーブルの value コラムは meas テーブルと合わせた type コラムであるべき。
 
 
-## 0.14.0-SNAPSHOT
+## 0.14.1 - 2022-12-29
+### Fixed
+- フェッチする項目表示がずれてた。core.cljs/measure-name
+### Changed
 - update Makefile /target/default+uberjar -> /target/uberjar
 - core.cljs (def redirect-uri "https://...") no warning.
 ```

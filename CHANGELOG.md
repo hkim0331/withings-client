@@ -15,6 +15,9 @@
 - fetch 問い合わせ中は「お待ちください」を表示する。
 - fetch エラーはエラーの内容を表示する。
 
+## 0.14.2-SNAPSHOT
+### Changed
+- [:button "button"] から [:input.button {:value "button"}] に変更した。
 
 ## 0.14.1 - 2022-12-29
 ### Fixed

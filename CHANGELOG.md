@@ -9,10 +9,13 @@
 - add `note` column to users table.
 - bar chart of the viable time of access tokens
 - validation about `startdate` and `enddate`
-- refresh-all async
 - display README.md or bin script usage.
 - catch exceptions. for example, execute weights.sh before login.sh.
-- WARNING #1 -
+
+
+## 0.14.0-SNAPSHOT
+- update Makefile /target/default+uberjar -> /target/uberjar
+- core.cljs (def redirect-uri "https://...") no warning.
 ```
 -----------------------------------------------------------
  File: /Users/hkim/clojure/withings-client/src/cljs/withings_client/core.cljs:20:4
@@ -24,8 +27,6 @@
 ----------^-------------------------------------------------------
  unreachable code
 ```
-
-## 0.14.0-SNAPSHOT
 
 ## 0.13.2 - 2022-12-29
 - libraries upgraded

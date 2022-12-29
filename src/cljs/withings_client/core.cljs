@@ -12,7 +12,7 @@
   (:import
    goog.History))
 
-(def ^:private version "0.14.1")
+(def ^:private version "0.14.2")
 
 ;; FIXME: better way?
 ;; (def redirect-uri
@@ -98,9 +98,8 @@
 
 (defn update-button
   []
-  [:button
-   {:class "button is-primary is-small"
-    :on-click
+  [:button.button.is-primary.is-small
+   {:on-click
     (fn [^js/Event e]
       ;; (js/alert (str (:user @session)))
       (POST (str "/api/user/" (get-in @session [:user :id]))
@@ -113,9 +112,8 @@
 
 (defn delete-button
   []
-  [:button
-   {:class "button is-danger is-small"
-    :on-click
+  [:button.button.is-primary.is-small
+   {:on-click
     (fn []
       (and (js/confirm "are you OK?")
            (POST (str "/api/user/" (-> @session :user :id) "/delete")
@@ -168,13 +166,13 @@
 (defn create-button
   []
   [:div {:class "field"}
-   [:button {:class "button is-primary is-small"
-             :on-click
-             #(let [params (select-keys
-                            (-> @session :home)
-                            [:name :cid :secret :belong :email])]
-                (create-user! params)
-                (swap! session assoc-in [:home :uri] (create-url)))}
+   [:button.button.is-primary.is-small
+    {:on-click
+     #(let [params (select-keys
+                    (-> @session :home)
+                    [:name :cid :secret :belong :email])]
+        (create-user! params)
+        (swap! session assoc-in [:home :uri] (create-url)))}
     "create"]])
 
 (defn sub-field
@@ -217,9 +215,8 @@
 
 (defn refresh-button
   [user]
-  [:button
-   {:class "button is-primary is-small"
-    :on-click
+  [:button.button.is-primary.is-small
+   {:on-click
     (fn [_] (POST (str "/api/token/" (:id user) "/refresh")
               {:format :json
                :handler (fn [_]
@@ -230,9 +227,8 @@
 
 (defn edit-button
   [user]
-  [:button
-   {:class "button is-primary is-small"
-    :on-click #(swap! session assoc :user user :page :user)}
+  [:button.button.is-primary.is-small
+   {:on-click #(swap! session assoc :user user :page :user)}
    "edit"])
 
 ;; used in users-component only.
@@ -294,15 +290,16 @@
   [:div
    [:select {:name "id"
              :on-change
-             (fn [e] (swap! session assoc-in [:data :id]
-                            (-> e .-target .-value)))}
+             (fn [e]
+               (swap! session assoc-in [:data :results] nil)
+               (swap! session assoc-in [:data :id]
+                      (-> e .-target .-value)))}
     (for [user (cons {:id 0 :name "氏名"}
                      (->> @session
                           :users
                           (filter :valid)))]
       [:option {:key (:id user) :value (:id user)} (:name user)])]])
 
-;; FIXME: 表示が悪い。
 (defn select-meatype
   []
   [:div
@@ -310,6 +307,7 @@
              :on-change
              (fn [e]
                ;; (js/alert (-> e .-target .-value))
+               (swap! session assoc-in [:data :results] nil)
                (swap! session assoc-in [:data :meastype]
                       (-> e .-target .-value)))}
     (for [item (cons {:id 0 :description "測定項目"} (:measures @session))]
@@ -351,44 +349,25 @@
 (defn fetch-button
   []
   [:div
-   [:button
-    {:class "button is-primary is-small"
-     :on-click
-     #(POST "/api/meas"
-        {:format :json
-         :params {:id         (-> @session :data :id)
-                  :meastype   (-> @session :data :meastype)
-                  :startdate  (-> @session :data :startdate)
-                  :enddate    (-> @session :data :enddate)
-                  :lastupdate (-> @session :data :lastupdate)}
-         :handler
-         (fn [res]
-           (swap! session assoc-in [:data :results] res))
-         :error-handler
-         (fn [e]
-           (js/alert (-> e :response :body)))})}
+   [:button.button.is-primary.is-small
+    {:on-click
+     (fn []
+       ;; no effect
+       ;; (swap! session assoc-in [:date :results] "fetching...")
+       (POST "/api/meas"
+         {:format :json
+          :params {:id         (-> @session :data :id)
+                   :meastype   (-> @session :data :meastype)
+                   :startdate  (-> @session :data :startdate)
+                   :enddate    (-> @session :data :enddate)
+                   :lastupdate (-> @session :data :lastupdate)}
+          :handler
+          (fn [res]
+            (swap! session assoc-in [:data :results] res))
+          :error-handler
+          (fn [e]
+            (js/alert (-> e :response :body)))}))}
     "fetch"]])
-
-(defn input-component
-  "id, meatype, startdate, enddate are required to work.
-   date must be in  `yyyy-MM-dd hh:mm:ss` format.
-   FIXME: validation."
-  []
-  [:div
-   [:h3 "Data"]
-   [select-id]
-   [select-meatype]
-   [input-startdate-enddate]
-   [:p "or"]
-   [input-lastupdate]
-   [:br]
-   [fetch-button]])
-
-;; params has `created` param. which should be displayed?
-(defn output-one
-  [n {:keys [date measures]}]
-  [:div {:key n}
-   (str (ts->date date) ", " (value->float 1 measures))])
 
 (defn user-name
   [id]
@@ -406,14 +385,39 @@
        first
        :description))
 
+(defn input-component
+  "id, meatype, startdate, enddate are required to work.
+   date must be in  `yyyy-MM-dd hh:mm:ss` format.
+   FIXME: validation."
+  []
+  [:div
+   [:h3 "Data"]
+   [select-id]
+   [select-meatype]
+   [input-startdate-enddate]
+   [:p "or"]
+   [input-lastupdate]
+   [:br]
+   [fetch-button]
+   #_[:div.columns
+    [:div.column.is-one-quarter
+     (-> @session :data :id js/parseInt user-name)
+     ", "
+     (-> @session :data :meastype js/parseInt measure-name)]
+    [:div.column [fetch-button]]]])
+
+;; params has `created` param. which should be displayed?
+(defn output-one
+  [n {:keys [date measures]}]
+  [:div {:key n}
+   (str (ts->date date) ", " (value->float 1 measures))])
+
 (defn output-component
   []
   [:div
-   [:h3 "fetched ("
-    (-> @session :data :id js/parseInt user-name)
+   [:h3 (-> @session :data :id js/parseInt user-name)
     ", "
-    (-> @session :data :meastype js/parseInt measure-name)
-    ")"]
+    (-> @session :data :meastype js/parseInt measure-name)]
    (if (seq (-> @session :data :results))
      (for [[n data] (map-indexed
                      vector

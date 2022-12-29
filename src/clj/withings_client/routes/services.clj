@@ -18,9 +18,9 @@
 
   ["/error"
    {:get (fn [_]
-          (try
-           (throw (Exception. "error occurs"))
-           (catch Exception e (error e))))}]
+           (try
+             (throw (Exception. "error occurs"))
+             (catch Exception e (error e))))}]
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;; tokens. use also when creating user entry
@@ -95,7 +95,6 @@
   ;; measures
   ["/measures"
    {:get (fn [_] (response/ok (measures/list-measures)))}]
-
   ["/meas"
    {:post (fn [{params :params}]
             (log/info "/meas " params)

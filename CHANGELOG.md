@@ -11,8 +11,13 @@
 - validation about `startdate` and `enddate`
 - display README.md or bin script usage.
 - catch exceptions. for example, execute weights.sh before login.sh.
-- measures テーブルの value コラムは meas テーブルと合わせた type コラムであるべき。
 
+
+## 0.14.2 - 2022-12-30
+### Added
+- Data: name, meatype をセレクトすると output フィールドをクリアする。
+### Changed
+- [:button "button"] から [:input.button {:value "button"}] に変更した。
 
 ## 0.14.1 - 2022-12-29
 ### Fixed

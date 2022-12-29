@@ -9,11 +9,17 @@
 - add `note` column to users table.
 - bar chart of the viable time of access tokens
 - validation about `startdate` and `enddate`
-- refresh-all async
-- favicon (nginx setting? '/' restriction? )
 - display README.md or bin script usage.
 - catch exceptions. for example, execute weights.sh before login.sh.
-- WARNING #1 -
+- measures テーブルの value コラムは meas テーブルと合わせた type コラムであるべき。
+
+
+## 0.14.1 - 2022-12-29
+### Fixed
+- フェッチする項目表示がずれてた。core.cljs/measure-name
+### Changed
+- update Makefile /target/default+uberjar -> /target/uberjar
+- core.cljs (def redirect-uri "https://...") no warning.
 ```
 -----------------------------------------------------------
  File: /Users/hkim/clojure/withings-client/src/cljs/withings_client/core.cljs:20:4
@@ -25,6 +31,10 @@
 ----------^-------------------------------------------------------
  unreachable code
 ```
+
+## 0.13.2 - 2022-12-29
+- libraries upgraded
+
 ## 0.13.1 - 2022-12-17
 - can login with scripts/login.clj
 

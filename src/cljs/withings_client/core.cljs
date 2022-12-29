@@ -12,13 +12,15 @@
   (:import
    goog.History))
 
-(def ^:private version "0.13.1")
+(def ^:private version "0.14.1")
 
 ;; FIXME: better way?
-(def redirect-uri
-  (try
-    js/redirectUrl
-    (catch js/Error _ "https://wc.kohhoh.jp/callback")))
+;; (def redirect-uri
+;;   (try
+;;     js/redirectUrl
+;;     (catch js/Error _ "https://wc.kohhoh.jp/callback")))
+
+(def redirect-uri "https://wc.kohhoh.jp/callback")
 
 (defonce session
   (r/atom {:page :home
@@ -28,7 +30,6 @@
                   :belong nil
                   :email  nil
                   :uri    nil
-                  ;; こっちじゃないか。
                   :line_id  nil
                   :bot_name nil}
            :users {}
@@ -275,9 +276,8 @@
 ;; ------------------------------------------------------------
 ;; data-page
 ;;
-;; misc functions
 (defn ts->date
-  "after converting to milli, doing jobs."
+  "After converting to milli, return with 24-hour time format."
   [ts]
   (-> (* 1000 ts)
       js/Date.
@@ -288,6 +288,7 @@
   [digits [{:keys [value unit]}]]
   (-> (/ value (pow 10 (- unit)))
       (.toFixed digits)))
+
 (defn select-id
   []
   [:div
@@ -295,24 +296,25 @@
              :on-change
              (fn [e] (swap! session assoc-in [:data :id]
                             (-> e .-target .-value)))}
-    (for [user (cons {:id 0 :name "選んでください"}
+    (for [user (cons {:id 0 :name "氏名"}
                      (->> @session
                           :users
                           (filter :valid)))]
       [:option {:key (:id user) :value (:id user)} (:name user)])]])
 
+;; FIXME: 表示が悪い。
 (defn select-meatype
   []
   [:div
    [:select {:name "meastype"
              :on-change
              (fn [e]
+               ;; (js/alert (-> e .-target .-value))
                (swap! session assoc-in [:data :meastype]
                       (-> e .-target .-value)))}
-    (for [mea (cons {:id 0 :description "選んでください"}
-                    (-> @session :measures))]
-      [:option {:key (str "m" (:id mea)) :value (:value mea)}
-       (:description mea)])]])
+    (for [item (cons {:id 0 :description "測定項目"} (:measures @session))]
+      [:option {:key (str "m" (:id item)) :value (:value item)}
+       (str (:value item) " " (:description item))])]])
 
 (defn input-startdate-enddate
   []
@@ -397,10 +399,10 @@
        :name))
 
 (defn measure-name
-  [id]
+  [n]
   (->> @session
        :measures
-       (filter #(= id (:id %)))
+       (filter #(= n (:value %))) ;; fixed 2022-12-29
        first
        :description))
 
@@ -468,8 +470,11 @@
 (defn fetch-users! []
   (GET "/api/users" {:handler #(swap! session assoc :users %)}))
 
-(defn fetch-measures! []
-  (GET "/api/meas" {:handler #(swap! session assoc :measures %)}))
+(defn fetch-measures!
+  "Get English/Japanese descriptions of measure types.
+   Many Japanese descriptions are empty."
+  []
+  (GET "/api/measures" {:handler #(swap! session assoc :measures %)}))
 
 (defn ^:dev/after-load mount-components []
   (rdom/render [#'navbar] (.getElementById js/document "navbar"))

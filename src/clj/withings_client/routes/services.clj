@@ -13,7 +13,7 @@
 
 (defn service-routes []
  ["/api"
-  {:middleware [middleware/wrap-restricted
+  {:middleware [;; middleware/wrap-restricted
                 middleware/wrap-formats]}
 
   ["/error"
@@ -26,7 +26,7 @@
   ;; tokens. use also when creating user entry
   ["/token/:id/refresh"
    {:post (fn [{{:keys [id]} :path-params}]
-            (log/info "/token/:n/refresh" id)
+            (log/info "/token/:id/refresh" id)
             (try
               (tokens/refresh-and-restore-id! id)
               (response/ok "success")
@@ -93,11 +93,12 @@
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;; measures
+  ["/measures"
+   {:get (fn [_] (response/ok (measures/list-measures)))}]
+
   ["/meas"
    {:post (fn [{params :params}]
             (log/info "/meas " params)
             (try
               (response/ok (measures/meas params))
-              (catch Exception e (error e))))
-    :get (fn [_] (response/ok (measures/list-measures)))}]])
-
+              (catch Exception e (error e))))}]])

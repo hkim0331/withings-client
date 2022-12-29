@@ -98,8 +98,8 @@
 
 (defn update-button
   []
-  [:button
-   {:class "button is-primary is-small"
+  [:input.button.is-primaruy.is-small
+   {:value "update"
     :on-click
     (fn [^js/Event e]
       ;; (js/alert (str (:user @session)))
@@ -108,13 +108,12 @@
          :handler (fn [_]
                     (fetch-users!)
                     (swap! session assoc :page :home))
-         :error-handler (fn [] (js/alert (.getMessage e)))}))}
-   "update"])
+         :error-handler (fn [] (js/alert (.getMessage e)))}))}])
 
 (defn delete-button
   []
-  [:button
-   {:class "button is-danger is-small"
+  [:input.button.is-primaruy.is-small
+   {:value "delete"
     :on-click
     (fn []
       (and (js/confirm "are you OK?")
@@ -123,8 +122,7 @@
                          (fetch-users!)
                          (swap! session assoc :page :home))
               :error-handler
-              (fn [^js/Event e] (js/alert (.getMessage e)))})))}
-   "delete"])
+              (fn [^js/Event e] (js/alert (.getMessage e)))})))}])
 
 (defn user-page
   []
@@ -168,14 +166,14 @@
 (defn create-button
   []
   [:div {:class "field"}
-   [:button {:class "button is-primary is-small"
-             :on-click
-             #(let [params (select-keys
-                            (-> @session :home)
-                            [:name :cid :secret :belong :email])]
-                (create-user! params)
-                (swap! session assoc-in [:home :uri] (create-url)))}
-    "create"]])
+   [:input.button.is-primary.is-small
+       {:value "create"
+        :on-click
+        #(let [params (select-keys
+                       (-> @session :home)
+                       [:name :cid :secret :belong :email])]
+           (create-user! params)
+           (swap! session assoc-in [:home :uri] (create-url)))}]])
 
 (defn sub-field
   [key label]
@@ -217,23 +215,21 @@
 
 (defn refresh-button
   [user]
-  [:button
-   {:class "button is-primary is-small"
+  [:input.button.is-primary.is-small
+   {:value "refresh"
     :on-click
     (fn [_] (POST (str "/api/token/" (:id user) "/refresh")
               {:format :json
                :handler (fn [_]
                           (fetch-users!)
                           (js/alert "リフレッシュ完了。"))
-               :error-handler #(js/alert "失敗。")}))}
-   "refresh"])
+               :error-handler #(js/alert "失敗。")}))}])
 
 (defn edit-button
   [user]
-  [:button
-   {:class "button is-primary is-small"
-    :on-click #(swap! session assoc :user user :page :user)}
-   "edit"])
+  [:input.button.is-primary.is-small
+   {:value "edit"
+    :on-click #(swap! session assoc :user user :page :user)}])
 
 ;; used in users-component only.
 (defn tm
@@ -351,8 +347,8 @@
 (defn fetch-button
   []
   [:div
-   [:button
-    {:class "button is-primary is-small"
+   [:input.button.is-primary.is-small
+    {:value "fetch"
      :on-click
      #(POST "/api/meas"
         {:format :json
@@ -366,8 +362,7 @@
            (swap! session assoc-in [:data :results] res))
          :error-handler
          (fn [e]
-           (js/alert (-> e :response :body)))})}
-    "fetch"]])
+           (js/alert (-> e :response :body)))})}]])
 
 (defn input-component
   "id, meatype, startdate, enddate are required to work.

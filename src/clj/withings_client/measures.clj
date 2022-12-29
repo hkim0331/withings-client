@@ -13,13 +13,13 @@
 ;; --header "Authorization: Bearer YOUR_ACCESS_TOKEN"
 ;; --data
 ;; action=getmeas&
-;; meastype=meastype&  1 weight
+;; meastype=meastype&   1 weight
 ;; meastypes=meastypes& list of meastype
-;; category=category& 1 for realmeasure 2 for user objectives
+;; category=category&   1 for realmeasure 2 for user objectives
 ;; startdate=startdate&
 ;; enddate=enddate&
 ;; offset=offset&
-;; lastupdate=int use this  instead of startdate+enddate
+;; lastupdate=int       use this  instead of startdate+enddate
 ;; 'https://wbsapi.withings.net/measure'
 
 ;; use meastypes?
@@ -49,6 +49,7 @@
         (probe #(when-not (= 200 (:status %))
                   (throw (Exception. "トークンが古いんじゃ？"))))
         (get-in [:body :body :measuregrps]))))
+
 
 (defn list-measures
   "returns measures items in vector"

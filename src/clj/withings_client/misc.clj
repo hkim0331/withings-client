@@ -22,10 +22,14 @@
     (let [[date time] (str/split s #" ")]
       (if (seq time)
         (-> (str date "T" time)
-            jt/to-sql-timestamp
+            jt/to-sql-timestamp ;; jt/sql-timestamp
             jt/to-millis-from-epoch
             (quot 1000))
         (datetime->second (str date " 00:00:00"))))))
+
+(comment
+  (datetime->second "2022-12-01")
+  :rcf)
 
 (defn second->datetime
   "returns a string like '2022-08-31T12:34:56'.

@@ -12,6 +12,9 @@
 - display README.md or bin script usage.
 - catch exceptions. for example, execute weights.sh before login.sh.
 
+## 0.15.3-SNAPSHOT
+### Changed
+- /spi/meas uses api `meastypes`
 
 ## 0.14.2 - 2022-12-30
 ### Added

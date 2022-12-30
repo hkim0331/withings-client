@@ -29,7 +29,7 @@
    retrieve `access-token` from `users` table by `id`.
    it is required to fetch meas from withings.
    Returns the results in json format."
-  [{:keys [id meastype meastypes startdate enddate lastupdate]}]
+  [{:keys [id meastype startdate enddate lastupdate]}]
   (let [{:keys [access]} (users/get-user id)]
     (log/info "meas" id meastype startdate enddate lastupdate)
     (log/info "access token" (abbrev access))
@@ -37,19 +37,18 @@
          meas-uri
          {:as :json
           ;; CAUTION: "authorization" must be lower characters!
-          :headers {"authorization" (str "Bearer " access)}
-          ;; :oauth-token access
+          ;; :headers {"authorization" (str "Bearer " access)}
+          :oauth-token access
           :query-params
           {:action     "getmeas"
            :meastype   meastype
-           :meastypes  meastypes
            :category   1
            :startdate  (datetime->second startdate)
            :enddate    (datetime->second enddate)
            :lastupdate (datetime->second lastupdate)}})
-        (probe #(if (= 200 (:status %))
-                  (throw (Exception. "トークンが古いんじゃ？"))
-                  (log/info (:body %))))
+        (probe #(when-not (= 200 (:status %))
+                  (log/info "error meas")
+                  (throw (Exception. "トークンが古いんじゃ？"))))
         (get-in [:body :body :measuregrps]))))
 
 (defn list-measures

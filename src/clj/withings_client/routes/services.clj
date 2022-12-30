@@ -101,7 +101,7 @@
             (try
               (response/ok (measures/meas params))
               (catch Exception e (error e))))}]
-  ["/meas-multi"
+  #_["/meas-multi"
    {:post (fn [{params :params}]
             (log/info "/meas-multi " params)
             (try

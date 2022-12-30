@@ -21,7 +21,7 @@
 ;; offset=offset&
 ;; lastupdate=int       use this  instead of startdate+enddate
 ;; 'https://wbsapi.withings.net/measure'
-
+;; curl --header "Authorization: Bearer YOUR_ACCESS_TOKEN" --data "action=getmeas&meastype=meastype&meastypes=meastypes&category=category&startdate=startdate&enddate=enddate&offset=offset&lastupdate=int" 'https://wbsapi.withings.net/measure'
 ;; use meastypes?
 (defn meas
   "get meastype between `startdate` and `enddate`,
@@ -29,27 +29,31 @@
    retrieve `access-token` from `users` table by `id`.
    it is required to fetch meas from withings.
    Returns the results in json format."
-  [{:keys [id meastype startdate enddate lastupdate]}]
-  (let [{:keys [access]} (users/get-user id)]
-    (log/info "meas" id meastype startdate enddate lastupdate)
-    (log/info "access token" (abbrev access))
+  [{:keys [id meastype startdate enddate lastupdate] :as params}]
+  (let [{:keys [access]} (users/get-user id)
+        query-params
+        (into {} (filter second
+                         {:action     "getmeas"
+                          :meastype   meastype
+                          :category   1
+                          :startdate  (datetime->second startdate)
+                          :enddate    (datetime->second enddate)
+                          :lastupdate (datetime->second lastupdate)}))]
+    ;; (log/info "meas" id meastype startdate enddate lastupdate)
+    ;; (log/info "params" params)
+    (log/info "meas query-params:" query-params)
+    (log/info "access token:" (abbrev access))
     (-> (hc/post
          meas-uri
          {:as :json
           ;; CAUTION: "authorization" must be lower characters!
-          :headers {"authorization" (str "Bearer " access)}
-          :query-params
-          {:action     "getmeas"
-           :meastype   meastype
-           :category   1
-           :startdate  (datetime->second startdate)
-           :enddate    (datetime->second enddate)
-           :lastupdate (datetime->second lastupdate)}})
-        ;;(check-response)
+          ;; :headers {"authorization" (str "Bearer " access)}
+          :oauth-token  access
+          :query-params query-params})
         (probe #(when-not (= 200 (:status %))
+                  (log/info "error meas")
                   (throw (Exception. "トークンが古いんじゃ？"))))
         (get-in [:body :body :measuregrps]))))
-
 
 (defn list-measures
   "returns measures items in vector"

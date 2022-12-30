@@ -12,6 +12,10 @@
 - display README.md or bin script usage.
 - catch exceptions. for example, execute weights.sh before login.sh.
 
+## 0.15.5 - 2022-12-30
+### Changed
+- core.clj: remove nil values from `query-params`.
+
 ## 0.15.3-SNAPSHOT
 ### Changed
 - /spi/meas uses api `meastypes`

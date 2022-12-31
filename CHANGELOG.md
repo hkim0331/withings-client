@@ -11,6 +11,13 @@
 - validation about `startdate` and `enddate`
 - display README.md or bin script usage.
 - catch exceptions. for example, execute weights.sh before login.sh.
+- project name, token-manager?
+
+## 0.16.0 - 2022-12-31
+- dividing namespaces.
+- wc
+- tokens
+- show access codes on home-page.
 
 ## 0.15.5 - 2022-12-30
 ### Changed

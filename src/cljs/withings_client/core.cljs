@@ -242,6 +242,9 @@
   [key e]
   [:div {:key key :class "column"} e])
 
+(defn shorten [n s]
+  (str (subs s 0 n) "..."))
+
 (defn users-component []
   [:div
    [:h2 "users"]
@@ -254,6 +257,7 @@
                                    (:id user)
                                    (:name user)
                                    (:belong user)
+                                   (shorten 6 (:access user))
                                    (tm (:updated_at user))
                                    [refresh-button user]
                                    [edit-button user]])]

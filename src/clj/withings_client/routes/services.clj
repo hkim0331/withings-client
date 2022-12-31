@@ -13,7 +13,7 @@
 
 (defn service-routes []
  ["/api"
-  {:middleware [;; middleware/wrap-restricted
+  {:middleware [middleware/wrap-restricted
                 middleware/wrap-formats]}
 
   ["/error"

@@ -13,6 +13,9 @@
 - catch exceptions. for example, execute weights.sh before login.sh.
 - project name, token-manager?
 
+## 0.16.1 - 2022-12-31
+- resumed restricted mode.
+
 ## 0.16.0 - 2022-12-31
 - dividing namespaces.
 - wc

@@ -101,9 +101,10 @@
             (try
               (response/ok (measures/meas params))
               (catch Exception e (error e))))}]
+  ;; can not.
   #_["/meas-multi"
-   {:post (fn [{params :params}]
-            (log/info "/meas-multi " params)
-            (try
-              (response/ok (measures/meas-multi params))
-              (catch Exception e (error e))))}]])
+     {:post (fn [{params :params}]
+              (log/info "/meas-multi " params)
+              (try
+                (response/ok (measures/meas-multi params))
+                (catch Exception e (error e))))}]])

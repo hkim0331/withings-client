@@ -12,14 +12,13 @@
   (:import
    goog.History))
 
-(def ^:private version "0.16.1")
+(def ^:private version "0.16.2")
 
 ;; FIXME: better way?
 ;; (def redirect-uri
 ;;   (try
 ;;     js/redirectUrl
 ;;     (catch js/Error _ "https://wc.kohhoh.jp/callback")))
-
 (def redirect-uri "https://wc.kohhoh.jp/callback")
 
 (defonce session
@@ -35,7 +34,7 @@
            :users {}
            :measures {}
            :data {:lastupdate "2022-09-01"
-                  :startdate  "2022-01-01 00:00:00"
+                  :startdate  "2022-09-01 00:00:00"
                   :enddate    "2022-12-31 23:59:59"
                   :results    nil}
            :user {}})) ;; user-page
@@ -202,10 +201,12 @@
       (sub-field key label)))
    [:br]
    [create-button]
-   [:p "(*)は Withings からのダウンロードに必須。bot_name もいるか？"]
+   [:p "(*)は Withings からのダウンロードに必須。
+        line_id/bot_name も line push に必要。"]
    [:p "create ボタンの後、下に現れるリンクをクリックすると
         acccess トークン、refresh トークンの取得に取り掛かる。
-        ページが切り替わるのに 5 秒くらいかかる。非同期通信でスピードアップ予定。"]])
+        ページが切り替わるのに 5 秒くらいかかる。
+        withings-client/refresh! は並行処理でスピードアップ達成できた。"]])
 
 (defn link-component []
   [:div
@@ -248,7 +249,8 @@
 (defn users-component []
   [:div
    [:h2 "users"]
-   [:p "アクセストークンは 10800 秒（3時間）で切れます。"]
+   [:p "アクセストークンは 10800 秒（3時間）で切れるとなってるが、
+        もっと短い時間で切れてるんじゃ？"]
    (doall
     (for [user (-> @session :users)]
       [:div {:class "columns" :key (:id user)}

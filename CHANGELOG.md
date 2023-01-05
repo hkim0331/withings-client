@@ -9,6 +9,7 @@
 - add `note` column to users table.
 - bar chart of the viable time of access tokens
 - validation about `startdate` and `enddate`
+
 - display README.md or bin script usage.
 - catch exceptions. for example, execute weights.sh before login.sh.
 - project name, token-manager?
@@ -78,10 +79,11 @@ Successfully installed bb in /usr/local/bin
 
 
 ## 0.12.2 - 2022-11-14
-- favicon.ico 反映しないか？
+- favicon.ico https://qiita.com/catatsuy/items/7589a3d7a10099f916ba
 ### Bugfix
 - can not update line_id, bot_name field
   -> updated resources/sql/queries.sql
+
 ## 0.12.1 - 2022-11-11
 - users テーブルに bot_name 追加。home.cljs もそれに伴い core.cljs に
   input フィールド追加。

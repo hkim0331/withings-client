@@ -488,7 +488,7 @@
 
 (defn ^:dev/after-load mount-components []
   (rdom/render [#'navbar] (.getElementById js/document "navbar"))
-  (rdom/render [#'page] (.getElementById js/document "app")))
+  (rdom/render [#'page]   (.getElementById js/document "app")))
 
 (defn init! []
   (ajax/load-interceptors!)

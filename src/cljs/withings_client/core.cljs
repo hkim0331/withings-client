@@ -33,9 +33,9 @@
                   :bot_name nil}
            :users {}
            :measures {}
-           :data {:lastupdate "2022-09-01"
-                  :startdate  "2022-09-01 00:00:00"
-                  :enddate    "2022-12-31 23:59:59"
+           :data {:lastupdate "2023-01-01"
+                  :startdate  "2022-10-01 00:00:00"
+                  :enddate    "2023-02-28 23:59:59"
                   :results    nil}
            :user {}})) ;; user-page
 

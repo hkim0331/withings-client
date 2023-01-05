@@ -11,12 +11,9 @@
 - validation about `startdate` and `enddate`
 - async APIs
 - favicon (nginx setting? '/' restriction? )
-- css, color buttons
 - display README.md or bin script usage.
-- docker container AMD64 can rebuild for AARC64 if have Dockerfile?
 - catch exceptions. for example, execute weights.sh before login.sh.
 - WARNING #1 -
-
 ```
 -----------------------------------------------------------
  File: /Users/hkim/clojure/withings-client/src/cljs/withings_client/core.cljs:20:4
@@ -31,10 +28,11 @@
 
 
 ## 0.12.2 - 2022-11-14
-- favicon.ico 反映しないか？
+- favicon.ico https://qiita.com/catatsuy/items/7589a3d7a10099f916ba
 ### Bugfix
 - can not update line_id, bot_name field
   -> updated resources/sql/queries.sql
+
 ## 0.12.1 - 2022-11-11
 - users テーブルに bot_name 追加。home.cljs もそれに伴い core.cljs に
   input フィールド追加。

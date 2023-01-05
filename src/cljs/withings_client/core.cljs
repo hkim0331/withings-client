@@ -27,10 +27,7 @@
                   :secret nil
                   :belong nil
                   :email  nil
-                  :uri    nil
-                  ;; こっちじゃないか。
-                  :line_id  nil
-                  :bot_name nil}
+                  :uri    nil}
            :users {}
            :measures {}
            :data {:lastupdate "2022-09-01"
@@ -473,7 +470,7 @@
 
 (defn ^:dev/after-load mount-components []
   (rdom/render [#'navbar] (.getElementById js/document "navbar"))
-  (rdom/render [#'page] (.getElementById js/document "app")))
+  (rdom/render [#'page]   (.getElementById js/document "app")))
 
 (defn init! []
   (ajax/load-interceptors!)

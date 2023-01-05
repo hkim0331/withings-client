@@ -46,7 +46,7 @@
 ;; FIXME: display in 24hour style
 (defn second->str
   ([n]
-   (second->str "yyyy-MM-dd HH:mm" n))
+   (second->str "yyyy-MM-dd HH:mm:ss" n))
   ([fmt n]
    ;; (println "n" n)
    (->> (second->datetime n)

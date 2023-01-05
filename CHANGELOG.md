@@ -9,11 +9,40 @@
 - add `note` column to users table.
 - bar chart of the viable time of access tokens
 - validation about `startdate` and `enddate`
-- async APIs
-- favicon (nginx setting? '/' restriction? )
+
 - display README.md or bin script usage.
 - catch exceptions. for example, execute weights.sh before login.sh.
-- WARNING #1 -
+- project name, token-manager?
+
+## 0.16.1 - 2022-12-31
+- resumed restricted mode.
+
+## 0.16.0 - 2022-12-31
+- dividing namespaces.
+- wc
+- tokens
+- show access codes on home-page.
+
+## 0.15.5 - 2022-12-30
+### Changed
+- core.clj: remove nil values from `query-params`.
+
+## 0.15.3-SNAPSHOT
+### Changed
+- /spi/meas uses api `meastypes`
+
+## 0.14.2 - 2022-12-30
+### Added
+- Data: name, meatype をセレクトすると output フィールドをクリアする。
+### Changed
+- [:button "button"] から [:input.button {:value "button"}] に変更した。
+
+## 0.14.1 - 2022-12-29
+### Fixed
+- フェッチする項目表示がずれてた。core.cljs/measure-name
+### Changed
+- update Makefile /target/default+uberjar -> /target/uberjar
+- core.cljs (def redirect-uri "https://...") no warning.
 ```
 -----------------------------------------------------------
  File: /Users/hkim/clojure/withings-client/src/cljs/withings_client/core.cljs:20:4
@@ -26,6 +55,28 @@
  unreachable code
 ```
 
+## 0.13.2 - 2022-12-29
+- libraries upgraded
+
+## 0.13.1 - 2022-12-17
+- can login with scripts/login.clj
+
+## 0.13.0 - 2022-12-17
+reactivate project
+### migration
+- (#'user/migrate) でできず、手動でマイグレートした。
+### CHANGED
+- bin/wc-date-value.clj: yyyy-mm-dd HH:mm:ss, ss 追加。
+  体重も ww.w に直したい。93.60000000000001 のような表示が混ざる。
+### kohhou にbabashka を準備
+```
+kohhoh$ sudo bash < <(curl -s https://raw.githubusercontent.com/babashka/babashka/master/install)
+Downloading https://github.com/babashka/babashka/releases/download/v1.0.168/babashka-1.0.168-linux-amd64-static.tar.gz to /tmp/tmp.cWrCVk1z7i
+Successfully installed bb in /usr/local/bin
+```
+### Added
+- bin/update-meas.clj: login, fetch, store できること。
+
 
 ## 0.12.2 - 2022-11-14
 - favicon.ico https://qiita.com/catatsuy/items/7589a3d7a10099f916ba
@@ -36,6 +87,7 @@
 ## 0.12.1 - 2022-11-11
 - users テーブルに bot_name 追加。home.cljs もそれに伴い core.cljs に
   input フィールド追加。
+- update users set bot_name='SAGA_JUDO' where id>20;
 
 ## 0.12.0 - 2022-11-11
 - users テーブルに line_id 追加。

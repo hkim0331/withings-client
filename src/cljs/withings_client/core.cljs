@@ -12,13 +12,14 @@
   (:import
    goog.History))
 
-(def ^:private version "0.12.2")
+(def ^:private version "0.17.0")
 
 ;; FIXME: better way?
-(def redirect-uri
-  (try
-    js/redirectUrl
-    (catch js/Error _ "https://wc.kohhoh.jp/callback")))
+;; (def redirect-uri
+;;   (try
+;;     js/redirectUrl
+;;     (catch js/Error _ "https://wc.kohhoh.jp/callback")))
+(def redirect-uri "https://wc.kohhoh.jp/callback")
 
 (defonce session
   (r/atom {:page :home
@@ -28,14 +29,13 @@
                   :belong nil
                   :email  nil
                   :uri    nil
-                  ;; こっちじゃないか。
                   :line_id  nil
                   :bot_name nil}
            :users {}
            :measures {}
-           :data {:lastupdate "2022-09-01"
-                  :startdate  "2022-01-01 00:00:00"
-                  :enddate    "2022-12-31 23:59:59"
+           :data {:lastupdate "2023-01-01"
+                  :startdate  "2022-10-01 00:00:00"
+                  :enddate    "2023-02-28 23:59:59"
                   :results    nil}
            :user {}})) ;; user-page
 
@@ -97,9 +97,8 @@
 
 (defn update-button
   []
-  [:button
-   {:class "button is-primary is-small"
-    :on-click
+  [:button.button.is-primary.is-small
+   {:on-click
     (fn [^js/Event e]
       ;; (js/alert (str (:user @session)))
       (POST (str "/api/user/" (get-in @session [:user :id]))
@@ -112,9 +111,8 @@
 
 (defn delete-button
   []
-  [:button
-   {:class "button is-danger is-small"
-    :on-click
+  [:button.button.is-primary.is-small
+   {:on-click
     (fn []
       (and (js/confirm "are you OK?")
            (POST (str "/api/user/" (-> @session :user :id) "/delete")
@@ -167,13 +165,13 @@
 (defn create-button
   []
   [:div {:class "field"}
-   [:button {:class "button is-primary is-small"
-             :on-click
-             #(let [params (select-keys
-                            (-> @session :home)
-                            [:name :cid :secret :belong :email])]
-                (create-user! params)
-                (swap! session assoc-in [:home :uri] (create-url)))}
+   [:button.button.is-primary.is-small
+    {:on-click
+     #(let [params (select-keys
+                    (-> @session :home)
+                    [:name :cid :secret :belong :email])]
+        (create-user! params)
+        (swap! session assoc-in [:home :uri] (create-url)))}
     "create"]])
 
 (defn sub-field
@@ -203,10 +201,12 @@
       (sub-field key label)))
    [:br]
    [create-button]
-   [:p "(*)は Withings からのダウンロードに必須。bot_name もいるか？"]
+   [:p "(*)は Withings からのダウンロードに必須。
+        line_id/bot_name も line push に必要。"]
    [:p "create ボタンの後、下に現れるリンクをクリックすると
         acccess トークン、refresh トークンの取得に取り掛かる。
-        ページが切り替わるのに 5 秒くらいかかる。非同期通信でスピードアップ予定。"]])
+        ページが切り替わるのに 5 秒くらいかかる。
+        withings-client/refresh! は並行処理でスピードアップ達成できた。"]])
 
 (defn link-component []
   [:div
@@ -216,9 +216,8 @@
 
 (defn refresh-button
   [user]
-  [:button
-   {:class "button is-primary is-small"
-    :on-click
+  [:button.button.is-primary.is-small
+   {:on-click
     (fn [_] (POST (str "/api/token/" (:id user) "/refresh")
               {:format :json
                :handler (fn [_]
@@ -229,9 +228,8 @@
 
 (defn edit-button
   [user]
-  [:button
-   {:class "button is-primary is-small"
-    :on-click #(swap! session assoc :user user :page :user)}
+  [:button.button.is-primary.is-small
+   {:on-click #(swap! session assoc :user user :page :user)}
    "edit"])
 
 ;; used in users-component only.
@@ -245,10 +243,14 @@
   [key e]
   [:div {:key key :class "column"} e])
 
+(defn shorten [n s]
+  (str (subs s 0 n) "..."))
+
 (defn users-component []
   [:div
    [:h2 "users"]
-   [:p "アクセストークンは 10800 秒（3時間）で切れます。"]
+   [:p "アクセストークンは 10800 秒（3時間）で切れるとなってるが、
+        もっと短い時間で切れてるんじゃ？"]
    (doall
     (for [user (-> @session :users)]
       [:div {:class "columns" :key (:id user)}
@@ -257,6 +259,7 @@
                                    (:id user)
                                    (:name user)
                                    (:belong user)
+                                   (shorten 6 (:access user))
                                    (tm (:updated_at user))
                                    [refresh-button user]
                                    [edit-button user]])]
@@ -275,9 +278,8 @@
 ;; ------------------------------------------------------------
 ;; data-page
 ;;
-;; misc functions
 (defn ts->date
-  "after converting to milli, doing jobs."
+  "After converting to milli, return with 24-hour time format."
   [ts]
   (-> (* 1000 ts)
       js/Date.
@@ -288,14 +290,17 @@
   [digits [{:keys [value unit]}]]
   (-> (/ value (pow 10 (- unit)))
       (.toFixed digits)))
+
 (defn select-id
   []
   [:div
    [:select {:name "id"
              :on-change
-             (fn [e] (swap! session assoc-in [:data :id]
-                            (-> e .-target .-value)))}
-    (for [user (cons {:id 0 :name "選んでください"}
+             (fn [e]
+               (swap! session assoc-in [:data :results] nil)
+               (swap! session assoc-in [:data :id]
+                      (-> e .-target .-value)))}
+    (for [user (cons {:id 0 :name "氏名"}
                      (->> @session
                           :users
                           (filter :valid)))]
@@ -307,12 +312,13 @@
    [:select {:name "meastype"
              :on-change
              (fn [e]
+               ;; (js/alert (-> e .-target .-value))
+               (swap! session assoc-in [:data :results] nil)
                (swap! session assoc-in [:data :meastype]
                       (-> e .-target .-value)))}
-    (for [mea (cons {:id 0 :description "選んでください"}
-                    (-> @session :measures))]
-      [:option {:key (str "m" (:id mea)) :value (:value mea)}
-       (:description mea)])]])
+    (for [item (cons {:id 0 :description "測定項目"} (:measures @session))]
+      [:option {:key (str "m" (:id item)) :value (:value item)}
+       (str (:value item) " " (:description item))])]])
 
 (defn input-startdate-enddate
   []
@@ -349,23 +355,41 @@
 (defn fetch-button
   []
   [:div
-   [:button
-    {:class "button is-primary is-small"
-     :on-click
-     #(POST "/api/meas"
-        {:format :json
-         :params {:id         (-> @session :data :id)
-                  :meastype   (-> @session :data :meastype)
-                  :startdate  (-> @session :data :startdate)
-                  :enddate    (-> @session :data :enddate)
-                  :lastupdate (-> @session :data :lastupdate)}
-         :handler
-         (fn [res]
-           (swap! session assoc-in [:data :results] res))
-         :error-handler
-         (fn [e]
-           (js/alert (-> e :response :body)))})}
+   [:button.button.is-primary.is-small
+    {:on-click
+     (fn []
+       ;; no effect
+       ;; (swap! session assoc-in [:date :results] "fetching...")
+       (POST "/api/meas"
+         {:format :json
+          :params {:id         (-> @session :data :id)
+                   :meastype   (-> @session :data :meastype)
+                   :startdate  (-> @session :data :startdate)
+                   :enddate    (-> @session :data :enddate)
+                   :lastupdate (-> @session :data :lastupdate)}
+          :handler
+          (fn [res]
+            (swap! session assoc-in [:data :results] res))
+          :error-handler
+          (fn [e]
+            (js/alert (-> e :response :body)))}))}
     "fetch"]])
+
+(defn user-name
+  [id]
+  (->> @session
+       :users
+       (filter #(= id (:id %)))
+       first
+       :name))
+
+(defn measure-name
+  [n]
+  (->> @session
+       :measures
+       (filter #(= n (:value %))) ;; fixed 2022-12-29
+       first
+       :description))
 
 (defn input-component
   "id, meatype, startdate, enddate are required to work.
@@ -380,7 +404,13 @@
    [:p "or"]
    [input-lastupdate]
    [:br]
-   [fetch-button]])
+   [fetch-button]
+   #_[:div.columns
+    [:div.column.is-one-quarter
+     (-> @session :data :id js/parseInt user-name)
+     ", "
+     (-> @session :data :meastype js/parseInt measure-name)]
+    [:div.column [fetch-button]]]])
 
 ;; params has `created` param. which should be displayed?
 (defn output-one
@@ -388,30 +418,12 @@
   [:div {:key n}
    (str (ts->date date) ", " (value->float 1 measures))])
 
-(defn user-name
-  [id]
-  (->> @session
-       :users
-       (filter #(= id (:id %)))
-       first
-       :name))
-
-(defn measure-name
-  [id]
-  (->> @session
-       :measures
-       (filter #(= id (:id %)))
-       first
-       :description))
-
 (defn output-component
   []
   [:div
-   [:h3 "fetched ("
-    (-> @session :data :id js/parseInt user-name)
+   [:h3 (-> @session :data :id js/parseInt user-name)
     ", "
-    (-> @session :data :meastype js/parseInt measure-name)
-    ")"]
+    (-> @session :data :meastype js/parseInt measure-name)]
    (if (seq (-> @session :data :results))
      (for [[n data] (map-indexed
                      vector
@@ -468,12 +480,15 @@
 (defn fetch-users! []
   (GET "/api/users" {:handler #(swap! session assoc :users %)}))
 
-(defn fetch-measures! []
-  (GET "/api/meas" {:handler #(swap! session assoc :measures %)}))
+(defn fetch-measures!
+  "Get English/Japanese descriptions of measure types.
+   Many Japanese descriptions are empty."
+  []
+  (GET "/api/measures" {:handler #(swap! session assoc :measures %)}))
 
 (defn ^:dev/after-load mount-components []
   (rdom/render [#'navbar] (.getElementById js/document "navbar"))
-  (rdom/render [#'page] (.getElementById js/document "app")))
+  (rdom/render [#'page]   (.getElementById js/document "app")))
 
 (defn init! []
   (ajax/load-interceptors!)

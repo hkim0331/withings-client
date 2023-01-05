@@ -24,7 +24,7 @@
            (= password (env :password)))
     (-> (response/found "/home/")
         (assoc-in [:session :identity] login))
-    (-> (response/found "/")
+    (-> (response/found "/login")
         (assoc :session {} :flash "login failure"))))
 
 (defn logout!
@@ -33,7 +33,7 @@
       (assoc-in [:session :identity] nil)))
 
 (defn login-routes []
-  [""
+  ["" {:get (response/ok "please login")}
    {:middleware [middleware/wrap-formats]}
-   ["/"        {:get login :post login!}]
+   ["/"   {:get login :post login!}]
    ["/logout"  {:get logout!}]])

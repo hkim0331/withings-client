@@ -1,30 +1,23 @@
 {
-	  "name": "Clojure (Community)",
-	  "build": {
-		    "dockerfile": "Dockerfile",
-		    "args": {
-			      "VARIANT": "17",
-			      "CLOJURE_VERSION": "1.10.3",
-            "INSTALL_CLOJURE_CLI": "true",
-			      "INSTALL_BOOT": "true",
-			      "INSTALL_LEININGEN": "true",
-			      "INSTALL_POLYLITH": "true",
-			      "NODE_VERSION": "lts/*"
-		    }
-	  },
-
-	  "customizations": {
-		    "vscode": {
-			      "settings": {
-			      },
-			      "extensions": [
-				        // "vscjava.vscode-java-pack",
-				        "borkdude.clj-kondo",
-				        "betterthantomorrow.calva",
-                "jsynowiec.vscode-insertdatestring"
-			      ]
-		    }
-	  },
-
-	  "remoteUser": "vscode"
+    "name": "Existing Docker Compose (Extend)",
+    "dockerComposeFile": [
+        "../docker-compose.yml"
+    ],
+    "customizations": {
+        "vscode": {
+            "settings": {
+            },
+            "extensions": [
+                "betterthantomorrow.calva",
+                "borkdude.clj-kondo",
+                "eduarddyckman.vscode-parinfer",
+                "jsynowiec.vscode-insertdatestring",
+                "jsynowiec.vscode-insertdatestring",
+                "lfs.vscode-emacs-friendly",
+                "mosapride.zenkaku",
+                "ybaumes.highlight-trailing-white-spaces"
+            ]}},
+    "service": "clj-cljs",
+    "workspaceFolder": "/usr/src/app"
+    // "remoteUser": "vscode"
 }

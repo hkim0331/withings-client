@@ -2,6 +2,7 @@
   (:require
    [withings-client.middleware :as middleware]
    [withings-client.layout :refer [error-page]]
+   [withings-client.routes.help :refer [help-routes]]
    [withings-client.routes.home :refer [home-routes]]
    [withings-client.routes.login :refer [login-routes]]
    [withings-client.routes.callback :refer [callback-routes]]
@@ -20,7 +21,11 @@
   :start
   (ring/ring-handler
     (ring/router
-      [(callback-routes) (login-routes) (home-routes) (service-routes)])
+      [(callback-routes)
+       (login-routes)
+       (home-routes)
+       (service-routes)
+       (help-routes)])
     (ring/routes
       (ring/create-resource-handler
         {:path "/"})

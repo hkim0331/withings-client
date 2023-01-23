@@ -20,6 +20,7 @@
 - /help/
 ### Updated
 - base.html: 'Welcome to App' -> 'SAGA-JUDO'
+- Makefile: all: clean deploy
 
 ## 0.17.0 - 2023-01-05
 

@@ -18,6 +18,8 @@
 ## 0.18.0 - 2023-01-23
 ### Added
 - /help/
+### Updated
+- base.html: 'Welcome to App' -> 'SAGA-JUDO'
 
 ## 0.17.0 - 2023-01-05
 

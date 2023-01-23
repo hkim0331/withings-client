@@ -1,5 +1,7 @@
 DEST=ubuntu@kohhoh.jp
 
+all: clean deploy
+
 rep:
 	npm install
 	npm install xmlhttprequest

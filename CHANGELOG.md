@@ -13,6 +13,16 @@
 - display README.md or bin script usage.
 - catch exceptions. for example, execute weights.sh before login.sh.
 - project name, token-manager?
+- Data page, 'no data' はわかりにくい。
+
+## 0.18.0 - 2023-01-23
+### Added
+- /help/
+### Updated
+- base.html: 'Welcome to App' -> 'SAGA-JUDO'
+- Makefile: all: clean deploy
+
+## 0.17.0 - 2023-01-05
 
 ## 0.16.1 - 2022-12-31
 - resumed restricted mode.

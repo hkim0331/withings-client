@@ -15,7 +15,9 @@
 - project name, token-manager?
 - Data page, 'no data' はわかりにくい。
 
-## 0.17.1-SNAPSHOT
+## 0.18.0 - 2023-01-23
+### Added
+- /help/
 
 ## 0.17.0 - 2023-01-05
 

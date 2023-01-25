@@ -15,6 +15,10 @@
 - project name, token-manager?
 - Data page, 'no data' はわかりにくい。
 
+## 0.19.0 - 2023-01-25
+### Added
+- Dockerfile
+
 ## 0.18.0 - 2023-01-23
 ### Added
 - /help/

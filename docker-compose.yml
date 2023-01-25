@@ -1,8 +1,8 @@
 version: "3.9"
 
 services:
-  clj-cljs:
-    image: hkim0331/clj-cljs
+  withings-client:
+    image: hkim0331/withings-client
     ports:
       - "3000:3000"
       - "7002:7002"

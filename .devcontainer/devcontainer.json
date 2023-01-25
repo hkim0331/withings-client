@@ -17,7 +17,7 @@
                 "mosapride.zenkaku",
                 "ybaumes.highlight-trailing-white-spaces"
             ]}},
-    "service": "clj-cljs",
+    "service": "withings-client",
     "workspaceFolder": "/usr/src/app"
     // "remoteUser": "vscode"
 }

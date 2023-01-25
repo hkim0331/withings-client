@@ -26,3 +26,10 @@ deploy: target/uberjar/withings-client.jar
 
 clean:
 	${RM} -r target
+
+
+build: hkim0331/luminus
+
+hkim0331/luminus:
+	docker build -t $@ .
+

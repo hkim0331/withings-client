@@ -15,6 +15,12 @@
 - project name, token-manager?
 - Data page, 'no data' はわかりにくい。
 
+## 0.19.0 - 2023-01-25
+### Added
+- Dockerfile
+  devcontainer.json にかくサービスとしては withings-client,
+  docker-compose.yml にかくサービスを実現するコンテナイメージが hkim0331/luminus.
+
 ## 0.18.0 - 2023-01-23
 ### Added
 - /help/

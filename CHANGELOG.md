@@ -15,6 +15,26 @@
 - project name, token-manager?
 - Data page, 'no data' はわかりにくい。
 
+
+## 0.19.1 hotfix - 2023-06-24
+- fixed: did not show page /home
+- updated libraries
+
+```
+|       :file |                             :name | :current |  :latest |
+|-------------+-----------------------------------+----------+----------|
+| project.clj |                  buddy/buddy-core | 1.10.413 | 1.11.418 |
+|             |               buddy/buddy-hashers |  1.8.158 |  2.0.162 |
+|             |                  buddy/buddy-sign |  3.4.333 |  3.5.346 |
+|             | com.google.protobuf/protobuf-java |  3.21.12 |   3.23.3 |
+|             |                   jonase/eastwood |    1.3.0 |    1.4.0 |
+|             |                    metosin/reitit |   0.5.18 |    0.6.0 |
+|             |       org.clojure/tools.namespace |    1.3.0 |    1.4.4 |
+|             |       org.webjars/webjars-locator |     0.46 |     0.47 |
+|             |                    ring/ring-core |    1.9.6 |   1.10.0 |
+|             |                   ring/ring-devel |    1.9.6 |   1.10.0 |
+```
+
 ## 0.19.0 - 2023-01-25
 ### Added
 - Dockerfile

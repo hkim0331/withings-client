@@ -12,7 +12,7 @@
   (:import
    goog.History))
 
-(def ^:private version "0.19.0")
+(def ^:private version "0.19.1")
 
 ;; FIXME: better way?
 ;; (def redirect-uri
@@ -50,25 +50,46 @@
     :class (when (= page (:page @session)) "is-active")}
    title])
 
+(defonce expanded? (r/atom false))
+
 (defn navbar []
-  (r/with-let [expanded? (r/atom false)]
-    [:nav.navbar.is-info>div.container
-     [:div.navbar-brand
-      [:a.navbar-item {:href "/" :style {:font-weight :bold}}
-       "Withings-Client"]
-      [:span.navbar-burger.burger
-       {:data-target :nav-menu
-        :on-click #(swap! expanded? not)
-        :class (when @expanded? :is-active)}
-       [:span] [:span] [:span]]]
-     [:div#nav-menu.navbar-menu
-      {:class (when @expanded? :is-active)}
-      [:div.navbar-start
-       [nav-link "#/" "Home" :home]
-       [nav-link "#/data" "Data" :data]
-       [nav-link "#/about" "About" :about]
-       [nav-link "/logout" "Logout"]
-       [nav-link "https://developer.withings.com/api-reference" "API"]]]]))
+  [:nav.navbar.is-info>div.container
+   [:div.navbar-brand
+    [:a.navbar-item {:href "/" :style {:font-weight :bold}}
+     "Withings-Client"]
+    [:span.navbar-burger.burger
+     {:data-target :nav-menu
+      :on-click #(swap! expanded? not)
+      :class (when @expanded? :is-active)}
+     [:span] [:span] [:span]]]
+   [:div#nav-menu.navbar-menu
+    {:class (when @expanded? :is-active)}
+    [:div.navbar-start
+     [nav-link "#/" "Home" :home]
+     [nav-link "#/data" "Data" :data]
+     [nav-link "#/about" "About" :about]
+     [nav-link "/logout" "Logout"]
+     [nav-link "https://developer.withings.com/api-reference" "API"]]]])
+
+;; (defn navbar []
+;;   (r/with-let [expanded? (r/atom false)]
+;;     [:nav.navbar.is-info>div.container
+;;      [:div.navbar-brand
+;;       [:a.navbar-item {:href "/" :style {:font-weight :bold}}
+;;        "Withings-Client"]
+;;       [:span.navbar-burger.burger
+;;        {:data-target :nav-menu
+;;         :on-click #(swap! expanded? not)
+;;         :class (when @expanded? :is-active)}
+;;        [:span] [:span] [:span]]]
+;;      [:div#nav-menu.navbar-menu
+;;       {:class (when @expanded? :is-active)}
+;;       [:div.navbar-start
+;;        [nav-link "#/" "Home" :home]
+;;        [nav-link "#/data" "Data" :data]
+;;        [nav-link "#/about" "About" :about]
+;;        [nav-link "/logout" "Logout"]
+;;        [nav-link "https://developer.withings.com/api-reference" "API"]]]]))
 
 ;; ----------------------------------------------------------
 ;; about-page

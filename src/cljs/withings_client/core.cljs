@@ -12,7 +12,7 @@
   (:import
    goog.History))
 
-(def ^:private version "0.19.1")
+(def ^:private version "0.19.2")
 
 ;; FIXME: better way?
 ;; (def redirect-uri
@@ -264,8 +264,11 @@
   [key e]
   [:div {:key key :class "column"} e])
 
+;; 2023-06-25
 (defn shorten [n s]
-  (str (subs s 0 n) "..."))
+  (if (empty? s)
+    "empty"
+    (str (subs s 0 n) "...")))
 
 (defn users-component []
   [:div
@@ -288,11 +291,11 @@
 
 (defn home-page []
   [:section.section>div.container>div.content
-   (new-component)
+   [new-component]
    [:br]
-   (link-component)
+   [link-component]
    [:hr]
-   (users-component)
+   [users-component]
    [:hr]
    version])
 

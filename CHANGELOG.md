@@ -16,7 +16,15 @@
 - Data page, 'no data' はわかりにくい。
 
 
-## 0.19.1 hotfix - 2023-06-24
+## 0.19.2 - 2023-06-25
+- fixed:
+```
+;; 2023-06-25
+(defn shorten [n s]
+  (if (empty? s)
+    "empty"
+    (str (subs s 0 n) "...")))
+```
 - fixed: did not show page /home
 - updated libraries
 

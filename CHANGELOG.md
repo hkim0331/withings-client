@@ -14,7 +14,9 @@
 - catch exceptions. for example, execute weights.sh before login.sh.
 - project name, token-manager?
 - Data page, 'no data' はわかりにくい。
--
+
+- empty になったが正しい cid/secret が入っているときは、fix みたいなボタンで
+  refresh/access token を取ってこれるようにできないか？
 
 ## 0.19.3 - 2023-06-26
 - core.cljs: added table header

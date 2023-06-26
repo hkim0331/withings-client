@@ -20,6 +20,9 @@ To start a web server for the application, run:
 
     lein run
 
+or in VScode,
+
+
 ## Run kohhoh
 
 Use /home/ubuntu/wc/{start,stop,restart}.sh scripts.

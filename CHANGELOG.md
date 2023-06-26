@@ -14,7 +14,11 @@
 - catch exceptions. for example, execute weights.sh before login.sh.
 - project name, token-manager?
 - Data page, 'no data' はわかりにくい。
+-
 
+## 0.19.3 - 2023-06-26
+- core.cljs: added table header
+- core.cljs: added cid column in users-component
 
 ## 0.19.2 - 2023-06-25
 - fixed:
@@ -22,7 +26,7 @@
 ;; 2023-06-25
 (defn shorten [n s]
   (if (empty? s)
-    "empty"
+    [:span {:class "red"} "empty"]
     (str (subs s 0 n) "...")))
 ```
 - fixed: did not show page /home

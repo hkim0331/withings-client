@@ -12,7 +12,7 @@
   (:import
    goog.History))
 
-(def ^:private version "0.19.0")
+(def ^:private version "0.19.3")
 
 ;; FIXME: better way?
 ;; (def redirect-uri
@@ -50,25 +50,25 @@
     :class (when (= page (:page @session)) "is-active")}
    title])
 
+(defonce expanded? (r/atom false))
 (defn navbar []
-  (r/with-let [expanded? (r/atom false)]
-    [:nav.navbar.is-info>div.container
-     [:div.navbar-brand
-      [:a.navbar-item {:href "/" :style {:font-weight :bold}}
-       "Withings-Client"]
-      [:span.navbar-burger.burger
-       {:data-target :nav-menu
-        :on-click #(swap! expanded? not)
-        :class (when @expanded? :is-active)}
-       [:span] [:span] [:span]]]
-     [:div#nav-menu.navbar-menu
-      {:class (when @expanded? :is-active)}
-      [:div.navbar-start
-       [nav-link "#/" "Home" :home]
-       [nav-link "#/data" "Data" :data]
-       [nav-link "#/about" "About" :about]
-       [nav-link "/logout" "Logout"]
-       [nav-link "https://developer.withings.com/api-reference" "API"]]]]))
+  [:nav.navbar.is-info>div.container
+   [:div.navbar-brand
+    [:a.navbar-item {:href "/" :style {:font-weight :bold}}
+     "Withings-Client"]
+    [:span.navbar-burger.burger
+     {:data-target :nav-menu
+      :on-click #(swap! expanded? not)
+      :class (when @expanded? :is-active)}
+     [:span] [:span] [:span]]]
+   [:div#nav-menu.navbar-menu
+    {:class (when @expanded? :is-active)}
+    [:div.navbar-start
+     [nav-link "#/" "Home" :home]
+     [nav-link "#/data" "Data" :data]
+     [nav-link "#/about" "About" :about]
+     [nav-link "/logout" "Logout"]
+     [nav-link "https://developer.withings.com/api-reference" "API"]]]])
 
 ;; ----------------------------------------------------------
 ;; about-page
@@ -243,14 +243,20 @@
   [key e]
   [:div {:key key :class "column"} e])
 
+;; 2023-06-25
 (defn shorten [n s]
-  (str (subs s 0 n) "..."))
+  (if (empty? s)
+    [:span {:class "red"} "empty"]
+    (str (subs s 0 n) "...")))
 
 (defn users-component []
   [:div
    [:h2 "users"]
    [:p "アクセストークンは 10800 秒（3時間）で切れるとなってるが、
         もっと短い時間で切れてるんじゃ？"]
+   [:div {:class "columns"}
+    (for [col ["valid" "id" "name" "belong" "cid" "access" "update" "" ""]]
+      [:div {:class "column"} col])]
    (doall
     (for [user (-> @session :users)]
       [:div {:class "columns" :key (:id user)}
@@ -259,6 +265,7 @@
                                    (:id user)
                                    (:name user)
                                    (:belong user)
+                                   (shorten 6 (:cid user))
                                    (shorten 6 (:access user))
                                    (tm (:updated_at user))
                                    [refresh-button user]
@@ -267,11 +274,11 @@
 
 (defn home-page []
   [:section.section>div.container>div.content
-   (new-component)
+   [new-component]
    [:br]
-   (link-component)
+   [link-component]
    [:hr]
-   (users-component)
+   [users-component]
    [:hr]
    version])
 

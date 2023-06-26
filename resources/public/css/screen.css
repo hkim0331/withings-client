@@ -32,3 +32,5 @@ body {
   /* Support for Firefox. */
   -moz-osx-font-smoothing: grayscale;
 }
+
+.red {color: red;}

@@ -33,10 +33,12 @@
 
 (defn store!
   [params]
+  (log/info "store! params")
   (users/update-tokens-by-name! params))
 
 (defn fetch-and-store!
   [params]
+  (log/info "fetch-and-restore! params" params)
   (-> params request-token store!))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

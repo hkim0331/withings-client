@@ -6,7 +6,7 @@
 # $0 id startdate enddate
 
 if [ $# -eq 0 ]; then
-  ID=16
+  ID=102
   LASTUPDATE=`date +%F`
 elif [ $# -eq 1 ]; then
   ID=$1

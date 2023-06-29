@@ -14,7 +14,21 @@
 - catch exceptions. for example, execute weights.sh before login.sh.
 - project name, token-manager?
 - Data page, 'no data' はわかりにくい。
--
+- empty になったが正しい cid/secret が入っているときは、fix みたいなボタンで
+  refresh/access token を取ってこれるようにできないか？
+- 新規ユーザの場合は userid をテーブルに入れず、リフレッシュは名前をキーとする。
+
+
+## 0.20.0-SNAPSHOT
+- kohhoh# apt-mark hold mariadb-server
+  mariadb 11.0.2 では以下のエラー。docker で mariadb 10.11 となら　OK.
+; Execution error (SQLException) at com.mysql.cj.jdbc.exceptions.SQLError/createSQLException (SQLError.java:130).
+; Unknown system variable 'transaction_isolation'
+
+
+## 0.19.4-SNAPSHOT
+- fetch-and-restore! 時、userid が hkimura のものになってしまう。
+- 表示テーブルに userid を入れる。
 
 ## 0.19.3 - 2023-06-26
 - core.cljs: added table header

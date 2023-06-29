@@ -12,7 +12,7 @@
   (:import
    goog.History))
 
-(def ^:private version "0.19.3")
+(def ^:private version "0.20.0")
 
 ;; FIXME: better way?
 ;; (def redirect-uri
@@ -255,7 +255,7 @@
    [:p "アクセストークンは 10800 秒（3時間）で切れるとなってるが、
         もっと短い時間で切れてるんじゃ？"]
    [:div {:class "columns"}
-    (for [col ["valid" "id" "name" "belong" "cid" "access" "update" "" ""]]
+    (for [col ["valid" "id" "name" "userid" "belong" "cid" "access" "update" "" ""]]
       [:div {:class "column"} col])]
    (doall
     (for [user (-> @session :users)]
@@ -264,6 +264,7 @@
                                   [(if (:valid user) "y" "n")
                                    (:id user)
                                    (:name user)
+                                   (:userid user)
                                    (:belong user)
                                    (shorten 6 (:cid user))
                                    (shorten 6 (:access user))

@@ -111,10 +111,10 @@
 
 (defn delete-button
   []
-  [:button.button.is-primary.is-small
+  [:button.button.is-danger.is-small
    {:on-click
     (fn []
-      (and (js/confirm "are you OK?")
+      (and (js/confirm (str "delete " (-> @session :user :name) " ?"))
            (POST (str "/api/user/" (-> @session :user :id) "/delete")
              {:handler (fn [_]
                          (fetch-users!)
@@ -201,12 +201,11 @@
       (sub-field key label)))
    [:br]
    [create-button]
-   [:p "(*)は Withings からのダウンロードに必須。
-        line_id/bot_name も line push に必要。"]
-   [:p "create ボタンの後、下に現れるリンクをクリックすると
-        acccess トークン、refresh トークンの取得に取り掛かる。
-        ページが切り替わるのに 5 秒くらいかかる。
-        withings-client/refresh! は並行処理でスピードアップ達成できた。"]])
+   [:p "(*)は Withings からのダウンロードに必須な情報です。"]
+   [:p "(*)を埋めてから create で データベースに access/refresh トークン抜きのエントリーを作る。"]
+   [:p "create ボタン押した後、この下に現れる氏名のリンクが
+        Withings から acccess/refresh トークン を取ってきてデータベースに追加します。
+        リンクをクリックして Withings のページが表示されるまで 5 秒くらいかかる。"]])
 
 (defn link-component []
   [:div

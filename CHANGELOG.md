@@ -19,6 +19,10 @@
 - 新規ユーザの場合は userid をテーブルに入れず、リフレッシュは名前をキーとする。
 
 
+## 0.20.0 - 2023-06-29
+- core.cljs/delete-button: delete user name ?
+- create ボタン、リンクの説明を数行追加。
+
 ## 0.20.0-SNAPSHOT
 - kohhoh# apt-mark hold mariadb-server
   mariadb 11.0.2 では以下のエラー。docker で mariadb 10.11 となら　OK.

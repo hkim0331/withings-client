@@ -58,7 +58,7 @@
                    :client_id     cid
                    :client_secret secret
                    :refresh_token refresh}}))]
-    (log/info "ret: " (get-in ret [:body]))
+    (log/info "refresh: " (get-in ret [:body :body]))
     (get-in ret [:body :body])))
 
 (defn restore!
@@ -73,7 +73,7 @@
 
 (defn refresh-and-restore!
   [user]
-  (log/info "refresh-and-restore" (:name user))
+  (log/info "refresh-and-restore!" (:name user))
   (-> user
       refresh
       restore!))
@@ -87,6 +87,6 @@
 (defn refresh-all!
   []
   (let [users (users/valid-users)]
-    (log/info "tokens/refresh-all" (map :name users))
+    (log/info "tokens/refresh-all!" (map :name users))
     (doseq [user users]
       (refresh-and-restore! user))))

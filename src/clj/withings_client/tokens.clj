@@ -71,12 +71,28 @@
     (log/info "users/update-tokens! returns" ret)
     (and (seq params) (pos? ret))))
 
+(defn restore-by-name!
+  "params = userid, access, refresh, access,
+   returns true/false"
+  [params]
+  (log/info "tokens/restore-by-name!" params)
+  ;;;
+  (let [ret (users/update-tokens-by-name! params)]
+    (log/info "users/update-tokens-by-name! returns" ret)
+    (and (seq params) (pos? ret))))
+
+;; (defn refresh-and-restore!
+;;   [user]
+;;   (log/info "refresh-and-restore!" (:name user))
+;;   (-> user
+;;       refresh
+;;       restore!))
+
 (defn refresh-and-restore!
   [user]
   (log/info "refresh-and-restore!" (:name user))
-  (-> user
-      refresh
-      restore!))
+  (restore-by-name!
+   (merge {:name (:name user)} (refresh user))))
 
 (defn refresh-and-restore-id!
   [id]

@@ -12,7 +12,7 @@
   (:import
    goog.History))
 
-(def ^:private version "0.19.2")
+(def ^:private version "0.20.0")
 
 ;; FIXME: better way?
 ;; (def redirect-uri
@@ -51,7 +51,6 @@
    title])
 
 (defonce expanded? (r/atom false))
-
 (defn navbar []
   [:nav.navbar.is-info>div.container
    [:div.navbar-brand
@@ -70,26 +69,6 @@
      [nav-link "#/about" "About" :about]
      [nav-link "/logout" "Logout"]
      [nav-link "https://developer.withings.com/api-reference" "API"]]]])
-
-;; (defn navbar []
-;;   (r/with-let [expanded? (r/atom false)]
-;;     [:nav.navbar.is-info>div.container
-;;      [:div.navbar-brand
-;;       [:a.navbar-item {:href "/" :style {:font-weight :bold}}
-;;        "Withings-Client"]
-;;       [:span.navbar-burger.burger
-;;        {:data-target :nav-menu
-;;         :on-click #(swap! expanded? not)
-;;         :class (when @expanded? :is-active)}
-;;        [:span] [:span] [:span]]]
-;;      [:div#nav-menu.navbar-menu
-;;       {:class (when @expanded? :is-active)}
-;;       [:div.navbar-start
-;;        [nav-link "#/" "Home" :home]
-;;        [nav-link "#/data" "Data" :data]
-;;        [nav-link "#/about" "About" :about]
-;;        [nav-link "/logout" "Logout"]
-;;        [nav-link "https://developer.withings.com/api-reference" "API"]]]]))
 
 ;; ----------------------------------------------------------
 ;; about-page
@@ -132,10 +111,10 @@
 
 (defn delete-button
   []
-  [:button.button.is-primary.is-small
+  [:button.button.is-danger.is-small
    {:on-click
     (fn []
-      (and (js/confirm "are you OK?")
+      (and (js/confirm (str "delete " (-> @session :user :name) " ?"))
            (POST (str "/api/user/" (-> @session :user :id) "/delete")
              {:handler (fn [_]
                          (fetch-users!)
@@ -222,12 +201,11 @@
       (sub-field key label)))
    [:br]
    [create-button]
-   [:p "(*)は Withings からのダウンロードに必須。
-        line_id/bot_name も line push に必要。"]
-   [:p "create ボタンの後、下に現れるリンクをクリックすると
-        acccess トークン、refresh トークンの取得に取り掛かる。
-        ページが切り替わるのに 5 秒くらいかかる。
-        withings-client/refresh! は並行処理でスピードアップ達成できた。"]])
+   [:p "(*)は Withings からのダウンロードに必須な情報です。"]
+   [:p "(*)を埋めてから create で データベースに access/refresh トークン抜きのエントリーを作る。"]
+   [:p "create ボタン押した後、この下に現れる氏名のリンクが
+        Withings から acccess/refresh トークン を取ってきてデータベースに追加します。
+        リンクをクリックして Withings のページが表示されるまで 5 秒くらいかかる。"]])
 
 (defn link-component []
   [:div
@@ -267,7 +245,7 @@
 ;; 2023-06-25
 (defn shorten [n s]
   (if (empty? s)
-    "empty"
+    [:span {:class "red"} "empty"]
     (str (subs s 0 n) "...")))
 
 (defn users-component []
@@ -275,6 +253,9 @@
    [:h2 "users"]
    [:p "アクセストークンは 10800 秒（3時間）で切れるとなってるが、
         もっと短い時間で切れてるんじゃ？"]
+   [:div {:class "columns"}
+    (for [col ["valid" "id" "name" "userid" "belong" "cid" "access" "update" "" ""]]
+      [:div {:class "column"} col])]
    (doall
     (for [user (-> @session :users)]
       [:div {:class "columns" :key (:id user)}
@@ -282,7 +263,9 @@
                                   [(if (:valid user) "y" "n")
                                    (:id user)
                                    (:name user)
+                                   (:userid user)
                                    (:belong user)
+                                   (shorten 6 (:cid user))
                                    (shorten 6 (:access user))
                                    (tm (:updated_at user))
                                    [refresh-button user]

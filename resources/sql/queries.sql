@@ -67,7 +67,7 @@ SET access = :access_token, refresh = :refresh_token, userid = :userid,
 WHERE name = :name
 
 -- :name update-tokens! :! :n
--- :doc updates an existing user's tokens, key is name.
+-- :doc updates an existing user's tokens, key is userid.
 UPDATE users
 SET access = :access_token, refresh = :refresh_token,
     updated_at = now()

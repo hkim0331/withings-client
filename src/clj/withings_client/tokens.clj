@@ -33,10 +33,12 @@
 
 (defn store!
   [params]
+  (log/info "store! params" params)
   (users/update-tokens-by-name! params))
 
 (defn fetch-and-store!
   [params]
+  (log/info "fetch-and-restore! params" params)
   (-> params request-token store!))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -46,32 +48,51 @@
    take the cid from the user data.
    when errors, returns {}"
   [{:keys [cid secret refresh]}]
-  (log/info "tokens/refresh cid" (abbrev cid))
-  (-> (hc/post
-       oauth2-uri
-       {:as :json
-        :query-params
-        {:action        "requesttoken"
-         :grant_type    "refresh_token"
-         :client_id     cid
-         :client_secret secret
-         :refresh_token refresh}})
-      (get-in [:body :body])))
+  (log/info "tokens/refresh cid" (abbrev cid) (abbrev secret) (abbrev refresh))
+  (let [ret (-> (hc/post
+                 oauth2-uri
+                 {:as :json
+                  :query-params
+                  {:action        "requesttoken"
+                   :grant_type    "refresh_token"
+                   :client_id     cid
+                   :client_secret secret
+                   :refresh_token refresh}}))]
+    (log/info "refresh: " (get-in ret [:body :body]))
+    (get-in ret [:body :body])))
 
-(defn restore!
+;; (defn restore!
+;;   "params = userid, access, refresh, access,
+;;    returns true/false"
+;;   [params]
+;;   (log/info "tokens/restore! params" params)
+;;   ;;;
+;;   (let [ret (users/update-tokens! params)]
+;;     (log/info "users/update-tokens! returns" ret)
+;;     (and (seq params) (pos? ret))))
+
+(defn restore-by-name!
   "params = userid, access, refresh, access,
    returns true/false"
   [params]
-  (let [ret (users/update-tokens! params)]
-    (log/info "users/update-tokens! returns" ret)
+  (log/info "tokens/restore-by-name!" params)
+  ;;;
+  (let [ret (users/update-tokens-by-name! params)]
+    (log/info "users/update-tokens-by-name! returns" ret)
     (and (seq params) (pos? ret))))
+
+;; (defn refresh-and-restore!
+;;   [user]
+;;   (log/info "refresh-and-restore!" (:name user))
+;;   (-> user
+;;       refresh
+;;       restore!))
 
 (defn refresh-and-restore!
   [user]
-  (log/info "refresh-and-restore" (:name user))
-  (-> user
-      refresh
-      restore!))
+  (log/info "refresh-and-restore!" (:name user))
+  (restore-by-name!
+   (merge {:name (:name user)} (refresh user))))
 
 (defn refresh-and-restore-id!
   [id]
@@ -82,6 +103,6 @@
 (defn refresh-all!
   []
   (let [users (users/valid-users)]
-    (log/info "tokens/refresh-all" (map :name users))
+    (log/info "tokens/refresh-all!" (map :name users))
     (doseq [user users]
       (refresh-and-restore! user))))

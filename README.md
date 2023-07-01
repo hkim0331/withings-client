@@ -21,6 +21,9 @@ generated using Luminus version "4.40"
 not MariaDB 11. use 10.3.
 
 
+or in VScode,
+
+
 ## Run kohhoh
 
 Use /home/ubuntu/wc/{start,stop,restart}.sh scripts.

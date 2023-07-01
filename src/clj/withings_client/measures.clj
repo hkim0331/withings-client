@@ -23,6 +23,7 @@
 ;; 'https://wbsapi.withings.net/measure'
 ;; curl --header "Authorization: Bearer YOUR_ACCESS_TOKEN" --data "action=getmeas&meastype=meastype&meastypes=meastypes&category=category&startdate=startdate&enddate=enddate&offset=offset&lastupdate=int" 'https://wbsapi.withings.net/measure'
 ;; use meastypes?
+
 (defn meas
   "get meastype between `startdate` and `enddate`,
   `lastupdate` is also available.
@@ -42,18 +43,19 @@
     ;; (log/info "meas" id meastype startdate enddate lastupdate)
     ;; (log/info "params" params)
     (log/info "meas query-params:" query-params)
-    (log/info "access token:" (abbrev access))
-    (-> (hc/post
-         meas-uri
-         {:as :json
-          ;; CAUTION: "authorization" must be lower characters!
-          ;; :headers {"authorization" (str "Bearer " access)}
-          :oauth-token  access
-          :query-params query-params})
-        (probe #(when-not (= 200 (:status %))
-                  (log/info "error meas")
-                  (throw (Exception. "トークンが古いんじゃ？"))))
-        (get-in [:body :body :measuregrps]))))
+    (log/info "meas access token:" (abbrev access))
+    (let [ret  (hc/post
+                meas-uri
+                {:as :json
+                 ;; CAUTION: "authorization" must be lower characters!
+                 ;; :headers {"authorization" (str "Bearer " access)}
+                 :oauth-token  access
+                 :query-params query-params})]
+      (log/info "meas ret" ret)
+      (if (= 200 (:status ret))
+        (get-in ret [:body :body :measuregrps])
+        (log/error "meas" ret)))))
+
 
 (defn list-measures
   "returns measures items in vector"

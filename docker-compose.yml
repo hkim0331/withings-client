@@ -3,6 +3,7 @@ version: "3.3"
 services:
   withings-client:
     image: hkim0331/luminus
+    # Calva forwards automatically
     ports:
       - "3000:3000"
       - "7002:7002"

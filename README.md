@@ -1,5 +1,7 @@
 # Withings-Client
 
+withings token manager.
+
 🔥UNDER CONSTRUCTION🔥
 
 generated using Luminus version "4.40"
@@ -14,11 +16,10 @@ generated using Luminus version "4.40"
 
 [1]: https://github.com/technomancy/leiningen
 
-## Run (develop)
+## Run (develop, need DevContainer)
 
-To start a web server for the application, run:
+not MariaDB 11. use 10.3.
 
-    lein run
 
 or in VScode,
 

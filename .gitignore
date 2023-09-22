@@ -1,3 +1,6 @@
+/.calva/output-window/
+/.clj-kondo/.cache/
+/.lsp/.cache/
 /classes
 /checkouts
 /lib
@@ -8,7 +11,7 @@
 *.jar
 *.class
 pom.xml
-.nrepl-port
+/.nrepl-port
 dev-config.edn
 test-config.edn
 profiles.clj
@@ -17,13 +20,9 @@ profiles.clj
 /log
 /data
 /.shadow-cljs
-/*.sh
-/db-dumps/*.sql
-/db-dumps/old/
+
+/db-dumps/*
+!/db-dumps/*.sh
 
 /.bash_history
 /.vscode-server
-
-/.calva/output-window/
-/.clj-kondo/.cache/
-/.lsp/.cache/

@@ -17,6 +17,7 @@ services:
       - infinity
 
   db:
+    # not mariadb:11
     image: mariadb:10.11
     # restart: always
     environment:

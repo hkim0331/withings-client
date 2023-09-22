@@ -1,28 +1,30 @@
-version: "3.3"
+version: "3"
 
 services:
   withings-client:
-    image: hkim0331/luminus
+    image: hkim0331/luminus:0.1
     # Calva forwards automatically
-    ports:
-      - "3000:3000"
-      - "7002:7002"
-      - "9630:9630"
+    # ports:
+    #   - "3000:3000"
+    #   - "7002:7002"
+    #   - "9630:9630"
     volumes:
       - .:/usr/src/app:cached
       - m2:/root/.m2
     working_dir: /usr/src/app
-    command: /bin/sh -c "while sleep 1000; do :; done"
+    command:
+      - sleep
+      - infinity
 
   db:
     image: mariadb:10.11
-    restart: always
+    # restart: always
     environment:
       MARIADB_ROOT_PASSWORD: admin
       MARIADB_USER: user
       MARIADB_PASSWORD: secret
-    ports:
-      - "13306:3306"
+    # ports:
+    #   - "13306:3306"
     volumes:
       - ./initdb.d:/docker-entrypoint-initdb.d
       - mariadb:/var/lib/mysql

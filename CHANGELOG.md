@@ -6,7 +6,7 @@
 - mainly getting many data at once
   change meastype with meastypes? should also change formatting functions.
 - add `note` column to users table.
-- bar chart of the viable time of access tokens
+- bar-chart of the viable time of access tokens
 - validation about `startdate` and `enddate`
 - display README.md or bin script usage.
 - catch exceptions. for example, execute weights.sh before login.sh.
@@ -15,10 +15,13 @@
 - empty になったが正しい cid/secret が入っているときは、fix みたいなボタンで
   refresh/access token を取ってこれるようにできないか？
 - 新規ユーザの場合は userid をテーブルに入れず、リフレッシュは名前をキーとする。
-
 - jdbc can not connect to MariaDB-11. choose Mariadb-10.
 - can not connect to localhost:3000 from devcontainer.
   need restarting VScode or logout/login to connect.
+
+## 0.21.1 - 2023-09-22
+- bump-version.sh
+- clojure -Tantq outdated :upgrade true
 
 ## 0.20.0 - 2023-06-29
 - core.cljs/delete-button: delete user name ?

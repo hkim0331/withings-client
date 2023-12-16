@@ -47,25 +47,28 @@
   (db/user-by-name {:name name}))
 
 ;; use?
-(defn user-by-cid
-  [cid]
-  (db/user-by-cid {:cid cid}))
+;; (defn user-by-cid
+;;   [cid]
+;;   (db/user-by-cid {:cid cid}))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defn update-tokens-by-name!
   "updates the `name`s row with `access`, `refresh` token"
   [params]
-  (db/update-tokens-by-name! params))
+  (log/info "users/update-tokens-by-name!" params)
+  (try
+    (db/update-tokens-by-name! params)
+    (catch Exception _ (throw (Exception. "error: update-tokens-by-name!")))))
 
 (defn update-tokens!
   "Update userid's access-token and refresh-token.
    returns the number of rows updated"
   [params]
-  (log/info "update-tokens! userid:" (:userid params))
+  (log/info "users/update-tokens! params" params)
   (try
     (db/update-tokens! params)
-    (catch Exception _ (throw (Exception. "error: update-token!")))))
+    (catch Exception _ (throw (Exception. "error: update-tokens!")))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defn toggle-valid!

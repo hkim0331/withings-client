@@ -1,0 +1,12 @@
+{:paths ["bb"]
+
+ :deps
+ {com.hyperfiddle/rcf {:mvn/version "20220926-202227"}
+  com.taoensso/timbre {:mvn/version "6.1.0"}
+  io.github.matthewdowney/rich-comment-tests {:git/tag "v1.0.2" :git/sha "4501366"}}
+
+ :tasks
+ {outdated      (shell "clojure -Tantq outdated")
+  upgrade       (shell "clojure -Tantq outdated :upgrade true")
+  upgrade-force (shell "clojure -Tantq outdated :upgrade true :force true")
+  help          (shell "clojure -A:deps -Tantq help/doc")}}

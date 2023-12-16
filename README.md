@@ -1,5 +1,7 @@
 # Withings-Client
 
+withings token manager.
+
 🔥UNDER CONSTRUCTION🔥
 
 generated using Luminus version "4.40"
@@ -9,20 +11,26 @@ generated using Luminus version "4.40"
 ## Prerequisites
 
 * [Leiningen][1] 2.0 or above installed.
-* mariadb 10.3 or mysql
+* mariadb 10.3 or later.
 * npm (maybe nodejs)
 
 [1]: https://github.com/technomancy/leiningen
 
-## Run (develop)
+## Prep
 
-To start a web server for the application, run:
+* create user
+* create database
 
-    lein run
+## develop
+
+not MariaDB 11. use 10.*. (2023-12-16, 10.6)
+
+or in VScode,
+
 
 ## Run kohhoh
 
-Use /home/ubuntu/wc/{start,stop,restart}.sh scripts.
+Use /home/ubuntu/withings-client/{start,stop,restart}.sh.
 
 ## Usage
 

@@ -9,13 +9,11 @@
             },
             "extensions": [
                 "betterthantomorrow.calva",
-                "borkdude.clj-kondo",
-                "eduarddyckman.vscode-parinfer",
+                // "borkdude.clj-kondo",
+                // "eduarddyckman.vscode-parinfer",
                 "jsynowiec.vscode-insertdatestring",
-                "jsynowiec.vscode-insertdatestring",
-                "lfs.vscode-emacs-friendly",
-                "mosapride.zenkaku",
-                "ybaumes.highlight-trailing-white-spaces"
+                // "mosapride.zenkaku",
+                // "ybaumes.highlight-trailing-white-spaces"
             ]}},
     "service": "withings-client",
     "workspaceFolder": "/usr/src/app"

@@ -1,8 +1,9 @@
+TAG=hkim0331/luminus:0.1
 DEST=ubuntu@kohhoh.jp
 
 all: clean deploy
 
-rep:
+prep:
 	npm install
 	npm install xmlhttprequest
 
@@ -10,8 +11,10 @@ mysql: mariadb
 
 mariadb:
 	docker run --detach --name mariadb -p 3306:3306 \
-		--env MARIADB_USER=user --env MARIADB_PASSWORD=secret \
-		--env MARIADB_ROOT_PASSWORD=admin  mariadb:latest
+		--env MARIADB_USER=user \
+		--env MARIADB_PASSWORD=secret \
+		--env MARIADB_ROOT_PASSWORD=admin \
+		mariadb:latest
 
 uberjar:
 	lein uberjar
@@ -27,9 +30,5 @@ deploy: target/uberjar/withings-client.jar
 clean:
 	${RM} -r target
 
-
-build: hkim0331/luminus
-
-hkim0331/luminus:
-	docker build -t $@ .
-
+build:
+	docker build -t $TAG .

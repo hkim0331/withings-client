@@ -20,7 +20,6 @@ generated using Luminus version "4.40"
 
 not MariaDB 11. use 10.3.
 
-
 or in VScode,
 
 

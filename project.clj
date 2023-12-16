@@ -1,4 +1,4 @@
-(defproject withings-client "0.21.1"
+(defproject withings-client "0.22.0"
 
   :description "FIXME: write description"
   :url "http://example.com/FIXME"

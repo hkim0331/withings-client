@@ -19,6 +19,16 @@
 - can not connect to localhost:3000 from devcontainer.
   need restarting VScode or logout/login to connect.
 
+## 0.22.0 - 2023-12-16
+move to new kohhoh.jp.
+also created `nuc.local:withings-client` drived by multipass. checked working.
+### Added
+- start.sh
+- stop.sh
+- restart.sh
+- nginx/wc.kohhoh.jp(must strip lines added by certbot before starting)
+
+
 ## 0.21.1 - 2023-09-22
 - bump-version.sh
 - clojure -Tantq outdated :upgrade true
@@ -29,7 +39,7 @@
 
 ## 0.20.0-SNAPSHOT
 - kohhoh# apt-mark hold mariadb-server
-  mariadb 11.0.2 では以下のエラー。docker で mariadb 10.11 となら　OK.
+  mariadb 11.0.2 では以下のエラー。docker で mariadb 10.11 とならOK.
 ; Execution error (SQLException) at com.mysql.cj.jdbc.exceptions.SQLError/createSQLException (SQLError.java:130).
 ; Unknown system variable 'transaction_isolation'
 

@@ -19,11 +19,18 @@
 - can not connect to localhost:3000 from devcontainer.
   need restarting VScode or logout/login to connect.
 
-- add refresh-all button
 - change fetch -> refresh and fetch
 - startdate/enddate combination
-- clear browser cache
+- clear browser cache?
+- JST date update
 
+## v1.24-SNAPSHOT
+### Changed
+- db-dumps/refresh.sh: dir name wc->withings-client
+- can refresh-tokens-all
+### Added
+- refresh-all button
+  doseq で 30 秒くらい、pmap で1秒以内。ほんとか？
 
 ## v1.23.574 / 2024-05-18
 - docker/mariadb-10 を利用する。コンテナでの開発よりも、表の macOS で開発。

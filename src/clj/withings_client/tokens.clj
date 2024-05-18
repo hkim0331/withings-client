@@ -100,9 +100,12 @@
   (-> (users/get-user id)
       refresh-and-restore!))
 
+;; doseq -> pmap
 (defn refresh-all!
   []
   (let [users (users/valid-users)]
     (log/info "tokens/refresh-all!" (map :name users))
     (doseq [user users]
-      (refresh-and-restore! user))))
+      (log/info "doseq" (:name user))
+      (refresh-and-restore! user))
+    #_(pmap refresh-and-restore! users)))

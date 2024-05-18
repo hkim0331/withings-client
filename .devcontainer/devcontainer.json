@@ -5,17 +5,13 @@
     ],
     "customizations": {
         "vscode": {
-            "settings": {
-            },
+            "settings": {},
             "extensions": [
                 "betterthantomorrow.calva",
-                // "borkdude.clj-kondo",
-                // "eduarddyckman.vscode-parinfer",
-                "jsynowiec.vscode-insertdatestring",
-                // "mosapride.zenkaku",
-                // "ybaumes.highlight-trailing-white-spaces"
-            ]}},
+                "jsynowiec.vscode-insertdatestring"
+            ]
+        }
+    },
     "service": "withings-client",
     "workspaceFolder": "/usr/src/app"
-    // "remoteUser": "vscode"
 }

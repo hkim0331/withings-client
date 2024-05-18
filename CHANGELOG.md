@@ -25,7 +25,7 @@
 - clear browser cache
 
 
-## v1.23-SNAPSHOT
+## v1.23.574 / 2024-05-18
 - docker/mariadb-10 を利用する。コンテナでの開発よりも、表の macOS で開発。
 - リモートログインして kohhoh.jp でサーバーデバッグしたら？
 - ライブラリのバージョンアップは極力避けて、安定運用を目指す。
@@ -51,14 +51,14 @@ also created `nuc.local:withings-client` drived by multipass. checked working.
 - core.cljs/delete-button: delete user name ?
 - create ボタン、リンクの説明を数行追加。
 
-## 0.20.0-SNAPSHOT
+##  / 2024-05-18
 - kohhoh# apt-mark hold mariadb-server
   mariadb 11.0.2 では以下のエラー。docker で mariadb 10.11 とならOK.
 ; Execution error (SQLException) at com.mysql.cj.jdbc.exceptions.SQLError/createSQLException (SQLError.java:130).
 ; Unknown system variable 'transaction_isolation'
 
 
-## 0.19.4-SNAPSHOT
+##  / 2024-05-18
 - fetch-and-restore! 時、userid が hkimura のものになってしまう。
 - 表示テーブルに userid を入れる。
 
@@ -121,7 +121,7 @@ also created `nuc.local:withings-client` drived by multipass. checked working.
 ### Changed
 - core.clj: remove nil values from `query-params`.
 
-## 0.15.3-SNAPSHOT
+##  / 2024-05-18
 ### Changed
 - /spi/meas uses api `meastypes`
 

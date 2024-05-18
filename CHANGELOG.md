@@ -24,7 +24,7 @@
 - clear browser cache?
 - JST date update
 
-## v1.25-SNAPSHOT
+## v1.25.579 / 2024-05-19
 ### Changed
 - fetch data -> refresh and fetch
   最初の refresh が次の fetch に追い越されることがある。

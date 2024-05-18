@@ -24,7 +24,7 @@
 - clear browser cache?
 - JST date update
 
-## v1.24-SNAPSHOT
+## v1.24.575 / 2024-05-18
 ### Changed
 - db-dumps/refresh.sh: dir name wc->withings-client
 - can refresh-tokens-all

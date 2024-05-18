@@ -12,7 +12,7 @@
   (:import
    goog.History))
 
-(def ^:private version "v1.23.574")
+(def ^:private version "v1.24.575")
 
 ;; FIXME: better way?
 ;; (def redirect-uri
@@ -78,7 +78,7 @@
    [:p version]])
 
 ;; ----------------------------------------------------------
-;; user-page
+;; user-page, called from edit button.
 (defn user-component
   []
   [:div
@@ -248,11 +248,24 @@
     [:span {:class "red"} "empty"]
     (str (subs s 0 n) "...")))
 
+(defn refresh-all-button
+  []
+  [:button.button.is-primary.is-small
+   {:on-click
+    (fn [_] (POST (str "/api/tokens/refresh-all")
+              {:format :json
+               :handler (fn [_]
+                          (fetch-users!)
+                          (js/alert "リフレッシュ完了。"))
+               :error-handler #(js/alert "失敗。")}))}
+   "refresh-all"])
+
 (defn users-component []
   [:div
    [:h2 "users"]
    [:p "アクセストークンは 10800 秒（3時間）で切れるとなってるが、
         もっと短い時間で切れてるんじゃ？"]
+   [:div [refresh-all-button] " 30秒くらいかかります。"]
    [:div {:class "columns"}
     (for [col ["valid" "id" "name" "userid" "belong" "cid" "access" "update" "" ""]]
       [:div {:class "column"} col])]
@@ -413,11 +426,11 @@
    [:br]
    [fetch-button]
    #_[:div.columns
-    [:div.column.is-one-quarter
-     (-> @session :data :id js/parseInt user-name)
-     ", "
-     (-> @session :data :meastype js/parseInt measure-name)]
-    [:div.column [fetch-button]]]])
+      [:div.column.is-one-quarter
+       (-> @session :data :id js/parseInt user-name)
+       ", "
+       (-> @session :data :meastype js/parseInt measure-name)]
+      [:div.column [fetch-button]]]])
 
 ;; params has `created` param. which should be displayed?
 (defn output-one

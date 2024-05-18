@@ -3,7 +3,7 @@
 SERV="ubuntu@kohhoh.jp"
 DUMP="withings-`date +%F`.sql"
 
-ssh ${SERV} 'cd wc/db-dumps && ./dump.sh'
-scp ${SERV}:wc/db-dumps/${DUMP} .
+ssh ${SERV} 'cd withings-client/db-dumps && ./dump.sh'
+scp ${SERV}:withings-client/db-dumps/${DUMP} .
 # ./restore.sh ${DUMP}
 

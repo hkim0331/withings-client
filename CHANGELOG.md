@@ -19,6 +19,20 @@
 - can not connect to localhost:3000 from devcontainer.
   need restarting VScode or logout/login to connect.
 
+- add refresh-all button
+- change fetch -> refresh and fetch
+- startdate/enddate combination
+- clear browser cache
+
+
+## v1.23-SNAPSHOT
+- docker/mariadb-10 を利用する。コンテナでの開発よりも、表の macOS で開発。
+- リモートログインして kohhoh.jp でサーバーデバッグしたら？
+- ライブラリのバージョンアップは極力避けて、安定運用を目指す。
+- updated bump-version.sh to update CHANGELOG.md
+- hkim0331/luminus:0.3.2
+
+
 ## 0.22.0 - 2023-12-16
 move to new kohhoh.jp.
 also created `nuc.local:withings-client` drived by multipass. checked working.

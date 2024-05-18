@@ -19,11 +19,8 @@ mariadb:
 uberjar:
 	lein uberjar
 
-target/uberjar/withings-client.jar:
-	lein uberjar
-
-deploy: target/uberjar/withings-client.jar
-	scp target/uberjar/withings-client.jar ${DEST}:wc/withings-client.jar && \
+deploy: uberjar
+	scp target/uberjar/withings-client.jar ${DEST}:withings-client/withings-client.jar && \
 	ssh ${DEST} 'sudo systemctl restart withings-client' && \
 	ssh ${DEST} 'systemctl status withings-client'
 

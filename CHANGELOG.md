@@ -24,6 +24,11 @@
 - clear browser cache?
 - JST date update
 
+## v1.25-SNAPSHOT
+### Changed
+- fetch data -> refresh and fetch
+  最初の refresh が次の fetch に追い越されることがある。
+
 ## v1.24.575 / 2024-05-18
 ### Changed
 - db-dumps/refresh.sh: dir name wc->withings-client

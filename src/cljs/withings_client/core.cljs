@@ -5,6 +5,7 @@
    [clojure.string :as string]
    [goog.events :as events]
    [goog.history.EventType :as HistoryEventType]
+   ;; [java-time.api :as jt]
    [reagent.core :as r]
    [reagent.dom :as rdom]
    [reitit.core :as reitit]
@@ -12,7 +13,7 @@
   (:import
    goog.History))
 
-(def ^:private version "v1.24.575")
+(def ^:private version "v1.25.579")
 
 ;; FIXME: better way?
 ;; (def redirect-uri
@@ -20,6 +21,11 @@
 ;;     js/redirectUrl
 ;;     (catch js/Error _ "https://wc.kohhoh.jp/callback")))
 (def redirect-uri "https://wc.kohhoh.jp/callback")
+
+(comment
+  (jt/instant) ; no in CLJS.
+  (js/Date)
+  :rcf)
 
 (defonce session
   (r/atom {:page :home
@@ -33,9 +39,9 @@
                   :bot_name nil}
            :users {}
            :measures {}
-           :data {:lastupdate "2023-06-01"
-                  :startdate  "2023-05-01 00:00:00"
-                  :enddate    "2023-06-28 23:59:59"
+           :data {:lastupdate ""
+                  :startdate  "2024-01-01 00:00:00"
+                  :enddate    "2024-12-31 23:59:59"
                   :results    nil}
            :user {}})) ;; user-page
 
@@ -54,7 +60,7 @@
 (defn navbar []
   [:nav.navbar.is-info>div.container
    [:div.navbar-brand
-    [:a.navbar-item {:href "/" :style {:font-weight :bold}}
+    [:a.navbar-item {:href "" :style {:font-weight :bold}}
      "Withings-Client"]
     [:span.navbar-burger.burger
      {:data-target :nav-menu
@@ -378,22 +384,24 @@
    [:button.button.is-primary.is-small
     {:on-click
      (fn []
-       ;; no effect
-       ;; (swap! session assoc-in [:date :results] "fetching...")
-       (POST "/api/meas"
-         {:format :json
-          :params {:id         (-> @session :data :id)
-                   :meastype   (-> @session :data :meastype)
-                   :startdate  (-> @session :data :startdate)
-                   :enddate    (-> @session :data :enddate)
-                   :lastupdate (-> @session :data :lastupdate)}
-          :handler
-          (fn [res]
-            (swap! session assoc-in [:data :results] res))
-          :error-handler
-          (fn [e]
-            (js/alert (-> e :response :body)))}))}
-    "fetch"]])
+       (try
+         (POST (str "/api/token/" (-> @session :data :id) "/refresh")
+           {;; :handler (fn [_] (js/alert "fetch success"))
+            :error-handler (fn [e] (throw e))})
+         (POST "/api/meas"
+           {:format :json
+            :params {:id         (-> @session :data :id)
+                     :meastype   (-> @session :data :meastype)
+                     :startdate  (-> @session :data :startdate)
+                     :enddate    (-> @session :data :enddate)
+                     :lastupdate (-> @session :data :lastupdate)}
+            :handler
+            (fn [res]
+              (swap! session assoc-in [:data :results] res))
+            :error-handler
+            (fn [e] (throw e))})
+         (catch js/Error e (js/alert e))))}
+    "refresh and fetch"]])
 
 (defn user-name
   [id]
@@ -424,7 +432,7 @@
    [:p "or"]
    [input-lastupdate]
    [:br]
-   [fetch-button]
+   [:div [fetch-button] " 1回目のfetch が空振りすることあり。2回目で成功します。"]
    #_[:div.columns
       [:div.column.is-one-quarter
        (-> @session :data :id js/parseInt user-name)

@@ -24,10 +24,14 @@
 - clear browser cache?
 - JST date update
 
+## v1.26-SNAPSHOT
+
 ## v1.25.579 / 2024-05-19
 ### Changed
 - fetch data -> refresh and fetch
-  最初の refresh が次の fetch に追い越されることがある。
+  最初の refresh が次の fetch に追い越されるのか、時間がかかる。
+- CLJS の navbar, Withings-Client のリンクを "/" から "" にし、
+  飛ばないように。
 
 ## v1.24.575 / 2024-05-18
 ### Changed

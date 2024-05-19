@@ -28,9 +28,10 @@
 - gap between `div.column`s.
 
 - /home が unauthorized になる。
+- bump-version が package.json をアップデートしていない。
 
 
-## v1.27-SNAPSHOT
+## v1.27.591 / 2024-05-19
 - refresh-all を毎時呼ぶ。systemd? POST /api/tokens/refresh-all
 ### Added
 - refresh-all.sh

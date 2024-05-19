@@ -24,7 +24,7 @@
            (= password (env :password)))
     (-> (response/found "/home/")
         (assoc-in [:session :identity] login))
-    (-> (response/found "/login")
+    (-> (response/found "/")
         (assoc :session {} :flash "login failure"))))
 
 (defn logout!

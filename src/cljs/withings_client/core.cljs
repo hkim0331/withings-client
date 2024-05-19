@@ -59,6 +59,7 @@
    title])
 
 (defonce expanded? (r/atom false))
+
 (defn navbar []
   [:nav.navbar.is-info>div.container
    [:div.navbar-brand
@@ -72,7 +73,9 @@
    [:div#nav-menu.navbar-menu
     {:class (when @expanded? :is-active)}
     [:div.navbar-start
-     [nav-link "#/" "Home" :home]
+     ;; [nav-link "" "Home" :home]
+     [nav-link "#/new" "New" :new]
+     [nav-link "#/users" "Users" :users]
      [nav-link "#/data" "Data" :data]
      [nav-link "#/about" "About" :about]
      [nav-link "/logout" "Logout"]
@@ -475,12 +478,26 @@
    [:hr]
    version])
 
+(defn new-page []
+  [:section.section>div.container>div.content
+   [new-component]
+   [:hr]
+   version])
+
+(defn users-page []
+  [:section.section>div.container>div.content
+   [users-component]
+   [:hr]
+   version])
 ;; ------------------------------------------------------------
 (def pages
   {:home  #'home-page
    :about #'about-page
    :user  #'user-page
-   :data  #'data-page})
+   :data  #'data-page
+   ;;
+   :new   #'new-page
+   :users #'users-page})
 
 (defn page []
   [(pages (:page @session))])
@@ -492,7 +509,10 @@
    [["/"      :home]
     ["/about" :about]
     ["/user"  :user]
-    ["/data"  :data]]))
+    ["/data"  :data]
+    ;;
+    ["/new"   :new]
+    ["/users" :users]]))
 
 (defn match-route [uri]
   (->> (or (not-empty (string/replace uri #"^.*#" "")) "/")

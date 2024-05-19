@@ -8,18 +8,16 @@
 - add `note` column to users table.
 - bar-chart of the viable time of access tokens
 - display README.md or bin script usage.
-- catch exceptions. for example, execute weights.sh before login.sh.
-- empty になったが正しい cid/secret が入っているときは、fix みたいなボタンで
-  refresh/access token を取ってこれるようにできないか？
 - 新規ユーザの場合は userid をテーブルに入れず、リフレッシュは名前をキーとする。
 - JST date update
-
 - gap between `div.column`s.
-- /home が unauthorized になる。
 
 
 ## v1.28-SNAPSHOT
-divide new to trhee pages. new, users, data.
+- divided new to trhee pages. new, users, data.
+- fix the problem after login failure.
+### Removed
+- Home item from navbar.
 ### Changed
 - bump-version.sh updates `package.json`.
 

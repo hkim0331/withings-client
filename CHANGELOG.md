@@ -25,6 +25,7 @@
 - JST date update
 
 ## v1.26-SNAPSHOT
+- CLJS では promise 使えない。
 
 ## v1.25.579 / 2024-05-19
 ### Changed

@@ -220,10 +220,10 @@
      (-> @session :home :name)]]])
 
 (defn refresh-button
-  [user]
+  [id] ;; user
   [:button.button.is-primary.is-small
    {:on-click
-    (fn [_] (POST (str "/api/token/" (:id user) "/refresh")
+    (fn [_] (POST (str "/api/token/" id "/refresh")
               {:format :json
                :handler (fn [_]
                           (fetch-users!)
@@ -287,7 +287,7 @@
                                    (shorten 6 (:cid user))
                                    (shorten 6 (:access user))
                                    (tm (:updated_at user))
-                                   [refresh-button user]
+                                   [refresh-button (:id user)]
                                    [edit-button user]])]
          (users-component-aux key e))]))])
 
@@ -379,29 +379,26 @@
     " 日時を記入するとこちらを優先する。カラだと start ~ end を取る。"]])
 
 (defn fetch-button
-  []
+  [id]
   [:div
    [:button.button.is-primary.is-small
     {:on-click
-     (fn []
-       (try
-         (POST (str "/api/token/" (-> @session :data :id) "/refresh")
-           {;; :handler (fn [_] (js/alert "fetch success"))
-            :error-handler (fn [e] (throw e))})
-         (POST "/api/meas"
-           {:format :json
-            :params {:id         (-> @session :data :id)
-                     :meastype   (-> @session :data :meastype)
-                     :startdate  (-> @session :data :startdate)
-                     :enddate    (-> @session :data :enddate)
-                     :lastupdate (-> @session :data :lastupdate)}
-            :handler
-            (fn [res]
-              (swap! session assoc-in [:data :results] res))
-            :error-handler
-            (fn [e] (throw e))})
-         (catch js/Error e (js/alert e))))}
-    "refresh and fetch"]])
+     (fn [_]
+       ;; (POST (str "/api/token/" (-> @session :data :id) "/refresh")
+       (POST "/api/meas"
+         {:format :json
+          :params {:id         id ;; (-> @session :data :id)
+                   :meastype   (-> @session :data :meastype)
+                   :startdate  (-> @session :data :startdate)
+                   :enddate    (-> @session :data :enddate)
+                   :lastupdate (-> @session :data :lastupdate)}
+          :handler
+          (fn [res]
+            (swap! session assoc-in [:data :results] res))
+          ;; error does not happen
+          :error-handler
+          (fn [_] (js/alert "/api/meas error"))}))}
+    "fetch"]])
 
 (defn user-name
   [id]
@@ -432,7 +429,9 @@
    [:p "or"]
    [input-lastupdate]
    [:br]
-   [:div [fetch-button] " 1回目のfetch が空振りすることあり。2回目で成功します。"]
+   [:div.columns
+    [:div.column [fetch-button (-> @session :data :id)]]
+    [:div [refresh-button (-> @session :data :id)]]]
    #_[:div.columns
       [:div.column.is-one-quarter
        (-> @session :data :id js/parseInt user-name)

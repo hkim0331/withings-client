@@ -26,9 +26,19 @@
 
 - new を別ページに。new, users, data に分ける。
 - gap between `div.column`s.
-- refresh-all を毎時呼ぶ。systemd?
+
+- /home が unauthorized になる。
+
 
 ## v1.27-SNAPSHOT
+- refresh-all を毎時呼ぶ。systemd? POST /api/tokens/refresh-all
+### Added
+- refresh-all.sh
+- withings-refresh.service
+- withings-refresh.timer
+### Changed
+- Makefile:timer-enable
+
 
 ## v1.26.586 / 2024-05-19
 - CLJS では promise 使えない。

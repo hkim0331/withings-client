@@ -24,8 +24,11 @@
 - clear browser cache?
 - JST date update
 
-- new を別ページに。new, uses, dara に分ける。
+- new を別ページに。new, users, data に分ける。
 - gap between `div.column`s.
+- refresh-all を毎時呼ぶ。systemd?
+
+## v1.27-SNAPSHOT
 
 ## v1.26.586 / 2024-05-19
 - CLJS では promise 使えない。
@@ -56,6 +59,7 @@
 - updated bump-version.sh to update CHANGELOG.md
 - hkim0331/luminus:0.3.2
 
+<!-- restart development -->
 
 ## 0.22.0 - 2023-12-16
 move to new kohhoh.jp.

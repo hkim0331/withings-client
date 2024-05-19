@@ -24,8 +24,15 @@
 - clear browser cache?
 - JST date update
 
+- new を別ページに。new, uses, dara に分ける。
+- gap between `div.column`s.
+
 ## v1.26-SNAPSHOT
 - CLJS では promise 使えない。
+### Changed
+- refresh-button takes `user-id` as its arg.
+- added refresh-button to data component.
+- fetch の結果を alert ではなく、テキストで表示。
 
 ## v1.25.579 / 2024-05-19
 ### Changed

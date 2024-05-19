@@ -43,6 +43,8 @@
                   :startdate  "2024-01-01 00:00:00"
                   :enddate    "2024-12-31 23:59:59"
                   :results    nil}
+           :refresh "???"
+           :refresh-all "30秒くらいかかります。"
            :user {}})) ;; user-page
 
 ;; to avoid reload
@@ -227,7 +229,8 @@
               {:format :json
                :handler (fn [_]
                           (fetch-users!)
-                          (js/alert "リフレッシュ完了。"))
+                          (swap! session assoc :refresh "OK")
+                          #_(js/alert "リフレッシュ完了。"))
                :error-handler #(js/alert "失敗。")}))}
    "refresh"])
 
@@ -258,12 +261,15 @@
   []
   [:button.button.is-primary.is-small
    {:on-click
-    (fn [_] (POST (str "/api/tokens/refresh-all")
-              {:format :json
-               :handler (fn [_]
-                          (fetch-users!)
-                          (js/alert "リフレッシュ完了。"))
-               :error-handler #(js/alert "失敗。")}))}
+    (fn [_]
+      (swap! session assoc :refresh-all "wait...")
+      (POST (str "/api/tokens/refresh-all")
+        {:format :json
+         :handler (fn [_]
+                    (fetch-users!)
+                    #_(js/alert "リフレッシュ完了。")
+                    (swap! session assoc :refresh-all "done."))
+         :error-handler #(js/alert "失敗。")}))}
    "refresh-all"])
 
 (defn users-component []
@@ -271,10 +277,11 @@
    [:h2 "users"]
    [:p "アクセストークンは 10800 秒（3時間）で切れるとなってるが、
         もっと短い時間で切れてるんじゃ？"]
-   [:div [refresh-all-button] " 30秒くらいかかります。"]
+   [:div.columns
+    [:div [refresh-all-button]] [:div (-> @session :refresh-all)]]
    [:div {:class "columns"}
-    (for [col ["valid" "id" "name" "userid" "belong" "cid" "access" "update" "" ""]]
-      [:div {:class "column"} col])]
+    (for [col ["valid" "id" "name" "userid" #_"belong" "cid" "access" "update" #_"" ""]]
+      [:div {:class "column has-text-weight-bold"} col])]
    (doall
     (for [user (-> @session :users)]
       [:div {:class "columns" :key (:id user)}
@@ -283,11 +290,12 @@
                                    (:id user)
                                    (:name user)
                                    (:userid user)
-                                   (:belong user)
+                                   #_(:belong user)
                                    (shorten 6 (:cid user))
                                    (shorten 6 (:access user))
                                    (tm (:updated_at user))
-                                   [refresh-button (:id user)]
+                                   ;;
+                                   #_[refresh-button (:id user)]
                                    [edit-button user]])]
          (users-component-aux key e))]))])
 
@@ -430,8 +438,9 @@
    [input-lastupdate]
    [:br]
    [:div.columns
-    [:div.column [fetch-button (-> @session :data :id)]]
-    [:div [refresh-button (-> @session :data :id)]]]
+    [:div.column.is-1 [fetch-button (-> @session :data :id)]]
+    [:div.column.is-1 [refresh-button (-> @session :data :id)]]
+    [:div#refresh.column.is-1 (-> @session :refresh)]]
    #_[:div.columns
       [:div.column.is-one-quarter
        (-> @session :data :id js/parseInt user-name)

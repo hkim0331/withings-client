@@ -29,3 +29,9 @@ clean:
 
 build:
 	docker build -t $TAG .
+
+timer-enable:
+	cp withings-timer.* /lib/systemd/system
+	systemctl daemon-reload
+	systemctl start withings-refresh.timer
+	systemctl enable withings-refresh.timer

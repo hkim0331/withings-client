@@ -13,7 +13,7 @@
 - gap between `div.column`s.
 
 
-## v1.28-SNAPSHOT
+## v1.28.599 / 2024-05-19
 - divided new to trhee pages. new, users, data.
 - fix the problem after login failure.
 ### Removed

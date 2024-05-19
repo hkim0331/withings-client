@@ -1,6 +1,6 @@
 {
   "name": "withings-client",
-"version": "v1.28-SNAPSHOT",
+"version": "v1.28.599",
   "devDependencies": {
     "shadow-cljs": "^2.16.5"
   },

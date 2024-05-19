@@ -24,10 +24,22 @@
 - clear browser cache?
 - JST date update
 
+- new を別ページに。new, uses, dara に分ける。
+- gap between `div.column`s.
+
+## v1.26.586 / 2024-05-19
+- CLJS では promise 使えない。
+### Changed
+- refresh-button takes `user-id` as its arg.
+- added refresh-button to data component.
+- fetch の結果を alert ではなく、テキストで表示。
+
 ## v1.25.579 / 2024-05-19
 ### Changed
 - fetch data -> refresh and fetch
-  最初の refresh が次の fetch に追い越されることがある。
+  最初の refresh が次の fetch に追い越されるのか、時間がかかる。
+- CLJS の navbar, Withings-Client のリンクを "/" から "" にし、
+  飛ばないように。
 
 ## v1.24.575 / 2024-05-18
 ### Changed

@@ -7,28 +7,21 @@
   change meastype with meastypes? should also change formatting functions.
 - add `note` column to users table.
 - bar-chart of the viable time of access tokens
-- validation about `startdate` and `enddate`
 - display README.md or bin script usage.
 - catch exceptions. for example, execute weights.sh before login.sh.
-- project name, token-manager?
-- Data page, 'no data' はわかりにくい。
 - empty になったが正しい cid/secret が入っているときは、fix みたいなボタンで
   refresh/access token を取ってこれるようにできないか？
 - 新規ユーザの場合は userid をテーブルに入れず、リフレッシュは名前をキーとする。
-- jdbc can not connect to MariaDB-11. choose Mariadb-10.
-- can not connect to localhost:3000 from devcontainer.
-  need restarting VScode or logout/login to connect.
-
-- change fetch -> refresh and fetch
-- startdate/enddate combination
-- clear browser cache?
 - JST date update
 
-- new を別ページに。new, users, data に分ける。
 - gap between `div.column`s.
-
 - /home が unauthorized になる。
-- bump-version が package.json をアップデートしていない。
+
+
+## v1.28-SNAPSHOT
+divide new to trhee pages. new, users, data.
+### Changed
+- bump-version.sh updates `package.json`.
 
 
 ## v1.27.591 / 2024-05-19

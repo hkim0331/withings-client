@@ -27,7 +27,7 @@
 - new を別ページに。new, uses, dara に分ける。
 - gap between `div.column`s.
 
-## v1.26-SNAPSHOT
+## v1.26.586 / 2024-05-19
 - CLJS では promise 使えない。
 ### Changed
 - refresh-button takes `user-id` as its arg.

@@ -7,17 +7,71 @@
   change meastype with meastypes? should also change formatting functions.
 - add `note` column to users table.
 - bar-chart of the viable time of access tokens
-- validation about `startdate` and `enddate`
 - display README.md or bin script usage.
-- catch exceptions. for example, execute weights.sh before login.sh.
-- project name, token-manager?
-- Data page, 'no data' はわかりにくい。
-- empty になったが正しい cid/secret が入っているときは、fix みたいなボタンで
-  refresh/access token を取ってこれるようにできないか？
 - 新規ユーザの場合は userid をテーブルに入れず、リフレッシュは名前をキーとする。
-- jdbc can not connect to MariaDB-11. choose Mariadb-10.
-- can not connect to localhost:3000 from devcontainer.
-  need restarting VScode or logout/login to connect.
+- JST date update
+- gap between `div.column`s.
+
+
+## v1.28.599 / 2024-05-19
+- divided new to trhee pages. new, users, data.
+- fix the problem after login failure.
+### Removed
+- Home item from navbar.
+### Changed
+- bump-version.sh updates `package.json`.
+
+
+## v1.27.591 / 2024-05-19
+- refresh-all を毎時呼ぶ。systemd? POST /api/tokens/refresh-all
+### Added
+- refresh-all.sh
+- withings-refresh.service
+- withings-refresh.timer
+### Changed
+- Makefile:timer-enable
+
+
+## v1.26.586 / 2024-05-19
+- CLJS では promise 使えない。
+### Changed
+- refresh-button takes `user-id` as its arg.
+- added refresh-button to data component.
+- fetch の結果を alert ではなく、テキストで表示。
+
+## v1.25.579 / 2024-05-19
+### Changed
+- fetch data -> refresh and fetch
+  最初の refresh が次の fetch に追い越されるのか、時間がかかる。
+- CLJS の navbar, Withings-Client のリンクを "/" から "" にし、
+  飛ばないように。
+
+## v1.24.575 / 2024-05-18
+### Changed
+- db-dumps/refresh.sh: dir name wc->withings-client
+- can refresh-tokens-all
+### Added
+- refresh-all button
+  doseq で 30 秒くらい、pmap で1秒以内。ほんとか？
+
+## v1.23.574 / 2024-05-18
+- docker/mariadb-10 を利用する。コンテナでの開発よりも、表の macOS で開発。
+- リモートログインして kohhoh.jp でサーバーデバッグしたら？
+- ライブラリのバージョンアップは極力避けて、安定運用を目指す。
+- updated bump-version.sh to update CHANGELOG.md
+- hkim0331/luminus:0.3.2
+
+<!-- restart development -->
+
+## 0.22.0 - 2023-12-16
+move to new kohhoh.jp.
+also created `nuc.local:withings-client` drived by multipass. checked working.
+### Added
+- start.sh
+- stop.sh
+- restart.sh
+- nginx/wc.kohhoh.jp(must strip lines added by certbot before starting)
+
 
 ## 0.21.1 - 2023-09-22
 - bump-version.sh
@@ -27,14 +81,14 @@
 - core.cljs/delete-button: delete user name ?
 - create ボタン、リンクの説明を数行追加。
 
-## 0.20.0-SNAPSHOT
+##  / 2024-05-18
 - kohhoh# apt-mark hold mariadb-server
-  mariadb 11.0.2 では以下のエラー。docker で mariadb 10.11 となら　OK.
+  mariadb 11.0.2 では以下のエラー。docker で mariadb 10.11 とならOK.
 ; Execution error (SQLException) at com.mysql.cj.jdbc.exceptions.SQLError/createSQLException (SQLError.java:130).
 ; Unknown system variable 'transaction_isolation'
 
 
-## 0.19.4-SNAPSHOT
+##  / 2024-05-18
 - fetch-and-restore! 時、userid が hkimura のものになってしまう。
 - 表示テーブルに userid を入れる。
 
@@ -97,7 +151,7 @@
 ### Changed
 - core.clj: remove nil values from `query-params`.
 
-## 0.15.3-SNAPSHOT
+##  / 2024-05-18
 ### Changed
 - /spi/meas uses api `meastypes`
 

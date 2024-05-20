@@ -1,0 +1,12 @@
+[Unit]
+Description=Withings-Client refresh-all
+
+[Service]
+WorkingDirectory=/home/ubuntu/withings-client
+ExecStart=/bin/sh refresh-all.sh
+TimeoutSec=300
+Type=simple
+User=ubuntu
+
+[Install]
+WantedBy=multi-user.target

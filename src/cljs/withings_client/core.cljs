@@ -5,6 +5,7 @@
    [clojure.string :as string]
    [goog.events :as events]
    [goog.history.EventType :as HistoryEventType]
+   ;; [java-time.api :as jt]
    [reagent.core :as r]
    [reagent.dom :as rdom]
    [reitit.core :as reitit]
@@ -12,7 +13,7 @@
   (:import
    goog.History))
 
-(def ^:private version "0.21.1")
+(def ^:private version "v1.28.599")
 
 ;; FIXME: better way?
 ;; (def redirect-uri
@@ -20,6 +21,11 @@
 ;;     js/redirectUrl
 ;;     (catch js/Error _ "https://wc.kohhoh.jp/callback")))
 (def redirect-uri "https://wc.kohhoh.jp/callback")
+
+(comment
+  (jt/instant) ; no in CLJS.
+  (js/Date)
+  :rcf)
 
 (defonce session
   (r/atom {:page :home
@@ -33,10 +39,12 @@
                   :bot_name nil}
            :users {}
            :measures {}
-           :data {:lastupdate "2023-06-01"
-                  :startdate  "2023-05-01 00:00:00"
-                  :enddate    "2023-06-28 23:59:59"
+           :data {:lastupdate ""
+                  :startdate  "2024-01-01 00:00:00"
+                  :enddate    "2024-12-31 23:59:59"
                   :results    nil}
+           :refresh "???"
+           :refresh-all "30秒くらいかかります。"
            :user {}})) ;; user-page
 
 ;; to avoid reload
@@ -51,10 +59,11 @@
    title])
 
 (defonce expanded? (r/atom false))
+
 (defn navbar []
   [:nav.navbar.is-info>div.container
    [:div.navbar-brand
-    [:a.navbar-item {:href "/" :style {:font-weight :bold}}
+    [:a.navbar-item {:href "" :style {:font-weight :bold}}
      "Withings-Client"]
     [:span.navbar-burger.burger
      {:data-target :nav-menu
@@ -64,7 +73,9 @@
    [:div#nav-menu.navbar-menu
     {:class (when @expanded? :is-active)}
     [:div.navbar-start
-     [nav-link "#/" "Home" :home]
+     ;; [nav-link "" "Home" :home]
+     [nav-link "#/new" "New" :new]
+     [nav-link "#/users" "Users" :users]
      [nav-link "#/data" "Data" :data]
      [nav-link "#/about" "About" :about]
      [nav-link "/logout" "Logout"]
@@ -78,7 +89,7 @@
    [:p version]])
 
 ;; ----------------------------------------------------------
-;; user-page
+;; user-page, called from edit button.
 (defn user-component
   []
   [:div
@@ -214,14 +225,15 @@
      (-> @session :home :name)]]])
 
 (defn refresh-button
-  [user]
+  [id] ;; user
   [:button.button.is-primary.is-small
    {:on-click
-    (fn [_] (POST (str "/api/token/" (:id user) "/refresh")
+    (fn [_] (POST (str "/api/token/" id "/refresh")
               {:format :json
                :handler (fn [_]
                           (fetch-users!)
-                          (js/alert "リフレッシュ完了。"))
+                          (swap! session assoc :refresh "OK")
+                          #_(js/alert "リフレッシュ完了。"))
                :error-handler #(js/alert "失敗。")}))}
    "refresh"])
 
@@ -248,14 +260,31 @@
     [:span {:class "red"} "empty"]
     (str (subs s 0 n) "...")))
 
+(defn refresh-all-button
+  []
+  [:button.button.is-primary.is-small
+   {:on-click
+    (fn [_]
+      (swap! session assoc :refresh-all "wait...")
+      (POST (str "/api/tokens/refresh-all")
+        {:format :json
+         :handler (fn [_]
+                    (fetch-users!)
+                    #_(js/alert "リフレッシュ完了。")
+                    (swap! session assoc :refresh-all "done."))
+         :error-handler #(js/alert "失敗。")}))}
+   "refresh-all"])
+
 (defn users-component []
   [:div
    [:h2 "users"]
    [:p "アクセストークンは 10800 秒（3時間）で切れるとなってるが、
         もっと短い時間で切れてるんじゃ？"]
+   [:div.columns
+    [:div [refresh-all-button]] [:div (-> @session :refresh-all)]]
    [:div {:class "columns"}
-    (for [col ["valid" "id" "name" "userid" "belong" "cid" "access" "update" "" ""]]
-      [:div {:class "column"} col])]
+    (for [col ["valid" "id" "name" "userid" #_"belong" "cid" "access" "update" #_"" ""]]
+      [:div {:class "column has-text-weight-bold"} col])]
    (doall
     (for [user (-> @session :users)]
       [:div {:class "columns" :key (:id user)}
@@ -264,11 +293,12 @@
                                    (:id user)
                                    (:name user)
                                    (:userid user)
-                                   (:belong user)
+                                   #_(:belong user)
                                    (shorten 6 (:cid user))
                                    (shorten 6 (:access user))
                                    (tm (:updated_at user))
-                                   [refresh-button user]
+                                   ;;
+                                   #_[refresh-button (:id user)]
                                    [edit-button user]])]
          (users-component-aux key e))]))])
 
@@ -360,16 +390,15 @@
     " 日時を記入するとこちらを優先する。カラだと start ~ end を取る。"]])
 
 (defn fetch-button
-  []
+  [id]
   [:div
    [:button.button.is-primary.is-small
     {:on-click
-     (fn []
-       ;; no effect
-       ;; (swap! session assoc-in [:date :results] "fetching...")
+     (fn [_]
+       ;; (POST (str "/api/token/" (-> @session :data :id) "/refresh")
        (POST "/api/meas"
          {:format :json
-          :params {:id         (-> @session :data :id)
+          :params {:id         id ;; (-> @session :data :id)
                    :meastype   (-> @session :data :meastype)
                    :startdate  (-> @session :data :startdate)
                    :enddate    (-> @session :data :enddate)
@@ -377,9 +406,9 @@
           :handler
           (fn [res]
             (swap! session assoc-in [:data :results] res))
+          ;; error does not happen
           :error-handler
-          (fn [e]
-            (js/alert (-> e :response :body)))}))}
+          (fn [_] (js/alert "/api/meas error"))}))}
     "fetch"]])
 
 (defn user-name
@@ -411,13 +440,16 @@
    [:p "or"]
    [input-lastupdate]
    [:br]
-   [fetch-button]
+   [:div.columns
+    [:div.column.is-1 [fetch-button (-> @session :data :id)]]
+    [:div.column.is-1 [refresh-button (-> @session :data :id)]]
+    [:div#refresh.column.is-1 (-> @session :refresh)]]
    #_[:div.columns
-    [:div.column.is-one-quarter
-     (-> @session :data :id js/parseInt user-name)
-     ", "
-     (-> @session :data :meastype js/parseInt measure-name)]
-    [:div.column [fetch-button]]]])
+      [:div.column.is-one-quarter
+       (-> @session :data :id js/parseInt user-name)
+       ", "
+       (-> @session :data :meastype js/parseInt measure-name)]
+      [:div.column [fetch-button]]]])
 
 ;; params has `created` param. which should be displayed?
 (defn output-one
@@ -446,12 +478,26 @@
    [:hr]
    version])
 
+(defn new-page []
+  [:section.section>div.container>div.content
+   [new-component]
+   [:hr]
+   version])
+
+(defn users-page []
+  [:section.section>div.container>div.content
+   [users-component]
+   [:hr]
+   version])
 ;; ------------------------------------------------------------
 (def pages
   {:home  #'home-page
    :about #'about-page
    :user  #'user-page
-   :data  #'data-page})
+   :data  #'data-page
+   ;;
+   :new   #'new-page
+   :users #'users-page})
 
 (defn page []
   [(pages (:page @session))])
@@ -463,7 +509,10 @@
    [["/"      :home]
     ["/about" :about]
     ["/user"  :user]
-    ["/data"  :data]]))
+    ["/data"  :data]
+    ;;
+    ["/new"   :new]
+    ["/users" :users]]))
 
 (defn match-route [uri]
   (->> (or (not-empty (string/replace uri #"^.*#" "")) "/")

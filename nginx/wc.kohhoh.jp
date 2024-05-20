@@ -1,0 +1,43 @@
+server {
+  server_name wc.kohhoh.jp;
+  root /srv/wc;
+  include proxy_params;
+
+  access_log "/srv/wc/log/wc_access.log";
+  error_log  "/srv/wc/log/wc_error.log";
+
+  location / {
+    proxy_pass "http://127.0.0.1:4000";
+    proxy_redirect default;
+  }
+
+ location = /favicon.ico {
+   error_page    404 = @favicon;
+   access_log    off;
+   log_not_found off;
+ }
+
+ location @favicon {
+   empty_gif;
+   access_log    off;
+   log_not_found off;
+ }
+
+  listen 443 ssl; # managed by Certbot
+  ssl_certificate /etc/letsencrypt/live/wc.kohhoh.jp/fullchain.pem; # managed by Certbot
+  ssl_certificate_key /etc/letsencrypt/live/wc.kohhoh.jp/privkey.pem; # managed by Certbot
+  include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+  ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+
+}
+
+server {
+    if ($host = wc.kohhoh.jp) {
+        return 301 https://$host$request_uri;
+    } # managed by Certbot
+
+    server_name wc.kohhoh.jp;
+    listen 80;
+    return 404; # managed by Certbot
+
+}

@@ -26,3 +26,13 @@ ${SED} -i "s|(defproject \S+).*|\1 \"$1\"|" project.clj
 #${SED} -i "s|(def \^:private version) .+|\1 \"$1\")|" src/core.clj
 
 ${SED} -i "s|(def \^:private version).*|\1 \"$1\")|" src/cljs/withings_client/core.cljs
+
+# CHANGELOG.md
+VER=$1
+TODAY=`date +%F`
+${SED} -i -e "/SNAPSHOT/c\
+## ${VER} / ${TODAY}" CHANGELOG.md
+
+## package.json
+${SED} -i.bak -e "/\"version\":/c\
+  \"version\": \"${VER}\"," package.json

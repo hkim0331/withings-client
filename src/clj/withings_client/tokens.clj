@@ -61,16 +61,6 @@
     (log/info "refresh: " (get-in ret [:body :body]))
     (get-in ret [:body :body])))
 
-;; (defn restore!
-;;   "params = userid, access, refresh, access,
-;;    returns true/false"
-;;   [params]
-;;   (log/info "tokens/restore! params" params)
-;;   ;;;
-;;   (let [ret (users/update-tokens! params)]
-;;     (log/info "users/update-tokens! returns" ret)
-;;     (and (seq params) (pos? ret))))
-
 (defn restore-by-name!
   "params = userid, access, refresh, access,
    returns true/false"

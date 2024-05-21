@@ -5,7 +5,7 @@
    [clojure.string :as string]
    [goog.events :as events]
    [goog.history.EventType :as HistoryEventType]
-   ;; [java-time.api :as jt]
+   ;; [java-time.api :as jt] ; no in CLJS.
    [reagent.core :as r]
    [reagent.dom :as rdom]
    [reitit.core :as reitit]
@@ -15,15 +15,10 @@
 
 (def ^:private version "v1.28.599")
 
-;; FIXME: better way?
-;; (def redirect-uri
-;;   (try
-;;     js/redirectUrl
-;;     (catch js/Error _ "https://wc.kohhoh.jp/callback")))
 (def redirect-uri "https://wc.kohhoh.jp/callback")
 
 (comment
-  (jt/instant) ; no in CLJS.
+  ;;(jt/instant) ; no in CLJS.
   (js/Date)
   :rcf)
 
@@ -44,7 +39,7 @@
                   :enddate    "2024-12-31 23:59:59"
                   :results    nil}
            :refresh "???"
-           :refresh-all "30秒くらいかかります。"
+           :refresh-all "スピードアップしました"
            :user {}})) ;; user-page
 
 ;; to avoid reload
@@ -52,13 +47,13 @@
 
 ;; ---------------------------------------------------------
 ;; navbar
+(defonce expanded? (r/atom false))
+
 (defn nav-link [uri title page]
   [:a.navbar-item
    {:href   uri
     :class (when (= page (:page @session)) "is-active")}
    title])
-
-(defonce expanded? (r/atom false))
 
 (defn navbar []
   [:nav.navbar.is-info>div.container

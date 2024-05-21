@@ -2,8 +2,8 @@
 Description=Trigger withing-refresh every hour
 
 [Timer]
-OnCalendar=*-*-*
-RandomizedDelaySec=5m
+OnCalendar=*-*-* *:30:00
+# RandomizedDelaySec=5m
 Persistent=true
 
 [Install]

@@ -1,15 +1,15 @@
 (require '[babashka.pods :as pods])
-(pods/load-pod 'org.babashka/mysql "0.1.1")
+(pods/load-pod 'org.babashka/mysql "0.1.2")
 (require '[pod.babashka.mysql :as mysql])
 (require '[babashka.fs :as fs])
 (require '[clojure.string :as str])
 
 (def db {:dbtype   "mysql"
          :host     "localhost"
-         :port     13306
+         :port     3306
          :dbname   "withings"
-         :user     "user"
-         :password "secret"})
+         :user     (System/getenv "WC_LOGIN")
+         :password (System/getenv "WC_PASSWORD")})
 
 (comment
   (mysql/execute! db ["select version()"])
@@ -22,8 +22,7 @@
       (let [[_ _ name _ cid secret email] (str/split line #",")]
         (mysql/execute! db ["insert into users (name,cid,secret,email)
                              values
-                             (?,?,?,?)" name cid secret email]))))
-  )
+                             (?,?,?,?)" name cid secret email])))))
 
 (defn insert-users-from-file
   [fname]
@@ -50,9 +49,9 @@
       (let [[_ _ name line_id] (map str/trim (str/split line #"\|"))]
         (println name line_id)
         (mysql/execute!
-           db
-           ["update users set line_id=? where name =?"
-            line_id name])))
+         db
+         ["update users set line_id=? where name =?"
+          line_id name])))
     (catch Exception e (println (.getMessage e)))))
 
 (comment

@@ -11,7 +11,25 @@
 - 新規ユーザの場合は userid をテーブルに入れず、リフレッシュは名前をキーとする。
 - JST date update
 - gap between `div.column`s.
+- 403 は login ページへ。
 
+## v1.29.606 / 2024-05-21
+### Added
+- Makefile:refresh
+  upload/update withings-refresh.{service,timer}
+### Changed
+- cljs/core/refresh-all! pmap
+- withings-refresh.service
+```
+  Type: oneshot
+```
+- withings-refresh.timer
+  00:00:00 だと重なるか。
+  RandomizedDelaySec=5m もやめておく。
+```
+  OnCalendar=*-*-* *:30:00
+  # RandomizedDelaySec=5m
+```
 
 ## v1.28.599 / 2024-05-19
 - divided new to trhee pages. new, users, data.

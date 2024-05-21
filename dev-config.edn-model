@@ -1,0 +1,12 @@
+;; WARNING
+;; The dev-config.edn file is used for local environment variables, such as database credentials.
+;; This file is listed in .gitignore and will be excluded from version control by Git.
+
+{:dev true
+ :port 3000
+ :nrepl-port 7000
+ ;; when use docker, check hostname.
+ :database-url "mysql://host:3306/withings?user=***&password=***"
+ :redirect-url "https://wc.kohhoh.jp/callback"
+ :login "***"
+ :password "******"}

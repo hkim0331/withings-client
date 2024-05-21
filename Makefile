@@ -35,3 +35,10 @@ timer-enable:
 	systemctl daemon-reload
 	systemctl start withings-refresh.timer
 	systemctl enable withings-refresh.timer
+
+refresh:
+	scp withings-refresh.service withings-refresh.timer  ${DEST}:withings-client
+	ssh ${DEST} 'sudo cp withing-client/withings-refresh.* /lib/systemd/system'
+	ssh ${DEST} 'sudo systemctl daemon-refresh'
+	ssh ${DEST} 'sudo systemctl restart withings-refresh.timer' && \
+	ssh ${DEST} 'systemctl status withings-refresh'

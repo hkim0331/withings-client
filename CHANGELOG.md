@@ -13,7 +13,7 @@
 - gap between `div.column`s.
 - 403 は login ページへ。
 
-## v1.29-SNAPSHOT
+## v1.29.606 / 2024-05-21
 ### Added
 - Makefile:refresh
   upload/update withings-refresh.{service,timer}

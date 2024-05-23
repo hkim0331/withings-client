@@ -1,7 +1,6 @@
 # Withings-Client
 
 ## Unreleased
-- (store fetched data in some DB)
 - (undo facility)
 - mainly getting many data at once
   change meastype with meastypes? should also change formatting functions.
@@ -11,12 +10,14 @@
 - JST date update
 - 表示の order が狂う。order by date になってるか？
 - gap between `div.column`s.
-- start.sh
+
 
 ## v1.31-SNAPSHOT / 2024-05-23
 - 403 は login ページへ。
 - home-page is just links.
 - relaced `favicon.ico`.
+- env_file, gitignored.
+- start.sh, gitignored.
 
 ## v1.30.611 / 2024-05-23
 - gitignore start.sh

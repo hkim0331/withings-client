@@ -1,4 +1,3 @@
-TAG=hkim0331/luminus:0.1
 DEST=ubuntu@kohhoh.jp
 
 all: clean deploy
@@ -26,9 +25,7 @@ deploy: uberjar
 
 clean:
 	${RM} -r target
-
-build:
-	docker build -t $TAG .
+	${RM} *.bak
 
 timer-enable:
 	cp systemd/withings-timer.* /lib/systemd/system

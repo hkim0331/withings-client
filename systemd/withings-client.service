@@ -2,12 +2,13 @@
 Description=Withings-Client service
 
 [Service]
+Type=simple
+User=ubuntu
 WorkingDirectory=/home/ubuntu/withings-client
+EnvironmentFile=/home/ubuntu/withings-client/env_file
 ExecStart=/bin/sh start.sh
 ExecStop=/bin/sh stop.sh
 TimeoutSec=300
-Type=simple
-User=ubuntu
 
 [Install]
 WantedBy=multi-user.target

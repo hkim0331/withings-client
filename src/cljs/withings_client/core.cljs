@@ -13,7 +13,7 @@
   (:import
    goog.History))
 
-(def ^:private version "v1.30.611")
+(def ^:private version "v1.31-SNAPSHOT")
 
 (def redirect-uri "https://wc.kohhoh.jp/callback")
 
@@ -297,13 +297,22 @@
                                    [edit-button user]])]
          (users-component-aux key e))]))])
 
+;; (defn home-page []
+;;   [:section.section>div.container>div.content
+;;    [new-component]
+;;    [:br]
+;;    [link-component]
+;;    [:hr]
+;;    [users-component]
+;;    [:hr]
+;;    version])
+
 (defn home-page []
   [:section.section>div.container>div.content
-   [new-component]
-   [:br]
-   [link-component]
-   [:hr]
-   [users-component]
+   [:ul.is-size-5
+    [:li [:a {:href "#/new"} "New User"]]
+    [:li [:a {:href "#/users"} "Users"]]
+    [:li [:a {:href "#/data"} "Data"]]]
    [:hr]
    version])
 
@@ -503,7 +512,7 @@
   (reitit/router
    [["/"      :home]
     ["/about" :about]
-    ["/user"  :user]
+    ["/user"  :user] ; edit
     ["/data"  :data]
     ;;
     ["/new"   :new]

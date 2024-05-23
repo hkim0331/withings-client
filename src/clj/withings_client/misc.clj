@@ -2,7 +2,7 @@
   (:require
    [clojure.tools.logging :as log]
    [clojure.string :as str]
-   [java-time :as jt]))
+   [java-time.api :as jt]))
 
 (defn probe
   ([x]

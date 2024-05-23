@@ -61,16 +61,6 @@
     (log/info "refresh: " (get-in ret [:body :body]))
     (get-in ret [:body :body])))
 
-;; (defn restore!
-;;   "params = userid, access, refresh, access,
-;;    returns true/false"
-;;   [params]
-;;   (log/info "tokens/restore! params" params)
-;;   ;;;
-;;   (let [ret (users/update-tokens! params)]
-;;     (log/info "users/update-tokens! returns" ret)
-;;     (and (seq params) (pos? ret))))
-
 (defn restore-by-name!
   "params = userid, access, refresh, access,
    returns true/false"
@@ -80,13 +70,6 @@
   (let [ret (users/update-tokens-by-name! params)]
     (log/info "users/update-tokens-by-name! returns" ret)
     (and (seq params) (pos? ret))))
-
-;; (defn refresh-and-restore!
-;;   [user]
-;;   (log/info "refresh-and-restore!" (:name user))
-;;   (-> user
-;;       refresh
-;;       restore!))
 
 (defn refresh-and-restore!
   [user]
@@ -100,12 +83,12 @@
   (-> (users/get-user id)
       refresh-and-restore!))
 
-;; doseq -> pmap
+;; quicken with pmap.
 (defn refresh-all!
   []
   (let [users (users/valid-users)]
     (log/info "tokens/refresh-all!" (map :name users))
-    (doseq [user users]
-      (log/info "doseq" (:name user))
-      (refresh-and-restore! user))
-    #_(pmap refresh-and-restore! users)))
+    #_(doseq [user users]
+        (log/info "doseq" (:name user))
+        (refresh-and-restore! user))
+    (pmap refresh-and-restore! users)))

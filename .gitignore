@@ -26,3 +26,5 @@ profiles.clj
 
 /.bash_history
 /.vscode-server
+
+/start.sh

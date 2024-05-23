@@ -16,6 +16,7 @@
 ## v1.31-SNAPSHOT / 2024-05-23
 - 403 は login ページへ。
 - home-page is just links.
+- relaced `favicon.ico`.
 
 ## v1.30.611 / 2024-05-23
 - gitignore start.sh

@@ -13,6 +13,10 @@
 - gap between `div.column`s.
 - 403 は login ページへ。
 
+## v1.30-SNAPSHOT
+- gitignore start.sh
+- git rm -r --cached .
+
 ## v1.29.606 / 2024-05-21
 ### Added
 - Makefile:refresh

@@ -12,7 +12,7 @@
 - gap between `div.column`s.
 - develop では wrap-restricted を外したい。
 
-## v1.31-SNAPSHOT / 2024-05-23
+## v1.31.621 / 2024-05-27
 - 403 は login ページへ。
 - home-page is just links.
 - relaced `favicon.ico`.

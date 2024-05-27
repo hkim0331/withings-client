@@ -13,7 +13,7 @@
   (:import
    goog.History))
 
-(def ^:private version "v1.31-SNAPSHOT")
+(def ^:private version "v1.31.621")
 
 (def redirect-uri "https://wc.kohhoh.jp/callback")
 

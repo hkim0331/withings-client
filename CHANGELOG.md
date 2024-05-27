@@ -10,7 +10,7 @@
 - JST date update
 - 表示の order が狂う。order by date になってるか？
 - gap between `div.column`s.
-
+- develop では wrap-restricted を外したい。
 
 ## v1.31-SNAPSHOT / 2024-05-23
 - 403 は login ページへ。

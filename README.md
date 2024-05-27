@@ -1,8 +1,6 @@
 # Withings-Client
 
-withings token manager.
-
-🔥UNDER CONSTRUCTION🔥
+Withings token manager.
 
 generated using Luminus version "4.40"
 
@@ -21,12 +19,9 @@ generated using Luminus version "4.40"
 * create user
 * create database
 
-## develop
+## Mariadb 10
 
-not MariaDB 11. use 10.*. (2023-12-16, 10.6)
-
-or in VScode,
-
+Not MariaDB 11. use 10.*. (2023-12-16, 10.6)
 
 ## Run kohhoh
 
